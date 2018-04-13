@@ -10,11 +10,11 @@
 
 struct menu {
 
-		IPaddress ip;
-		int nrOfPlayers;
-		int play;
-		int countdown; 
-		int sound;
-		int exit;
+	IPaddress ip;
+	int nrOfPlayers;
+	int play;
+	int countdown; 
+	int sound;
+	int exit;
 };
-typedef menu Menu;
+typedef struct menu Menu;
