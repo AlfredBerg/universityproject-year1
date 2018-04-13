@@ -23,5 +23,8 @@
     <ClInclude Include="playerStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="weaponStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
