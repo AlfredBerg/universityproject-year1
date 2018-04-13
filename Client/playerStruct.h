@@ -13,7 +13,7 @@ struct player {
 	int y;
 	int weaponID;
 
-	SDL_Texture *textureImage_Player;
-	SDL_Surface *image_Player;
+	SDL_Texture *Texture;
+	SDL_Surface *Image;
 }; 
 typedef struct player Player;
