@@ -13,52 +13,6 @@
 #include "menu.h"
 #include "weaponStruct.h"
 
-<<<<<<< HEAD
-#define SDL_MAIN_HANDLED
-#include "SDL.h"
-
-#define SCREEN_w 640
-#define SCREEN_H 480
-#define SCREEN_SCALE 1
-#define SCREEN_NAME "Prototype"
-
-//----------------------------------------------------------------------
-void game_init(void);
-void game_quit(void);
-
-struct {
-	// define "attributes"
-	SDL_bool running;
-	struct {
-		unsigned int w;
-		unsigned int h;
-		const char* name;
-		SDL_Window* window;
-		SDL_Renderer* renderer;
-	} screen;
-
-	// define "methods"
-	void(*init)(void);
-	void(*quit)(void);
-} Game = {
-	SDL_FALSE,
-{
-	SCREEN_SCALE*SCREEN_w,
-	SCREEN_SCALE*SCREEN_H,
-	SCREEN_NAME,
-	NULL,
-	NULL
-},
-game_init,
-game_quit
-};
-
-//----------------------------------------------------------------------
-void game_init(void) {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		printf("SDL error -> %sn", SDL_GetError());
-		exit(1);
-=======
 void game_init(void);
 int menu(SDL_Window* window, SDL_Renderer* renderer);
 int menuOptions(SDL_Event event, bool *menuLoop);
@@ -86,7 +40,6 @@ int main(int argc, char** argv)
 			//if(running)
 			//running = restart(window, renderer);
 		}
->>>>>>> 3a14a5cd9a3bfeb8763326fd081d48c693993ba9
 	}
 	
 	SDL_DestroyRenderer(renderer);
@@ -100,35 +53,6 @@ void game_init(void)
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-<<<<<<< HEAD
-	unsigned int w = Game.screen.w;
-	unsigned int h = Game.screen.h;
-	const char* name = Game.screen.name;
-
-	Game.screen.window = SDL_CreateWindow(
-		name,
-		SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED,
-		w, h, 0
-	);
-	Game.screen.renderer = SDL_CreateRenderer(
-		Game.screen.window, -1,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-	);
-
-	Game.running = SDL_TRUE;
-}
-
-//----------------------------------------------------------------------
-void game_quit(void) {
-	SDL_DestroyRenderer(Game.screen.renderer);
-	SDL_DestroyWindow(Game.screen.window);
-
-	Game.screen.window = NULL;
-	Game.screen.renderer = NULL;
-
-	SDL_Quit();
-=======
 	//initialize support for loading png and JPEG image
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
@@ -197,7 +121,6 @@ int menuOptions(SDL_Event event, bool *menuLoop) {
 	}
 
 	return running;
->>>>>>> 3a14a5cd9a3bfeb8763326fd081d48c693993ba9
 }
 
 int restart(SDL_Window* window, SDL_Renderer* renderer) {
@@ -228,22 +151,6 @@ int restart(SDL_Window* window, SDL_Renderer* renderer) {
 			{
 				if (ev.button.button == SDL_BUTTON_LEFT) {
 
-<<<<<<< HEAD
-	Game.init();
-
-	SDL_Event event;
-	while (Game.running) {
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
-			case SDL_QUIT: {
-				Game.running = SDL_FALSE;
-			} break;
-			}
-		}
-
-		SDL_RenderClear(Game.screen.renderer);
-		SDL_RenderPresent(Game.screen.renderer);
-=======
 					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340){
 						SDL_DestroyTexture(rematch_Texture);
 						running = true;
@@ -264,7 +171,6 @@ int restart(SDL_Window* window, SDL_Renderer* renderer) {
 		SDL_RenderPresent(renderer);
 
 	
->>>>>>> 3a14a5cd9a3bfeb8763326fd081d48c693993ba9
 	}
 	SDL_DestroyTexture(rematch_Texture);
 	return running;
@@ -272,11 +178,7 @@ int restart(SDL_Window* window, SDL_Renderer* renderer) {
 }
 int game(SDL_Window* window, SDL_Renderer* renderer) {
 
-<<<<<<< HEAD
-	Game.quit();
-=======
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
->>>>>>> 3a14a5cd9a3bfeb8763326fd081d48c693993ba9
 
 	if (!backgroundsound)
 		printf("got me good");
