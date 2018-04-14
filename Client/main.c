@@ -12,6 +12,7 @@
 #include "game.h"
 #include "menu.h"
 #include "weaponStruct.h"
+#include "gravity.h"
 
 void game_init(void);
 int menu(SDL_Window* window, SDL_Renderer* renderer);
@@ -287,16 +288,21 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 			bild2.x -= 10;
 			bild5.x -= 10;
 		}
-		else if (KeyState[SDL_SCANCODE_W] && bild2.y > 0) {
+		if (KeyState[SDL_SCANCODE_W] && bild2.y > 0) {
 			sprite += 1;
 			bild2.y -= 10;
 			bild5.y -= 10;
 		}
+		else {
+			gravity(&bild2, &bild5);
+		}
+		
+		/* DOWN ISN'T USED
 		else if (KeyState[SDL_SCANCODE_S] && bild2.y < 470) {
 			sprite += 1;
 			bild2.y += 10;
 			bild5.y += 10;
-		}
+		} */
 
 		if (KeyState[SDL_SCANCODE_RIGHT] && bild3.x < 712) {
 			sprite2 += 1;
@@ -308,16 +314,22 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 			bild3.x -= 10;
 			bild7.x -= 10;
 		}
-		else if (KeyState[SDL_SCANCODE_UP] && bild3.y > -30) {
+		if (KeyState[SDL_SCANCODE_UP] && bild3.y > -30) {
 			sprite2 += 1;
 			bild3.y -= 10;
 			bild7.y -= 10;
 		}
+		else {
+			gravity(&bild3, &bild7);
+		}
+		
+		/* DOWN ISN'T USED
 		else if (KeyState[SDL_SCANCODE_DOWN] && bild3.y < 485) {
 			sprite2 += 1;
 			bild3.y += 10;
 			bild7.y += 10;
-		}
+		} */
+
 		if (KeyState[SDL_SCANCODE_R]) {
 			bild6 = bild5;
 			SourcePosition = bild6.x;
@@ -335,6 +347,9 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 
 		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
 			bild8.x -= 10;
+
+		
+		
 
 		//clear screen with black
 		SDL_RenderClear(renderer);
