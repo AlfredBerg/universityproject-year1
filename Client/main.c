@@ -19,7 +19,8 @@ int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(SDL_Window* window, SDL_Renderer* renderer);
 int game(SDL_Window* window, SDL_Renderer* renderer);
 
-
+#define WINDOWLENGTH 800
+#define WINDOWHEIGHT 600
 
 int main(int argc, char** argv)
 {
@@ -27,7 +28,7 @@ int main(int argc, char** argv)
 
 	// Open a 800x600 window and define an accelerated renderer
 	SDL_Window* window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		800, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
@@ -84,7 +85,7 @@ int menu(SDL_Window* window, SDL_Renderer* renderer) {
 	textRect.w = 150;
 	textRect.h = 80;
 
-	SDL_Rect backRect = { 0, 0, 800, 600 };
+	SDL_Rect backRect = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT };
 
 	bool startGame = true;
 	bool menuLoop = true;
@@ -226,7 +227,7 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 	SDL_FreeSurface(image9);
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, 800, 600 }; //(x, y, hight, width)
+	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
 
 	SDL_Rect bild2 = { 60, 400, 140, 200 };
 	SDL_Rect bild3 = { 500, 400, 500, 500 };
