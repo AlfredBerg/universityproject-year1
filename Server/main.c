@@ -10,10 +10,62 @@
 
 #include "SDL.h"
 #include "SDL_net.h"
+#include "serverNetwork.h"
 
 #define PORTNR 12346
+#define SOCKET_TIMEOUT 1000
 
-void init(UDPsocket *serverSocket, IPaddress *serverSettings) {
+void init(Network *server);
+
+int main(int argc, char **argv)
+{
+	Network server;
+
+	init(&server);
+
+	UDPpacket *packet;
+
+	packet = SDLNet_AllocPacket(1024);
+	if (!packet) {
+		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	/*
+	int exit = 0;
+
+	while (!exit) {
+		if (SDLNet_UDP_Recv(server.serverSocket, packet)) {
+			printf("I got a packet\n");
+			printf("Packet data: %s\n From %d\n", packet->data, packet->address);
+
+		}
+	}
+	*/
+
+	int nrReady = 0;
+	while (server.running) {
+		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
+
+		if (nrReady == -1) {
+			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+			perror("SDLNet_CheckSockets");
+		}
+		else if (nrReady == 0) {
+			//No sockets ready, do server activity
+		}
+		else {
+			printf("%d sockets ready", nrReady);
+		}
+	}
+
+	SDLNet_FreePacket(packet);
+	SDLNet_Quit();
+	SDL_Quit();
+	return(0);
+}
+
+void init(Network *server) {
 	// Initialize SDL
 	if (SDL_Init(0) != 0)
 	{
@@ -30,55 +82,34 @@ void init(UDPsocket *serverSocket, IPaddress *serverSettings) {
 	}
 
 	//Open port
-	*serverSocket = SDLNet_UDP_Open(PORTNR);
-	if (!(*serverSocket))
+	server->serverSocket = SDLNet_UDP_Open(PORTNR);
+	if (!(server->serverSocket))
 	{
 		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
 	//Listen on all interfaces
-	if (SDLNet_ResolveHost(serverSettings, NULL, PORTNR))
+	if (SDLNet_ResolveHost(&server->serverIP, NULL, PORTNR))
 	{
 		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-}
+	server->socketSet = SDLNet_AllocSocketSet(MAX_SOCKETS + 1);
 
-void *handleClient(void *vargp) {
-
-}
-
-int main(int argc, char **argv)
-{
-	UDPsocket serverSocket;
-	IPaddress serverSettings;
-
-	init(&serverSocket, &serverSettings);
-
-	UDPpacket *packet;
-
-	packet = SDLNet_AllocPacket(1024);
-	if (!packet) {
-		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+	if (server->socketSet == NULL) {
+		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+		exit(-1);
 	}
 
-	int exit = 0;
-
-	while (!exit) {
-		if (SDLNet_UDP_Recv(serverSocket, packet)) {
-			printf("I got a packet\n");
-			printf("Packet data: %s\n From %d\n", packet->data, packet->address);
-
-		}
+	if (SDLNet_UDP_AddSocket(server->socketSet, server->serverSocket) == -1) {
+		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+		exit(-1);
 	}
 
+	server->running = 1;
 
-
-	SDLNet_FreePacket(packet);
-	SDLNet_Quit();
-	SDL_Quit();
-	return(0);
 }
+
+
