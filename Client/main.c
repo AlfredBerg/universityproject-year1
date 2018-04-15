@@ -12,6 +12,7 @@
 #include "game.h"
 #include "menu.h"
 #include "weaponStruct.h"
+#include "gravity.h"
 
 void game_init(Game *game);
 //int menu(SDL_Window* window, SDL_Renderer* renderer);
@@ -279,47 +280,58 @@ int rungame(Game *game) {
 			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D]) {
+		if (KeyState[SDL_SCANCODE_D] && bild2.x < 730) {
 			sprite += 1;
 			bild2.x += 10;
 			bild5.x += 10;
 		}
-		else if (KeyState[SDL_SCANCODE_A]) {
+		else if (KeyState[SDL_SCANCODE_A] && bild2.x > -10) {
 			sprite -= 1;
 			bild2.x -= 10;
 			bild5.x -= 10;
 		}
-		else if (KeyState[SDL_SCANCODE_W]) {
+		if (KeyState[SDL_SCANCODE_W] && bild2.y > 0) {
 			sprite += 1;
 			bild2.y -= 10;
 			bild5.y -= 10;
 		}
-		else if (KeyState[SDL_SCANCODE_S]) {
+		else {
+			gravity(&bild2, &bild5);
+		}
+		
+		/* DOWN ISN'T USED
+		else if (KeyState[SDL_SCANCODE_S] && bild2.y < 470) {
 			sprite += 1;
 			bild2.y += 10;
 			bild5.y += 10;
-		}
+		} */
 
-		if (KeyState[SDL_SCANCODE_RIGHT]) {
+		if (KeyState[SDL_SCANCODE_RIGHT] && bild3.x < 712) {
 			sprite2 += 1;
 			bild3.x += 10;
 			bild7.x += 10;
 		}
-		else if (KeyState[SDL_SCANCODE_LEFT]) {
+		else if (KeyState[SDL_SCANCODE_LEFT] && bild3.x > -22) {
 			sprite2 -= 1;
 			bild3.x -= 10;
 			bild7.x -= 10;
 		}
-		else if (KeyState[SDL_SCANCODE_UP]) {
+		if (KeyState[SDL_SCANCODE_UP] && bild3.y > -30) {
 			sprite2 += 1;
 			bild3.y -= 10;
 			bild7.y -= 10;
 		}
-		else if (KeyState[SDL_SCANCODE_DOWN]) {
+		else {
+			gravity(&bild3, &bild7);
+		}
+		
+		/* DOWN ISN'T USED
+		else if (KeyState[SDL_SCANCODE_DOWN] && bild3.y < 485) {
 			sprite2 += 1;
 			bild3.y += 10;
 			bild7.y += 10;
-		}
+		} */
+
 		if (KeyState[SDL_SCANCODE_R]) {
 			bild6 = bild5;
 			SourcePosition = bild6.x;
@@ -338,6 +350,9 @@ int rungame(Game *game) {
 		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
 			bild8.x -= 10;
 
+		
+		
+
 		//clear screen with black
 		SDL_RenderClear(game->renderer);
 
@@ -350,6 +365,7 @@ int rungame(Game *game) {
 		if (pPressed == true)
 			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
 
+		//Checking if sword hit player1
 		if (bild6.x >= bild3.x + 40 && bild6.x <= bild3.x + 50) {
 			if (bild6.y <= bild3.y + 99 && bild6.y >= bild3.y) {
 				SDL_DestroyTexture(image3_texture);
@@ -362,6 +378,7 @@ int rungame(Game *game) {
 			}
 		}
 
+		//Checking if sword hit player2
 		if (bild8.x <= bild2.x + 40 && bild8.x >= bild2.x - 50)
 			if (bild8.y <= bild2.y + 120 && bild8.y >= bild2.y - 20) {
 				SDL_DestroyTexture(image2_texture);
