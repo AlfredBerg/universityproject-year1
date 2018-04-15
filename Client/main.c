@@ -15,10 +15,9 @@
 #include "gravity.h"
 
 void game_init(Game *game);
-//int menu(SDL_Window* window, SDL_Renderer* renderer);
 int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
-int restart(SDL_Window* window, SDL_Renderer* renderer);
+int restart(Game *game);
 int rungame(Game *game);
 
 #define WINDOWLENGTH 800
@@ -34,8 +33,8 @@ int main(int argc, char** argv)
 		game.running=menu(&game);
 		while (game.running) {
 			game.running=rungame(&game);
-			//if(running)
-			//running = restart(window, renderer);
+			//if(game.running)
+			//	game.running = restart(&game);
 		}
 	}
 	
@@ -56,6 +55,11 @@ void game_init(Game *game)
 	//initialize the mixer
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
+	if (TTF_Init() < 0) {
+		printf("SDL error -> %s\n", SDL_GetError());
+		exit(1);
+	}
+
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
@@ -65,11 +69,6 @@ void game_init(Game *game)
 }
 
 int menu(Game *game) {
-
-	if (TTF_Init() < 0) {
-			printf("SDL error -> %s\n", SDL_GetError());
-			exit(1);
-	}
 
 	TTF_Font *font = TTF_OpenFont("fintext.ttf", 20);
 	SDL_Color color = { 255, 255, 255, 255 };
@@ -127,13 +126,13 @@ int menuOptions(SDL_Event event, bool *menuLoop) {
 	return running;
 }
 
-int restart(SDL_Window* window, SDL_Renderer* renderer) {
+int restart(Game* game) {
 
 	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
 	SDL_Color color = { 255, 255, 255, 255 };
 	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
 
-	SDL_Texture *rematch_Texture=SDL_CreateTextureFromSurface(renderer, rematch);  
+	SDL_Texture *rematch_Texture=SDL_CreateTextureFromSurface(game->renderer, rematch);  
 	SDL_FreeSurface(rematch);
 
 	SDL_Rect RematchFontRect;
@@ -164,15 +163,15 @@ int restart(SDL_Window* window, SDL_Renderer* renderer) {
 				}
 			}
 		}
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, rematch_Texture, NULL, &RematchFontRect);
-		/*SDL_RenderCopy(renderer, image2_texture, &srcrect, &dstrect);//draw
-		SDL_RenderCopy(renderer, image3_texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(renderer, image5_texture, NULL, &bild5);
-		SDL_RenderCopy(renderer, image7_texture, NULL, &bild7);
+		SDL_RenderClear(game->renderer);
+		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
+		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
+		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
+		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
+		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
 		*/
 
-		SDL_RenderPresent(renderer);
+		SDL_RenderPresent(game->renderer);
 
 	
 	}
