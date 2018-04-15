@@ -10,5 +10,8 @@ struct game {
 	int running;
 	int livingPlayers[MAXPLAYERS];
 	int connectedPlayers[MAXPLAYERS];
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+
 };
 typedef struct game Game;

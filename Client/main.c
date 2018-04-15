@@ -13,43 +13,38 @@
 #include "menu.h"
 #include "weaponStruct.h"
 
-void game_init(void);
-int menu(SDL_Window* window, SDL_Renderer* renderer);
+void game_init(Game *game);
+//int menu(SDL_Window* window, SDL_Renderer* renderer);
+int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(SDL_Window* window, SDL_Renderer* renderer);
-int game(SDL_Window* window, SDL_Renderer* renderer);
+int rungame(Game *game);
 
 #define WINDOWLENGTH 800
 #define WINDOWHEIGHT 600
 
 int main(int argc, char** argv)
 {
-	game_init();
+	Game game;
 
-	// Open a 800x600 window and define an accelerated renderer
-	SDL_Window* window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	game_init(&game);
 
-	bool running = true;
-	while (running)
-	{
-		running=menu(window, renderer);
-		while (running) {
-			running=game(window, renderer);
+	while (game.running){
+		game.running=menu(&game);
+		while (game.running) {
+			game.running=rungame(&game);
 			//if(running)
 			//running = restart(window, renderer);
 		}
 	}
 	
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(game.renderer);
+	SDL_DestroyWindow(game.window);
 	SDL_Quit();
 	return 0;
 }
 
-void game_init(void)
+void game_init(Game *game)
 {
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -59,9 +54,16 @@ void game_init(void)
 
 	//initialize the mixer
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+
+	game->running = 1;
+	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
 }
 
-int menu(SDL_Window* window, SDL_Renderer* renderer) {
+int menu(Game *game) {
 
 	if (TTF_Init() < 0) {
 			printf("SDL error -> %s\n", SDL_GetError());
@@ -74,9 +76,9 @@ int menu(SDL_Window* window, SDL_Renderer* renderer) {
 	SDL_Surface *textImage = TTF_RenderText_Solid(font, "START", color);
 	SDL_Surface *menuImage = IMG_Load("startscreen.jpg");
 		
-	SDL_Texture *text = SDL_CreateTextureFromSurface(renderer, textImage);
+	SDL_Texture *text = SDL_CreateTextureFromSurface(game->renderer, textImage);
 	SDL_FreeSurface(textImage);
-	SDL_Texture *background = SDL_CreateTextureFromSurface(renderer, menuImage);
+	SDL_Texture *background = SDL_CreateTextureFromSurface(game->renderer, menuImage);
 	SDL_FreeSurface(menuImage);
 
 	SDL_Rect textRect;
@@ -95,10 +97,10 @@ int menu(SDL_Window* window, SDL_Renderer* renderer) {
 			startGame = menuOptions(event, &menuLoop);
 		}
 
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, background, NULL, &backRect);
-		SDL_RenderCopy(renderer, text, NULL, &textRect);
-		SDL_RenderPresent(renderer);
+		SDL_RenderClear(game->renderer);
+		SDL_RenderCopy(game->renderer, background, NULL, &backRect);
+		SDL_RenderCopy(game->renderer, text, NULL, &textRect);
+		SDL_RenderPresent(game->renderer);
 	}
 	SDL_DestroyTexture(text);
 	SDL_DestroyTexture(background);
@@ -177,7 +179,7 @@ int restart(SDL_Window* window, SDL_Renderer* renderer) {
 	return running;
 	
 }
-int game(SDL_Window* window, SDL_Renderer* renderer) {
+int rungame(Game *game) {
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
 
@@ -207,23 +209,23 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 	SDL_Surface *image8 = IMG_Load("sword2.png");
 	SDL_Surface *image9 = IMG_Load("humanwin.png");
 
-	SDL_Texture *image_texture = SDL_CreateTextureFromSurface(renderer, image);
+	SDL_Texture *image_texture = SDL_CreateTextureFromSurface(game->renderer, image);
 	SDL_FreeSurface(image);
-	SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(renderer, image2);
+	SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(game->renderer, image2);
 	SDL_FreeSurface(image2);
-	SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(renderer, image3);
+	SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(game->renderer, image3);
 	SDL_FreeSurface(image3);
-	SDL_Texture *image4_texture = SDL_CreateTextureFromSurface(renderer, image4);
+	SDL_Texture *image4_texture = SDL_CreateTextureFromSurface(game->renderer, image4);
 	SDL_FreeSurface(image4);
-	SDL_Texture *image5_texture = SDL_CreateTextureFromSurface(renderer, image5);
+	SDL_Texture *image5_texture = SDL_CreateTextureFromSurface(game->renderer, image5);
 	SDL_FreeSurface(image5);
-	SDL_Texture *image6_texture = SDL_CreateTextureFromSurface(renderer, image6);
+	SDL_Texture *image6_texture = SDL_CreateTextureFromSurface(game->renderer, image6);
 	SDL_FreeSurface(image6);
-	SDL_Texture *image7_texture = SDL_CreateTextureFromSurface(renderer, image7);
+	SDL_Texture *image7_texture = SDL_CreateTextureFromSurface(game->renderer, image7);
 	SDL_FreeSurface(image7);
-	SDL_Texture *image8_texture = SDL_CreateTextureFromSurface(renderer, image8);
+	SDL_Texture *image8_texture = SDL_CreateTextureFromSurface(game->renderer, image8);
 	SDL_FreeSurface(image8);
-	SDL_Texture *image9_texture = SDL_CreateTextureFromSurface(renderer, image9);
+	SDL_Texture *image9_texture = SDL_CreateTextureFromSurface(game->renderer, image9);
 	SDL_FreeSurface(image9);
 
 	//Define where on the "screen" we want to draw the texture
@@ -337,16 +339,16 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 			bild8.x -= 10;
 
 		//clear screen with black
-		SDL_RenderClear(renderer);
+		SDL_RenderClear(game->renderer);
 
 		//draw
-		SDL_RenderCopy(renderer, image_texture, NULL, &bild);
+		SDL_RenderCopy(game->renderer, image_texture, NULL, &bild);
 
 		if (rPressed == true)
-			SDL_RenderCopy(renderer, image6_texture, NULL, &bild6);
+			SDL_RenderCopy(game->renderer, image6_texture, NULL, &bild6);
 
 		if (pPressed == true)
-			SDL_RenderCopy(renderer, image8_texture, NULL, &bild8);
+			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
 
 		if (bild6.x >= bild3.x + 40 && bild6.x <= bild3.x + 50) {
 			if (bild6.y <= bild3.y + 99 && bild6.y >= bild3.y) {
@@ -371,22 +373,22 @@ int game(SDL_Window* window, SDL_Renderer* renderer) {
 			}
 
 		if(whynotwork==0)
-		SDL_RenderCopy(renderer, image9_texture, NULL, &bild9);
+		SDL_RenderCopy(game->renderer, image9_texture, NULL, &bild9);
 		if (whynotwork == 2)
-		SDL_RenderCopy(renderer, image4_texture, NULL, &bild4);
+		SDL_RenderCopy(game->renderer, image4_texture, NULL, &bild4);
 		if (again==true) {
 
 		//restart(window, renderer);
 
 		}
 
-		SDL_RenderCopy(renderer, image2_texture, &srcrect, &dstrect);//draw
-		SDL_RenderCopy(renderer, image3_texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(renderer, image5_texture, NULL, &bild5);
-		SDL_RenderCopy(renderer, image7_texture, NULL, &bild7);
+		SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
+		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
+		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
+		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 
-		SDL_RenderPresent(renderer);//show what was drawn
+		SDL_RenderPresent(game->renderer);//show what was drawn
 	}
 	running = true;
 	return running;
