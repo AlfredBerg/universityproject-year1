@@ -6,7 +6,7 @@
 #include "clients.h"
 
 #define MAX_PACKET 0xFF
-#define MAX_SOCKETS 0x5
+#define MAX_SOCKETS 0x4
 
 struct network {
 	int next_player;

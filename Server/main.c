@@ -13,9 +13,11 @@
 #include "serverNetwork.h"
 
 #define PORTNR 12346
-#define SOCKET_TIMEOUT 1000
+#define SOCKET_TIMEOUT 0
 
 void init(Network *server);
+void quit(Network *server, UDPpacket *packet);
+void closeSocket(Network *server, int index);
 
 int main(int argc, char **argv)
 {
@@ -51,19 +53,60 @@ int main(int argc, char **argv)
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
 			perror("SDLNet_CheckSockets");
 		}
-		else if (nrReady == 0) {
+		else if (nrReady == 0) {//Might need to be changed to prioritize game state
 			//No sockets ready, do server activity
 		}
 		else {
 			printf("%d sockets ready", nrReady);
+			if (SDLNet_SocketReady(server.serverSocket)) {
+				//newClient();
+			}
 		}
 	}
 
+	quit(&server, packet);
+
+	return(0);
+}
+
+void quit(Network *server, UDPpacket *packet) {
+	if (SDLNet_UDP_DelSocket(server->socketSet, server->serverSocket) == -1) {
+		fprintf(stderr, "ER: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
+		exit(-1);
+	}
+	SDLNet_UDP_Close(server->serverSocket);
+
+	//TODO, figure out why the code bellow wont delete and close the sockets
+	/*
+	int i;
+	for (i = 0; i < MAX_SOCKETS; ++i) {
+		if (server->sockets[i] == NULL) continue;
+		closeSocket(server, i);
+	}
+	*/
+
+	SDLNet_FreeSocketSet(server->socketSet);
 	SDLNet_FreePacket(packet);
 	SDLNet_Quit();
 	SDL_Quit();
-	return(0);
 }
+
+void closeSocket(Network *server, int index) {
+	if (server->sockets[index] == NULL) {
+		fprintf(stderr, "ER: Attempted to delete a NULL socket.\n");
+		return;
+	}
+
+	if (SDLNet_UDP_DelSocket(server->socketSet, server->sockets[index]) == -1) {
+		fprintf(stderr, "ER: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
+		exit(-1);
+	}
+
+	memset(&server->clients[index], 0x00, sizeof(Client));
+	SDLNet_UDP_Close(server->sockets[index]);
+	server->sockets[index] = NULL;
+}
+
 
 void init(Network *server) {
 	// Initialize SDL
@@ -102,12 +145,11 @@ void init(Network *server) {
 		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
 		exit(-1);
 	}
-
+	
 	if (SDLNet_UDP_AddSocket(server->socketSet, server->serverSocket) == -1) {
 		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
 		exit(-1);
 	}
-
 	server->running = 1;
 
 }
