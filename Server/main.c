@@ -19,7 +19,9 @@
 
 void init(Network *server);
 void quit(Network *server);
-void updateClients(Network *server);
+void updateClients(Network *server, Uint32 *lastTick);
+void gamestateToString(Network *server, char string[]);
+
 
 int main(int argc, char **argv)
 {
@@ -52,7 +54,7 @@ int main(int argc, char **argv)
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
 			perror("SDLNet_CheckSockets");
 		}
-		else if (nrReady == 0) {//Might need to be changed to prioritize game state
+		else if (nrReady == 0) {
 			//No sockets ready, do server activity
 			
 		}
@@ -74,8 +76,10 @@ void updateClients(Network *server, Uint32 *lastTick) {
 	
 	if (SDL_TICKS_PASSED(SDL_GetTicks(), *lastTick + TICK_RATE)) {
 		
+		char data[MAX_PACKET];
+		gamestateToString(server, data);
+		puts(data);
 		for (int i = 0; i < MAX_SOCKETS; i++) {
-			char data[] = "CLIENT UPDATE";
 			sendPacket(data, server->clients[i].ip, server->serverSocket);
 		}
 
@@ -83,7 +87,10 @@ void updateClients(Network *server, Uint32 *lastTick) {
 	}
 }
 
-
+void gamestateToString(Network *server, char string[]) {
+	//x1;y1;x2;y2
+	sprintf(string, "%d;%d;%d;%d", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
+}
 
 void quit(Network *server) {
 	if (SDLNet_UDP_DelSocket(server->socketSet, server->serverSocket) == -1) {
@@ -159,6 +166,14 @@ void init(Network *server) {
 
 	server->running = 1;
 	server->next_player = 0;
+
+
+	//Hardcoded stuff, remove me
+	server->clients[0].xPos = 4;
+	server->clients[0].yPos = 50;
+	server->clients[1].xPos = 100;
+	server->clients[1].yPos = 200;
+
 
 }
 
