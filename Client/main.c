@@ -186,7 +186,7 @@ int restart(Game* game) {
 int rungame(Game *game) {
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
-
+	
 	if (!backgroundsound)
 		printf("got me good");
 
@@ -194,9 +194,12 @@ int rungame(Game *game) {
 	int SourcePosition2 = 0;
 	int whynotwork = 1;
 
+	
 	//Create two players
-	Player fighter = { "Erik", 100, 60, 400, 0 };
-	Player enemy = {"Skull", 100, 500, 50, 0 };
+	Player fighter = { "Erik", 3, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, fighter.Image), {60, 400, 140, 200}};
+	Player enemy = {"Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, enemy.Image), enemy.p1};
+	printf("%d, %d\n", fighter.p1.x, fighter.p1.y);
+	printf("%d, %d", fighter.x, fighter.y);
 
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
@@ -239,8 +242,8 @@ int rungame(Game *game) {
 	//Define where on the "screen" we want to draw the texture
 	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
 
-	SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
-	SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500 };
+	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
+	SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
 	SDL_Rect bild5 = { 100, 450, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
@@ -279,10 +282,12 @@ int rungame(Game *game) {
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
 		SDL_Rect srcrect = { sprite * 75, 0, 75, 132 };
-		SDL_Rect dstrect = { bild2.x, bild2.y, 75, 132 };
+		SDL_Rect dstrect = { fighter.p1.x, fighter.p1.y, 75, 132 };
 
 		SDL_Rect srcrect2 = { sprite2 * 64, 64, 64, 64 };
 		SDL_Rect dstrect2 = { bild3.x, bild3.y, 120, 120 };
+
+
 
 		// Check for various events (keyboard, mouse, touch, close)
 		while (SDL_PollEvent(&event))
@@ -304,23 +309,23 @@ int rungame(Game *game) {
 			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D] && bild2.x < 730) {
+		if (KeyState[SDL_SCANCODE_D] && fighter.p1.x < 730) {
 			sprite += 1;
-			bild2.x += 10;
+			fighter.p1.x += 10;
 			bild5.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A] && bild2.x > -10) {
+		else if (KeyState[SDL_SCANCODE_A] && fighter.p1.x > -10) {
 			sprite -= 1;
-			bild2.x -= 10;
+			fighter.p1.x -= 10;
 			bild5.x -= 10;
 			prevKey = LEFT;
 		}
 		//if (prevKey == UP) {
 			
 		//}
-			jump(&bild2, &bild5, &isJumping, &jumpTime, &doJump1);
-			gravity(&bild2, &bild5);
+			jump(&fighter, &bild5, &isJumping, &jumpTime, &doJump1);
+			gravity(&fighter.p1, &bild5);
 		
 		
 		/* DOWN ISN'T USED
@@ -400,9 +405,9 @@ int rungame(Game *game) {
 		}
 
 		//Checking if sword hit player2
-		if (bild8.x <= bild2.x + 40 && bild8.x >= bild2.x - 50)
-			if (bild8.y <= bild2.y + 120 && bild8.y >= bild2.y - 20) {
-				SDL_DestroyTexture(image2_texture);
+		if (bild8.x <= fighter.p1.x + 40 && bild8.x >= fighter.p1.x - 50)
+			if (bild8.y <= fighter.p1.y + 120 && bild8.y >= fighter.p1.y - 20) {
+				SDL_DestroyTexture(fighter.Texture);
 				SDL_DestroyTexture(image5_texture);
 				SDL_DestroyTexture(image6_texture);
 				whynotwork = 2;
@@ -420,7 +425,7 @@ int rungame(Game *game) {
 
 		}
 
-		SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
+		SDL_RenderCopy(game->renderer, fighter.Texture, &srcrect, &dstrect);//draw
 		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
 		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
 		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
