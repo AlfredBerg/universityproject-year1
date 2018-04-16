@@ -16,8 +16,6 @@
 void newClient(int *nrReady, Network *server) {
 	int newClientAccepted = AcceptSocket(server);
 	(*nrReady)--;
-	
-
 
 }
 
@@ -28,19 +26,42 @@ int AcceptSocket(Network *server) {
 	}
 
 	char packetdata[MAX_PACKET];
-	packetDatatoString(server->serverSocketPacket, packetdata);
+	receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
 	printf("\nPacket len: %d Packet data: %s\n", server->serverSocketPacket->len, packetdata);
 	if (strcmp("HELLO\n", packetdata)) {
 		return 0;
 	}
 
 	printf("I got a new client that want to connect\n");
+	//Make the client send further request to a new port
 
+	server->clients[server->next_player].ip = server->serverSocketPacket->address;
 
+	char data[] = "HELLO CLIENT";
+
+	sendPacket(data, server->clients[server->next_player].ip, server->serverSocket);
+	
 	return 1;
 }
 
-void packetDatatoString(UDPpacket *packet, char string[]) {
+void sendPacket(char data[], IPaddress ip, UDPsocket socket) {
+	UDPpacket *send;
+
+	send = SDLNet_AllocPacket(1024);
+	if (!send) {
+		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+	
+	strcpy(send->data, data);
+	send->len = strlen(data);
+	send->address = ip;
+	SDLNet_UDP_Send(socket, -1, send);
+}
+
+void receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
+	SDLNet_UDP_Recv(socket, packet);
+
 	for (int i = 0; i < packet->len; i++) {
 		string[i] = packet->data[i];
 	}

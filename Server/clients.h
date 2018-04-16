@@ -5,6 +5,7 @@
 #include <SDL_net.h>
 
 struct client {
+	IPaddress ip;
 	int inUse;
 	int xPos;
 	int yPos;
