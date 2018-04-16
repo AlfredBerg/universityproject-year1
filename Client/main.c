@@ -388,7 +388,7 @@ int rungame(Game *game) {
 				running = false;
 			}
 
-		if(whynotwork==0)
+		if(whynotwork == 0)
 		SDL_RenderCopy(game->renderer, image9_texture, NULL, &bild9);
 		if (whynotwork == 2)
 		SDL_RenderCopy(game->renderer, image4_texture, NULL, &bild4);

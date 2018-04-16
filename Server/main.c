@@ -16,22 +16,13 @@
 #define SOCKET_TIMEOUT 0
 
 void init(Network *server);
-void quit(Network *server, UDPpacket *packet);
-void closeSocket(Network *server, int index);
+void quit(Network *server);
 
 int main(int argc, char **argv)
 {
 	Network server;
 
 	init(&server);
-
-	UDPpacket *packet;
-
-	packet = SDLNet_AllocPacket(1024);
-	if (!packet) {
-		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
 
 	/*
 	int exit = 0;
@@ -44,6 +35,7 @@ int main(int argc, char **argv)
 		}
 	}
 	*/
+	
 
 	int nrReady = 0;
 	while (server.running) {
@@ -59,52 +51,35 @@ int main(int argc, char **argv)
 		else {
 			printf("%d sockets ready", nrReady);
 			if (SDLNet_SocketReady(server.serverSocket)) {
-				//newClient();
+				if (SDLNet_UDP_Recv(server.serverSocket, server.serverSocketPacket)) {
+					newClient(&nrReady, &server);
+				}
 			}
 		}
 	}
 
-	quit(&server, packet);
+	quit(&server);
 
 	return(0);
 }
 
-void quit(Network *server, UDPpacket *packet) {
+void quit(Network *server) {
 	if (SDLNet_UDP_DelSocket(server->socketSet, server->serverSocket) == -1) {
-		fprintf(stderr, "ER: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
+		fprintf(stderr, "ER: SDLNet_UDP_DelSocket: %s\n", SDLNet_GetError());
 		exit(-1);
 	}
 	SDLNet_UDP_Close(server->serverSocket);
 
-	//TODO, figure out why the code bellow wont delete and close the sockets
-	/*
 	int i;
 	for (i = 0; i < MAX_SOCKETS; ++i) {
 		if (server->sockets[i] == NULL) continue;
 		closeSocket(server, i);
 	}
-	*/
 
 	SDLNet_FreeSocketSet(server->socketSet);
-	SDLNet_FreePacket(packet);
+	SDLNet_FreePacket(server->serverSocketPacket);
 	SDLNet_Quit();
 	SDL_Quit();
-}
-
-void closeSocket(Network *server, int index) {
-	if (server->sockets[index] == NULL) {
-		fprintf(stderr, "ER: Attempted to delete a NULL socket.\n");
-		return;
-	}
-
-	if (SDLNet_UDP_DelSocket(server->socketSet, server->sockets[index]) == -1) {
-		fprintf(stderr, "ER: SDLNet_TCP_DelSocket: %s\n", SDLNet_GetError());
-		exit(-1);
-	}
-
-	memset(&server->clients[index], 0x00, sizeof(Client));
-	SDLNet_UDP_Close(server->sockets[index]);
-	server->sockets[index] = NULL;
 }
 
 
@@ -124,6 +99,13 @@ void init(Network *server) {
 		exit(EXIT_FAILURE);
 	}
 
+	//Listen on all interfaces
+	if (SDLNet_ResolveHost(&server->serverIP, NULL, PORTNR))
+	{
+		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
 	//Open port
 	server->serverSocket = SDLNet_UDP_Open(PORTNR);
 	if (!(server->serverSocket))
@@ -132,15 +114,13 @@ void init(Network *server) {
 		exit(EXIT_FAILURE);
 	}
 
-	//Listen on all interfaces
-	if (SDLNet_ResolveHost(&server->serverIP, NULL, PORTNR))
-	{
-		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
+	server->serverSocketPacket = SDLNet_AllocPacket(1024);
+	if (!server->serverSocketPacket) {
+		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
 	server->socketSet = SDLNet_AllocSocketSet(MAX_SOCKETS + 1);
-
 	if (server->socketSet == NULL) {
 		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
 		exit(-1);
@@ -150,7 +130,13 @@ void init(Network *server) {
 		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
 		exit(-1);
 	}
+
+	for (int i = 0; i < MAX_SOCKETS; i++) {
+		server->sockets[i] = NULL;
+	}
+
 	server->running = 1;
+	server->next_player = 0;
 
 }
 

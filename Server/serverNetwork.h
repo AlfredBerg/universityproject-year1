@@ -13,9 +13,14 @@ struct network {
 	IPaddress serverIP;
 	Client clients[MAX_SOCKETS];
 	UDPsocket serverSocket;
+	UDPpacket *serverSocketPacket;
 	SDLNet_SocketSet socketSet;
 	UDPsocket sockets[MAX_SOCKETS];
 	int running;
-
 };
 typedef struct network Network;
+
+int AcceptSocket(Network *server);
+void closeSocket(Network *server, int index);
+void newClient(int *nrReady, Network *server);
+void packetDatatoString(UDPpacket *packet, char string[]);
