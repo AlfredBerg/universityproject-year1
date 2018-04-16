@@ -11,6 +11,7 @@
 #include "SDL.h"
 #include "SDL_net.h"
 #include "serverNetwork.h"
+#include "sharedNetwork.h"
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 0
@@ -51,9 +52,7 @@ int main(int argc, char **argv)
 		else {
 			printf("%d sockets ready", nrReady);
 			if (SDLNet_SocketReady(server.serverSocket)) {
-				//if (SDLNet_UDP_Recv(server.serverSocket, server.serverSocketPacket)) {
 				newClient(&nrReady, &server);
-				//}
 			}
 		}
 	}

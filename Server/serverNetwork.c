@@ -11,11 +11,13 @@
 #include "SDL.h"
 #include "SDL_net.h"
 #include "serverNetwork.h"
+#include "sharedNetwork.h"
 
 
 void newClient(int *nrReady, Network *server) {
 	int newClientAccepted = AcceptSocket(server);
 	(*nrReady)--;
+	
 
 }
 
@@ -42,30 +44,6 @@ int AcceptSocket(Network *server) {
 	sendPacket(data, server->clients[server->next_player].ip, server->serverSocket);
 	
 	return 1;
-}
-
-void sendPacket(char data[], IPaddress ip, UDPsocket socket) {
-	UDPpacket *send;
-
-	send = SDLNet_AllocPacket(1024);
-	if (!send) {
-		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-	
-	strcpy(send->data, data);
-	send->len = strlen(data);
-	send->address = ip;
-	SDLNet_UDP_Send(socket, -1, send);
-}
-
-void receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
-	SDLNet_UDP_Recv(socket, packet);
-
-	for (int i = 0; i < packet->len; i++) {
-		string[i] = packet->data[i];
-	}
-	string[packet->len] = '\0';
 }
 
 void closeSocket(Network *server, int index) {
