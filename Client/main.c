@@ -19,9 +19,13 @@ int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(Game *game);
 int rungame(Game *game);
+void jump(SDL_Rect *player, SDL_Rect *weapon, int *isJumping, int *jumpTime);
 
 #define WINDOWLENGTH 800
 #define WINDOWHEIGHT 600
+#define UP 1
+#define LEFT 2
+#define RIGHT 3
 
 int main(int argc, char** argv)
 {
@@ -92,7 +96,7 @@ int menu(Game *game) {
 	bool startGame = true;
 	bool menuLoop = true;
 	SDL_Event event;
-	while(menuLoop){
+	/*while(menuLoop){
 		if (SDL_PollEvent(&event) != 0) {
 			startGame = menuOptions(event, &menuLoop);
 		}
@@ -101,7 +105,7 @@ int menu(Game *game) {
 		SDL_RenderCopy(game->renderer, background, NULL, &backRect);
 		SDL_RenderCopy(game->renderer, text, NULL, &textRect);
 		SDL_RenderPresent(game->renderer);
-	}
+	}*/
 	SDL_DestroyTexture(text);
 	SDL_DestroyTexture(background);
 	return startGame;
@@ -248,6 +252,13 @@ int rungame(Game *game) {
 	SDL_Event event;
 	int sprite = 1;
 	int sprite2 = 1;
+
+	int prevKey = 0;
+	int isJumping = 0;
+	int jumpTime = 0;
+	int doJump1 = 0;
+	int doJump2 = 0;
+
 	while (running)
 	{
 		if (sprite >= 8)
@@ -277,26 +288,36 @@ int rungame(Game *game) {
 				running = false;
 				return running;
 			}
+			else if (event.type == SDL_KEYDOWN) {
+				if (event.key.keysym.sym == SDLK_w) {
+					printf("W is pressed");
+					doJump1 = 1;
+				}
+				if (event.key.keysym.sym == SDLK_UP) {
+					printf("UP is pressed");
+					doJump2 = 1;
+				}
+			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
 		if (KeyState[SDL_SCANCODE_D] && bild2.x < 730) {
 			sprite += 1;
 			bild2.x += 10;
 			bild5.x += 10;
+			prevKey = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_A] && bild2.x > -10) {
 			sprite -= 1;
 			bild2.x -= 10;
 			bild5.x -= 10;
+			prevKey = LEFT;
 		}
-		if (KeyState[SDL_SCANCODE_W] && bild2.y > 0) {
-			sprite += 1;
-			bild2.y -= 10;
-			bild5.y -= 10;
-		}
-		else {
+		//if (prevKey == UP) {
+			
+		//}
+			jump(&bild2, &bild5, &isJumping, &jumpTime, &doJump1);
 			gravity(&bild2, &bild5);
-		}
+		
 		
 		/* DOWN ISN'T USED
 		else if (KeyState[SDL_SCANCODE_S] && bild2.y < 470) {
@@ -309,20 +330,17 @@ int rungame(Game *game) {
 			sprite2 += 1;
 			bild3.x += 10;
 			bild7.x += 10;
+			prevKey = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_LEFT] && bild3.x > -22) {
 			sprite2 -= 1;
 			bild3.x -= 10;
 			bild7.x -= 10;
+			prevKey = LEFT;
 		}
-		if (KeyState[SDL_SCANCODE_UP] && bild3.y > -30) {
-			sprite2 += 1;
-			bild3.y -= 10;
-			bild7.y -= 10;
-		}
-		else {
+			jump(&bild3, &bild7, &isJumping, &jumpTime, &doJump2);
 			gravity(&bild3, &bild7);
-		}
+		
 		
 		/* DOWN ISN'T USED
 		else if (KeyState[SDL_SCANCODE_DOWN] && bild3.y < 485) {
