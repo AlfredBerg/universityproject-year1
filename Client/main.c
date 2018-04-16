@@ -194,6 +194,10 @@ int rungame(Game *game) {
 	int SourcePosition2 = 0;
 	int whynotwork = 1;
 
+	//Create two players
+	Player fighter = { "Erik", 100, 60, 400, 0 };
+	Player enemy = {"Skull", 100, 500, 50, 0 };
+
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 
@@ -235,8 +239,8 @@ int rungame(Game *game) {
 	//Define where on the "screen" we want to draw the texture
 	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
 
-	SDL_Rect bild2 = { 60, 400, 140, 200 };
-	SDL_Rect bild3 = { 500, 400, 500, 500 };
+	SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
+	SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500 };
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
 	SDL_Rect bild5 = { 100, 450, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
