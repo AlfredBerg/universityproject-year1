@@ -42,7 +42,8 @@ int AcceptSocket(Network *server) {
 	char data[] = "HELLO CLIENT";
 
 	sendPacket(data, server->clients[server->next_player].ip, server->serverSocket);
-	
+	server->clients[server->next_player].inUse = 1;
+	server->next_player++;
 	return 1;
 }
 

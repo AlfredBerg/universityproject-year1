@@ -15,9 +15,11 @@
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 0
+#define TICK_RATE 1000
 
 void init(Network *server);
 void quit(Network *server);
+void updateClients(Network *server);
 
 int main(int argc, char **argv)
 {
@@ -36,11 +38,15 @@ int main(int argc, char **argv)
 		}
 	}
 	*/
-	
+
+	Uint32 lastTick = SDL_GetTicks();
 
 	int nrReady = 0;
 	while (server.running) {
+
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
+
+		updateClients(&server, &lastTick);
 
 		if (nrReady == -1) {
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
@@ -48,6 +54,7 @@ int main(int argc, char **argv)
 		}
 		else if (nrReady == 0) {//Might need to be changed to prioritize game state
 			//No sockets ready, do server activity
+			
 		}
 		else {
 			printf("%d sockets ready", nrReady);
@@ -61,6 +68,22 @@ int main(int argc, char **argv)
 
 	return(0);
 }
+
+
+void updateClients(Network *server, Uint32 *lastTick) {
+	
+	if (SDL_TICKS_PASSED(SDL_GetTicks(), *lastTick + TICK_RATE)) {
+		
+		for (int i = 0; i < MAX_SOCKETS; i++) {
+			char data[] = "CLIENT UPDATE";
+			sendPacket(data, server->clients[i].ip, server->serverSocket);
+		}
+
+		*lastTick = SDL_GetTicks();
+	}
+}
+
+
 
 void quit(Network *server) {
 	if (SDLNet_UDP_DelSocket(server->socketSet, server->serverSocket) == -1) {
