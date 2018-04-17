@@ -19,7 +19,7 @@ int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(Game *game);
 int rungame(Game *game);
-void jump(SDL_Rect *player, SDL_Rect *weapon, int *isJumping, int *jumpTime);
+void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime);
 
 #define WINDOWLENGTH 800
 #define WINDOWHEIGHT 600
@@ -310,23 +310,23 @@ int rungame(Game *game) {
 			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D] && fighter.p1.x < 730) {
+		if (KeyState[SDL_SCANCODE_D] && fighter.x < 730) {
 			sprite += 1;
-			fighter.p1.x += 10;
+			fighter.x += 10;
 			bild5.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A] && fighter.p1.x > -10) {
+		else if (KeyState[SDL_SCANCODE_A] && fighter.x > -10) {
 			sprite -= 1;
-			fighter.p1.x -= 10;
+			fighter.x -= 10;
 			bild5.x -= 10;
 			prevKey = LEFT;
 		}
 		//if (prevKey == UP) {
 			
 		//}
-			jump(&fighter.p1, &bild5, &isJumping, &jumpTime, &doJump1);
-			gravity(&fighter.p1, &bild5);
+			jump(&fighter, &bild5, &isJumping, &jumpTime, &doJump1);
+			gravity(&fighter, &bild5);
 		
 		
 		/* DOWN ISN'T USED
@@ -336,20 +336,20 @@ int rungame(Game *game) {
 			bild5.y += 10;
 		} */
 
-		if (KeyState[SDL_SCANCODE_RIGHT] && enemy.p1.x < 712) {
+		if (KeyState[SDL_SCANCODE_RIGHT] && enemy.x < 712) {
 			sprite2 += 1;
-			enemy.p1.x += 10;
+			enemy.x += 10;
 			bild7.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_LEFT] && enemy.p1.x > -22) {
+		else if (KeyState[SDL_SCANCODE_LEFT] && enemy.x > -22) {
 			sprite2 -= 1;
-			enemy.p1.x -= 10;
+			enemy.x -= 10;
 			bild7.x -= 10;
 			prevKey = LEFT;
 		}
-			jump(&enemy.p1, &bild7, &isJumping, &jumpTime, &doJump2);
-			gravity(&enemy.p1, &bild7);
+			jump(&enemy, &bild7, &isJumping, &jumpTime, &doJump2);
+			gravity(&enemy, &bild7);
 		
 		
 		/* DOWN ISN'T USED
@@ -388,6 +388,11 @@ int rungame(Game *game) {
 
 		if (pPressed == true)
 			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
+
+		fighter.p1.x = fighter.x;
+		fighter.p1.y = fighter.y;
+		enemy.p1.x = enemy.x;
+		enemy.p1.y = enemy.y;
 
 		//Checking if sword hit player1
 		if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {

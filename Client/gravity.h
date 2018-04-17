@@ -4,9 +4,9 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-void gravity(SDL_Rect *player, SDL_Rect *weapon) {   
+void gravity(Player *player, SDL_Rect *weapon) {   
 	if (player->y < 480 && player->y > 0) {
-		player->y += player->y * 0.025;
+		player->y += 10;
 		weapon->y = player->y + 50;
 	}
 	else if (player->y >= 480) {
@@ -14,12 +14,12 @@ void gravity(SDL_Rect *player, SDL_Rect *weapon) {
 		weapon->y = player->y + 50;
 	}
 	else {
-		player->y += 10;
+		player->y += 20;
 		weapon->y = player->y + 50;
 	}
 }
 
-void jump(SDL_Rect *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump) {		
+void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump) {		
 	
 	if ((*doJump == 1))				
 	{			
