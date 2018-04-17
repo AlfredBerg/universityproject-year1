@@ -13,12 +13,14 @@
 #include "menu.h"
 #include "weaponStruct.h"
 #include "gravity.h"
+#include "sharedNetwork.h"
+#include "clientNetwork.h"
 
-void game_init(Game *game);
+void game_init(Game *game, Network *client);
 int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(Game *game);
-int rungame(Game *game);
+int rungame(Game *game, Network *client);
 void jump(SDL_Rect *player, SDL_Rect *weapon, int *isJumping, int *jumpTime);
 
 #define WINDOWLENGTH 800
@@ -26,17 +28,20 @@ void jump(SDL_Rect *player, SDL_Rect *weapon, int *isJumping, int *jumpTime);
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
+#define SERVERPORT 12346
+#define CLIENTPORT 53132
+#define SERVERIP "127.0.0.1"
 
 int main(int argc, char** argv)
 {
 	Game game;
-
-	game_init(&game);
+	Network client;
+	game_init(&game, &client);
 
 	while (game.running){
 		game.running=menu(&game);
 		while (game.running) {
-			game.running=rungame(&game);
+			game.running=rungame(&game, &client);
 			//if(game.running)
 			//	game.running = restart(&game);
 		}
@@ -48,8 +53,7 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-void game_init(Game *game)
-{
+void game_init(Game *game, Network *client){
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -70,6 +74,32 @@ void game_init(Game *game)
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
+
+	// Initialize SDL_net
+	if (SDLNet_Init() != 0){
+		fprintf(stderr, "Erro initializing SDL_NET %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	//Listen on all interfaces
+	if (SDLNet_ResolveHost(&client->serverIP, SERVERIP, SERVERPORT)){
+		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	//Open port
+	client->serverSocket = SDLNet_UDP_Open(CLIENTPORT);
+	if (!(client->serverSocket)){
+		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	client->packet = SDLNet_AllocPacket(1024);
+	if (!client->packet) {
+		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
 }
 
 int menu(Game *game) {
@@ -183,7 +213,10 @@ int restart(Game* game) {
 	return running;
 	
 }
-int rungame(Game *game) {
+int rungame(Game *game, Network *client) {
+
+	char data[] = "HELLO\n";
+	sendPacket(data, client->serverIP, client->serverSocket);
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
 	
@@ -207,7 +240,6 @@ int rungame(Game *game) {
 	const Uint8 *KeyState;
 
 	//load an image file
-
 
 	SDL_Surface *image = IMG_Load("bowser.png");
 	SDL_Surface *image2 = IMG_Load("mansprite.png");
@@ -269,6 +301,8 @@ int rungame(Game *game) {
 
 	while (running)
 	{
+		//updateServer(&);
+
 		if (sprite >= 8)
 			sprite = 1;
 		else if (sprite <= 0)
