@@ -196,8 +196,8 @@ int rungame(Game *game) {
 
 	
 	//Create two players
-	Player fighter = { "Erik", 3, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, fighter.Image), {60, 400, 140, 200}};
-	Player enemy = { "Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, enemy.Image), {500, 50, 120, 120}};
+	Player fighter = { "Erik", 3, 300, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, fighter.Image), {300, 400, 140, 200}};
+	//Player enemy = { "Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, enemy.Image), {500, 50, 120, 120}};
 	printf("%d, %d\n", fighter.p1.x, fighter.p1.y);
 	printf("%d, %d", fighter.x, fighter.y);
 
@@ -209,17 +209,18 @@ int rungame(Game *game) {
 	//load an image file
 
 
-	SDL_Surface *image = IMG_Load("bowser.png");
+	SDL_Surface *image = IMG_Load("Mockup.png");
 	SDL_Surface *image2 = IMG_Load("mansprite.png");
-	SDL_Surface *image3 = IMG_Load("deathsprite.png");
+	//SDL_Surface *image3 = IMG_Load("deathsprite.png");
 	SDL_Surface *image4 = IMG_Load("deathwins.jpg");
 
 	SDL_Surface *image5 = IMG_Load("sword1.png");
 	SDL_Surface *image6 = IMG_Load("sword1.png");
 
-	SDL_Surface *image7 = IMG_Load("sword2.png");
-	SDL_Surface *image8 = IMG_Load("sword2.png");
+	//SDL_Surface *image7 = IMG_Load("sword2.png");
+	//SDL_Surface *image8 = IMG_Load("sword2.png");
 	SDL_Surface *image9 = IMG_Load("humanwin.png");
+	SDL_Surface *imageTest = IMG_Load("bowser.png");
 
 	SDL_Texture *image_texture = SDL_CreateTextureFromSurface(game->renderer, image);
 	SDL_FreeSurface(image);
@@ -233,24 +234,27 @@ int rungame(Game *game) {
 	SDL_FreeSurface(image5);
 	SDL_Texture *image6_texture = SDL_CreateTextureFromSurface(game->renderer, image6);
 	SDL_FreeSurface(image6);
-	SDL_Texture *image7_texture = SDL_CreateTextureFromSurface(game->renderer, image7);
+	/*SDL_Texture *image7_texture = SDL_CreateTextureFromSurface(game->renderer, image7);
 	SDL_FreeSurface(image7);
 	SDL_Texture *image8_texture = SDL_CreateTextureFromSurface(game->renderer, image8);
-	SDL_FreeSurface(image8);
+	SDL_FreeSurface(image8);*/
 	SDL_Texture *image9_texture = SDL_CreateTextureFromSurface(game->renderer, image9);
 	SDL_FreeSurface(image9);
+	SDL_Texture *test_texture = SDL_CreateTextureFromSurface(game->renderer, imageTest);
+	SDL_FreeSurface(imageTest);
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
+	SDL_Rect bild = { -480, -560, 1800, 1400 }; //(x, y, hight, width)
 
 	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
-	SDL_Rect bild5 = { 100, 450, 15, 40 };
+	SDL_Rect bild5 = { 340, 450, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
-	SDL_Rect bild7 = { 530, 450, 15, 40 };
-	SDL_Rect bild8 = { 530, 490, 15, 40 };
+	//SDL_Rect bild7 = { 530, 450, 15, 40 };
+	//SDL_Rect bild8 = { 530, 490, 15, 40 };
 	SDL_Rect bild9 = { 150, 100, 550, 300 };
+	SDL_Rect test = {-900, -560, 300, 300};
 
 	Mix_PlayMusic(backgroundsound, -1);
 	bool pPressed = false;
@@ -283,10 +287,10 @@ int rungame(Game *game) {
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
 		SDL_Rect srcrect = { sprite * 75, 0, 75, 132 };
-		SDL_Rect dstrect = { fighter.p1.x, fighter.p1.y, 75, 132 };
+		SDL_Rect dstrect = { 300, fighter.p1.y, 70, 100 };
 
-		SDL_Rect srcrect2 = { sprite2 * 64, 64, 64, 64 };
-		SDL_Rect dstrect2 = { enemy.p1.x, enemy.p1.y, 120, 120 };
+		//SDL_Rect srcrect2 = { sprite2 * 64, 64, 64, 64 };
+		//SDL_Rect dstrect2 = { enemy.p1.x, enemy.p1.y, 120, 120 };
 
 
 
@@ -310,16 +314,18 @@ int rungame(Game *game) {
 			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D] && fighter.x < 730) {
+		if (KeyState[SDL_SCANCODE_D] /*&& fighter.x < 730*/) {
 			sprite += 1;
+			bild.x -= 10;
 			fighter.x += 10;
-			bild5.x += 10;
+			//bild5.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A] && fighter.x > -10) {
+		else if (KeyState[SDL_SCANCODE_A]/* && fighter.x > -10*/) {
 			sprite -= 1;
+			bild.x += 10;
 			fighter.x -= 10;
-			bild5.x -= 10;
+			//bild5.x -= 10;
 			prevKey = LEFT;
 		}
 		//if (prevKey == UP) {
@@ -336,7 +342,7 @@ int rungame(Game *game) {
 			bild5.y += 10;
 		} */
 
-		if (KeyState[SDL_SCANCODE_RIGHT] && enemy.x < 712) {
+		/*if (KeyState[SDL_SCANCODE_RIGHT] && enemy.x < 712) {
 			sprite2 += 1;
 			enemy.x += 10;
 			bild7.x += 10;
@@ -365,37 +371,39 @@ int rungame(Game *game) {
 			bild6.x += 10;
 			rPressed = true;
 		}
-		if (KeyState[SDL_SCANCODE_P]) {
+		/*if (KeyState[SDL_SCANCODE_P]) {
 			bild8 = bild7;
 			SourcePosition2 = bild8.x;
 			bild8.x -= 10;
 			pPressed = true;
-		}
+		}*/
 		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true)
 			bild6.x += 10;
 
-		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
-			bild8.x -= 10;
+		//if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
+		//	bild8.x -= 10;
 
 		//clear screen with black
 		SDL_RenderClear(game->renderer);
 
 		//draw
 		SDL_RenderCopy(game->renderer, image_texture, NULL, &bild);
+		SDL_RenderCopy(game->renderer, test_texture, NULL, &test);
+		
 
 		if (rPressed == true)
 			SDL_RenderCopy(game->renderer, image6_texture, NULL, &bild6);
 
-		if (pPressed == true)
-			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
+		//if (pPressed == true)
+			//SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
 
 		fighter.p1.x = fighter.x;
 		fighter.p1.y = fighter.y;
-		enemy.p1.x = enemy.x;
-		enemy.p1.y = enemy.y;
+		//enemy.p1.x = enemy.x;
+		//enemy.p1.y = enemy.y;
 
 		//Checking if sword hit player1
-		if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
+		/*if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
 			if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
 				SDL_DestroyTexture(enemy.Texture);
 				SDL_DestroyTexture(image7_texture);
@@ -405,10 +413,10 @@ int rungame(Game *game) {
 				running=false;
 
 			}
-		}
+		}*/
 
 		//Checking if sword hit player2
-		if (bild8.x <= fighter.p1.x + 40 && bild8.x >= fighter.p1.x - 50)
+		/*if (bild8.x <= fighter.p1.x + 40 && bild8.x >= fighter.p1.x - 50)
 			if (bild8.y <= fighter.p1.y + 120 && bild8.y >= fighter.p1.y - 20) {
 				SDL_DestroyTexture(fighter.Texture);
 				SDL_DestroyTexture(image5_texture);
@@ -416,7 +424,7 @@ int rungame(Game *game) {
 				whynotwork = 2;
 				//again = true;
 				running = false;
-			}
+			}*/
 
 		if(whynotwork==0)
 		SDL_RenderCopy(game->renderer, image9_texture, NULL, &bild9);
@@ -429,11 +437,13 @@ int rungame(Game *game) {
 		}
 
 		SDL_RenderCopy(game->renderer, fighter.Texture, &srcrect, &dstrect);//draw
-		SDL_RenderCopy(game->renderer, enemy.Texture, &srcrect2, &dstrect2);
+		//SDL_RenderCopy(game->renderer, enemy.Texture, &srcrect2, &dstrect2);
 		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
-		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
+		
+		//SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 
+		printf("%d\n", fighter.p1.x);
 		SDL_RenderPresent(game->renderer);//show what was drawn
 	}
 	running = true;
