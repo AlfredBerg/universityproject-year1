@@ -39,13 +39,12 @@ void receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
 	string[packet->len] = '\0';
 }
 
-void decode (char str[], char data[][30], int dataLength, int stringlength)
-{
+void decode(char indata[], char data[][30], int dataLength, int stringlength){
   char * part;
   int count = 0;
   
   //Initiating part to get access into loop
-  part = strtok (str,SEPARATOR);
+  part = strtok (indata,SEPARATOR);
   
   //Separating all the parts
   while (part != NULL)

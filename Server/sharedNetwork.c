@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <string.h>
+
+#define SEPARATOR ";"
 
 #ifndef _MSC_VER
 #include <unistd.h> 
@@ -34,4 +37,20 @@ void receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
 		string[i] = packet->data[i];
 	}
 	string[packet->len] = '\0';
+}
+
+void decode(char indata[], char data[][30], int dataLength, int stringlength){
+  char * part;
+  int count = 0;
+  
+  //Initiating part to get access into loop
+  part = strtok (indata,SEPARATOR);
+  
+  //Separating all the parts
+  while (part != NULL)
+  {
+	strcpy(data[count], part);
+    part = strtok (NULL, SEPARATOR);
+	count++;
+  }
 }

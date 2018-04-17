@@ -172,7 +172,7 @@ void init(Network *server) {
 	server->clients[0].xPos = 4;
 	server->clients[0].yPos = 50;
 	server->clients[1].xPos = 100;
-	server->clients[1].yPos = 200;
+	server->clients[1].yPos = 410;
 
 
 }

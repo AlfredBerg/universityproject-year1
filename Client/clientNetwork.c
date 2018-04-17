@@ -14,6 +14,26 @@
 #include "playerStruct.h"
 #include "sharedNetwork.h"
 
+void connectToServer(Network *client) {
+	char data[MAX_PACKET] = "HELLO\n";
+
+	sendPacket(data, client->serverIP, client->serverSocket);
+
+	SDL_Delay(500); //test delay
+
+	receivePacket(client->serverSocket, client->packet, data);
+	if (!strcmp(data, "HELLO CLIENT")) {
+		printf("I am now connected to the server!\n");
+		client->connectedToServer = 1;
+	}
+	/*
+	else {
+		puts("I could not connect to the server, quiting");
+		exit(0);
+	}
+	*/
+
+}
 
 void positionToString(Player *player, char string[]) {
 	//x1;y1
@@ -31,22 +51,34 @@ void sendPositionToServer(Network *client, Player *fighter) {
 	}
 }
 
-void updateServer(Player *fighter, Network *client) {
+void updateServer(Player *fighter, Player *enemy,Network *client) {
+	if (client->connectedToServer == 0) {
+		return;
+	}
+
 	int num_rdy = SDLNet_CheckSockets(client->socketSet, 0);
 	char data[MAX_PACKET];
 	if ((SDLNet_SocketReady(client->serverSocket))) {
-		printf("\nIncoming packet!\n");
 
-		
 		receivePacket(client->serverSocket, client->packet, data);
-		puts(data);
+		printf("Incoming data: %s\n", data);
 		
-		//parse the data...
-
+		parseData(data, enemy);
 	}
 
 	//Send a update to the server about my position
 	
 	//printf("\nMy data: %s\n", data);
 	sendPositionToServer(client, fighter);
+}
+
+void parseData(char serverdata[], Player *enemy) {
+	char parsedData[30][30];
+
+	decode(serverdata, parsedData, 4, 30);
+
+	printf("\nFirst data: %s", parsedData[0]);
+	printf("\nFirst data: %s", parsedData[1]);
+	enemy->x = atoi(parsedData[2]);
+	enemy->y = atoi(parsedData[3]);
 }

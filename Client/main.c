@@ -113,6 +113,9 @@ void game_init(Game *game, Network *client){
 	}
 
 	client->lastTick = SDL_GetTicks();
+	client->connectedToServer = 0;
+
+	connectToServer(client);
 }
 
 int menu(Game *game) {
@@ -228,9 +231,6 @@ int restart(Game* game) {
 }
 int rungame(Game *game, Network *client) {
 
-	char data[] = "HELLO\n"; //Make "conenct" function
-	sendPacket(data, client->serverIP, client->serverSocket);
-
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
 	
 	if (!backgroundsound)
@@ -314,7 +314,7 @@ int rungame(Game *game, Network *client) {
 
 	while (running)
 	{
-		updateServer(&fighter, client);
+		updateServer(&fighter, &enemy, client);
 
 		if (sprite >= 8)
 			sprite = 1;

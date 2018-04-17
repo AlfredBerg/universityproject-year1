@@ -15,7 +15,10 @@ struct network {
 	UDPpacket *packet;
 	SDLNet_SocketSet socketSet;
 	Uint32 lastTick;
+	int connectedToServer;
 };
 typedef struct network Network;
 
-void updateServer(Player *fighter, Network *client);
+void updateServer(Player *fighter, Player *enemy, Network *client);
+void parseData(char serverdata[], Player *enemy);
+void connectToServer(Network *client);
