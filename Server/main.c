@@ -14,7 +14,7 @@
 #include "sharedNetwork.h"
 
 #define PORTNR 12346
-#define SOCKET_TIMEOUT 0
+#define SOCKET_TIMEOUT 10
 #define TICK_RATE 1000
 
 void init(Network *server);
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 			
 		}
 		else {
-			printf("%d sockets ready", nrReady);
+			//printf("%d sockets ready", nrReady);
 			if (SDLNet_SocketReady(server.serverSocket)) {
 				newClient(&nrReady, &server);
 			}

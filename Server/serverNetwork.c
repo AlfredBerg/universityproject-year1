@@ -29,7 +29,7 @@ int AcceptSocket(Network *server) {
 
 	char packetdata[MAX_PACKET];
 	receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
-	printf("\nPacket len: %d Packet data: %s\n", server->serverSocketPacket->len, packetdata);
+	printf("\nIncoming: %s\n", packetdata);
 	if (strcmp("HELLO\n", packetdata)) {
 		return 0;
 	}

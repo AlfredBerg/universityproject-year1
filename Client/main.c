@@ -32,6 +32,7 @@ int rungame(Game *game, Network *client);
 #define CLIENTPORT 53132
 #define SERVERIP "127.0.0.1"
 
+
 int main(int argc, char** argv)
 {
 	Game game;
@@ -100,6 +101,18 @@ void game_init(Game *game, Network *client){
 		exit(EXIT_FAILURE);
 	}
 
+	client->socketSet = SDLNet_AllocSocketSet(1);
+	if (client->socketSet == NULL) {
+		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+		exit(-1);
+	}
+
+	if (SDLNet_UDP_AddSocket(client->socketSet, client->serverSocket) == -1) {
+		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+		exit(-1);
+	}
+
+	client->lastTick = SDL_GetTicks();
 }
 
 int menu(Game *game) {
@@ -215,7 +228,7 @@ int restart(Game* game) {
 }
 int rungame(Game *game, Network *client) {
 
-	char data[] = "HELLO\n";
+	char data[] = "HELLO\n"; //Make "conenct" function
 	sendPacket(data, client->serverIP, client->serverSocket);
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
@@ -301,7 +314,7 @@ int rungame(Game *game, Network *client) {
 
 	while (running)
 	{
-		//updateServer(&);
+		updateServer(&fighter, client);
 
 		if (sprite >= 8)
 			sprite = 1;
@@ -334,11 +347,11 @@ int rungame(Game *game, Network *client) {
 			}
 			else if (event.type == SDL_KEYDOWN) {
 				if (event.key.keysym.sym == SDLK_w) {
-					printf("W is pressed");
+					//printf("W is pressed");
 					doJump1 = 1;
 				}
 				if (event.key.keysym.sym == SDLK_UP) {
-					printf("UP is pressed");
+					//printf("UP is pressed");
 					doJump2 = 1;
 				}
 			}
