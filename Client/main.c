@@ -8,10 +8,10 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <SDL_net.h>
-#include "playerStruct.h"
+#include "player.h"
 #include "game.h"
 #include "menu.h"
-#include "weaponStruct.h"
+#include "weapon.h"
 #include "gravity.h"
 
 void game_init(Game *game);
