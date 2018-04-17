@@ -223,10 +223,10 @@ int rungame(Game *game) {
 
 	SDL_Texture *image_texture = SDL_CreateTextureFromSurface(game->renderer, image);
 	SDL_FreeSurface(image);
-	SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(game->renderer, image2);
-	SDL_FreeSurface(image2);
-	SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(game->renderer, image3);
-	SDL_FreeSurface(image3);
+	//SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(game->renderer, image2);
+	//SDL_FreeSurface(image2);
+	//SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(game->renderer, image3);
+	//SDL_FreeSurface(image3);
 	SDL_Texture *image4_texture = SDL_CreateTextureFromSurface(game->renderer, image4);
 	SDL_FreeSurface(image4);
 	SDL_Texture *image5_texture = SDL_CreateTextureFromSurface(game->renderer, image5);
