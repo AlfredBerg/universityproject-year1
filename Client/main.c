@@ -288,15 +288,24 @@ int rungame(Game *game, Network *client) {
 	SDL_Texture *image9_texture = SDL_CreateTextureFromSurface(game->renderer, image9);
 	SDL_FreeSurface(image9);
 
+	//Fulkod för att avgöra enemyID
+	int enemyID;
+	if (client->playerID == 1) {
+		enemyID = 0;
+	}
+	else {
+		enemyID = 1;
+	}
+
 	//Define where on the "screen" we want to draw the texture
 	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
 
 	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
-	SDL_Rect bild5 = { players[client->playerID].x, players[client->playerID].y + 20, 15, 40 };
+	SDL_Rect bild5 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
-	SDL_Rect bild7 = { 530, 450, 15, 40 };
+	SDL_Rect bild7 = { players[enemyID].x + 50, players[enemyID].y + 40, 15, 40 };
 	SDL_Rect bild8 = { 530, 490, 15, 40 };
 	SDL_Rect bild9 = { 150, 100, 550, 300 };
 
