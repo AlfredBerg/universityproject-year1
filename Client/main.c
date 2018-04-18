@@ -8,10 +8,10 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <SDL_net.h>
-#include "playerStruct.h"
+#include "player.h"
 #include "game.h"
 #include "menu.h"
-#include "weaponStruct.h"
+#include "weapon.h"
 #include "gravity.h"
 #include "sharedNetwork.h"
 #include "clientNetwork.h"
@@ -268,10 +268,10 @@ int rungame(Game *game, Network *client) {
 
 	SDL_Texture *image_texture = SDL_CreateTextureFromSurface(game->renderer, image);
 	SDL_FreeSurface(image);
-	SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(game->renderer, image2);
-	SDL_FreeSurface(image2);
-	SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(game->renderer, image3);
-	SDL_FreeSurface(image3);
+	//SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(game->renderer, image2);
+	//SDL_FreeSurface(image2);
+	//SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(game->renderer, image3);
+	//SDL_FreeSurface(image3);
 	SDL_Texture *image4_texture = SDL_CreateTextureFromSurface(game->renderer, image4);
 	SDL_FreeSurface(image4);
 	SDL_Texture *image5_texture = SDL_CreateTextureFromSurface(game->renderer, image5);
