@@ -15,7 +15,7 @@
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 10
-#define TICK_RATE 33
+#define TICK_RATE 10
 
 void init(Network *server);
 void quit(Network *server);
