@@ -36,6 +36,15 @@ void connectToServer(Network *client) {
 
 }
 
+int compareString(char str1[], char str2[], int len) {
+	for (int i = 0; i < len; i++) {
+		if (!(str1[i] == str2[i])) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
 void positionToString(Player *player, char string[]) {
 	//x1;y1
 	sprintf(string, "%d;%d;", player->p1.x, player->p1.y);

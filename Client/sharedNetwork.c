@@ -55,6 +55,7 @@ void decode(char indata[], char data[][30], int dataLength, int stringlength){
   //Separating all the parts
   while (part != NULL)
   {
+
 	strcpy(data[count], part);
     part = strtok (NULL, SEPARATOR);
 	count++;
