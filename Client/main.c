@@ -114,7 +114,7 @@ void game_init(Game *game, Network *client){
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
-	client->playerID = 0;
+	client->playerID = 1;
 
 	connectToServer(client);
 }
@@ -375,8 +375,8 @@ int rungame(Game *game, Network *client) {
 		//if (prevKey == UP) {
 			
 		//}
-			jump(&players[0], &bild5, &isJumping, &jumpTime, &doJump1);
-			gravity(&players[0], &bild5);
+			jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump1);
+			gravity(&players[client->playerID], &bild5);
 		
 		
 		/* DOWN ISN'T USED
