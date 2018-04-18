@@ -241,9 +241,9 @@ int rungame(Game *game, Network *client) {
 	int SourcePosition2 = 0;
 	int whynotwork = 1;
 
-	
+
 	//Create two players
-	Player players[2] = { 
+	Player players[2] = {
 		{ "Erik", 3, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[0].Image), {60, 400, 140, 200} },
 		{ "Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[1].Image), {500, 50, 120, 120} }
 	};
@@ -306,8 +306,9 @@ int rungame(Game *game, Network *client) {
 	bool running = true;
 	bool again = false;
 	SDL_Event event;
-	int sprite = 1;
-	int sprite2 = 1;
+	int sprite[2];
+	sprite[0] = 1;
+	sprite[1] = 1;
 
 	int prevKey = 0;
 	int isJumping = 0;
@@ -319,23 +320,25 @@ int rungame(Game *game, Network *client) {
 	{
 		updateServer(players, client);
 
-		if (sprite >= 8)
-			sprite = 1;
-		else if (sprite <= 0)
-			sprite = 7;
+		if (sprite[client->playerID] >= 8)
+			sprite[client->playerID] = 1;
+		else if (sprite[client->playerID] <= 0)
+			sprite[client->playerID] = 7;
+		/*
 		if (sprite2 >= 8)
 			sprite2 = 1;
 		else if (sprite2 <= 0)
 			sprite2 = 7;
+		*/
 
 		//for sprite
 		//Uint32 ticks = SDL_GetTicks(); (time based)
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
-		SDL_Rect srcrect = { sprite * 75, 0, 75, 132 };
+		SDL_Rect srcrect = { sprite[0] * 75, 0, 75, 132 };
 		SDL_Rect dstrect = { players[0].p1.x, players[0].p1.y, 75, 132 };
 
-		SDL_Rect srcrect2 = { sprite2 * 64, 64, 64, 64 };
+		SDL_Rect srcrect2 = { sprite[1] * 64, 64, 64, 64 };
 		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 120 };
 
 
@@ -361,13 +364,13 @@ int rungame(Game *game, Network *client) {
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
 		if (KeyState[SDL_SCANCODE_D] && players[client->playerID].x < 730) {
-			sprite += 1;
+			sprite[client->playerID] += 1;
 			players[client->playerID].x += 10;
 			bild5.x += 10;
 			prevKey = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_A] && players[client->playerID].x > -10) {
-			sprite -= 1;
+			sprite[client->playerID] -= 1;
 			players[client->playerID].x -= 10;
 			bild5.x -= 10;
 			prevKey = LEFT;
