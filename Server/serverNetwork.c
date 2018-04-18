@@ -18,7 +18,7 @@ updatePositions(Network *server, char indata[]) {
 	char data[5][30];
 
 	decode(indata, data, MAX_PACKET, 2);
-
+	printf("Who sen packet: %d\n", server->whoSentThePacket);
 	server->clients[server->whoSentThePacket].xPos = atoi(data[0]);
 	server->clients[server->whoSentThePacket].yPos = atoi(data[1]);
 }
@@ -53,7 +53,7 @@ int AcceptSocket(Network *server) {
 	if (!strcmp("HELLO\n", packetdata)) {
 
 		if (server->next_player >= MAX_SOCKETS) {
-			fprintf(stderr, "ER: Server full!.\n", server->next_player);
+			fprintf(stderr, "ER: Server full!.\n");
 			return 0;
 		}
 

@@ -64,12 +64,12 @@ void sendPositionToServer(Network *client, Player *fighter) {
 	}
 }
 
-void updateServer(Player *fighter, Player *enemy,Network *client) {
+void updateServer(Player *player, Network *client) {
 	if (client->connectedToServer == 0) {
 		return;
 	}
 
-	sendPositionToServer(client, fighter);
+	sendPositionToServer(client, &player[client->playerID]);
 
 	int num_rdy = SDLNet_CheckSockets(client->socketSet, 0);
 	char data[MAX_PACKET];
@@ -82,16 +82,23 @@ void updateServer(Player *fighter, Player *enemy,Network *client) {
 		}
 
 		printf("Incoming data: %s\n", data);
-		parseData(data, enemy);
+		parseData(data, player, client);
 	}
 	
 }
 
-void parseData(char serverdata[], Player *enemy) {
+void parseData(char serverdata[], Player *player, Network *client) {
 	char parsedData[30][30];
 
 	decode(serverdata, parsedData, 4, 30);
 
-	enemy->x = atoi(parsedData[2]);
-	enemy->y = atoi(parsedData[3]);
+	
+	for (int i = 0; i < 4; i++) {
+		if (client->playerID == i) {
+			continue;
+		}
+
+		player[i].x = atoi(parsedData[2]);
+		player[i].y = atoi(parsedData[3]);
+	}
 }

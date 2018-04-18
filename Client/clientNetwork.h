@@ -19,6 +19,6 @@ struct network {
 };
 typedef struct network Network;
 
-void updateServer(Player *fighter, Player *enemy, Network *client);
+void updateServer(Player *player, Network *client);
 void parseData(char serverdata[], Player *enemy);
 void connectToServer(Network *client);

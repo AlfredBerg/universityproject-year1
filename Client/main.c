@@ -317,7 +317,7 @@ int rungame(Game *game, Network *client) {
 
 	while (running)
 	{
-		updateServer(&players[0], &players[1], client);
+		updateServer(&players, client);
 
 		if (sprite >= 8)
 			sprite = 1;
