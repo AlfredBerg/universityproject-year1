@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 #include <SDL_net.h>
+
 #include "player.h"
 #include "game.h"
 #include "menu.h"
@@ -16,7 +18,6 @@
 #include "walk.h"
 #include "jump.h"
 
-void game_init(Game *game);
 int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(Game *game);
@@ -25,9 +26,6 @@ void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *
 void walk1(Player *player, SDL_Rect *weapon, int *prevKey);
 void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
 
-
-#define WINDOWLENGTH 800
-#define WINDOWHEIGHT 600
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
@@ -36,7 +34,7 @@ int main(int argc, char** argv)
 {
 	Game game;
 
-	game_init(&game);
+	initGame(&game);
 
 	while (game.running) {
 		game.running = menu(&game);
@@ -49,30 +47,6 @@ int main(int argc, char** argv)
 	SDL_DestroyWindow(game.window);
 	SDL_Quit();
 	return 0;
-}
-
-void game_init(Game *game)
-{
-	// Initialize SDL and audio system
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
-	//initialize support for loading png and JPEG image
-	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
-
-	//initialize the mixer
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-
-	if (TTF_Init() < 0) {
-		printf("SDL error -> %s\n", SDL_GetError());
-		exit(1);
-	}
-
-	game->running = 1;
-	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
 }
 
 int menu(Game *game) {
@@ -94,7 +68,7 @@ int menu(Game *game) {
 	textRect.w = 150;
 	textRect.h = 80;
 
-	SDL_Rect backRect = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT };
+	SDL_Rect backRect = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT };
 
 	bool startGame = true;
 	bool menuLoop = true;
@@ -206,7 +180,7 @@ int rungame(Game *game) {
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 
-	
+
 
 	//load an image file
 
@@ -243,7 +217,7 @@ int rungame(Game *game) {
 	SDL_FreeSurface(image9);
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
+	SDL_Rect bild = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT }; //(x, y, hight, width)
 
 														  //SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 														  //SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
@@ -309,11 +283,11 @@ int rungame(Game *game) {
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump1 = 1;
 		}
-		if (KeyState[SDL_SCANCODE_D]) { 
+		if (KeyState[SDL_SCANCODE_D]) {
 			sprite += 1;
 			prevKey1 = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A]) { 
+		else if (KeyState[SDL_SCANCODE_A]) {
 			sprite -= 1;
 			prevKey1 = LEFT;
 		}
@@ -329,7 +303,7 @@ int rungame(Game *game) {
 			sprite2 -= 1;
 			prevKey2 = LEFT;
 		}
-		
+
 		walk1(&fighter, &bild5, &prevKey1);
 		walk2(&enemy, &bild7, &prevKey2);
 
@@ -352,7 +326,7 @@ int rungame(Game *game) {
 			bild8.x -= 10;
 			pPressed = true;
 		}
-		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true) 
+		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true)
 			bild6.x += 10;
 
 		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
