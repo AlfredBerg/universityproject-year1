@@ -11,7 +11,7 @@
 #include "SDL.h"
 #include "SDL_net.h"
 #include "clientNetwork.h"
-#include "playerStruct.h"
+#include "player.h"
 #include "sharedNetwork.h"
 
 void connectToServer(Network *client) {
@@ -22,6 +22,7 @@ void connectToServer(Network *client) {
 	SDL_Delay(500); //test delay
 
 	receivePacket(client->serverSocket, client->packet, data);
+
 	if (!strcmp(data, "HELLO CLIENT")) {
 		printf("I am now connected to the server!\n");
 		client->connectedToServer = 1;

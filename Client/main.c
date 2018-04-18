@@ -443,6 +443,7 @@ int rungame(Game *game, Network *client) {
 		players[1].p1.x = players[1].x;
 		players[1].p1.y = players[1].y;
 
+		/*
 		//Checking if sword hit player1
 		if (bild6.x >= players[1].p1.x + 40 && bild6.x <= players[1].p1.x + 50) {
 			if (bild6.y <= players[1].p1.y + 99 && bild6.y >= players[1].p1.y) {
@@ -466,6 +467,7 @@ int rungame(Game *game, Network *client) {
 				//again = true;
 				running = false;
 			}
+		*/
 
 		if(whynotwork == 0)
 		SDL_RenderCopy(game->renderer, image9_texture, NULL, &bild9);

@@ -18,20 +18,17 @@ updatePositions(Network *server, char indata[]) {
 	char data[5][30];
 
 	decode(indata, data, MAX_PACKET, 2);
-	
-	server->clients[1].xPos = atoi(data[0]);
-	server->clients[1].yPos = atoi(data[1]);
 
-
-	//server->clients[1].xPos = 123;
+	server->clients[server->whoSentThePacket].xPos = atoi(data[0]);
+	server->clients[server->whoSentThePacket].yPos = atoi(data[1]);
 }
 
 
 int isClient(Network *server) {
 	for (int i = 0; i < MAX_CLIENTS; i++) {
 		if (server->clients[i].ip.host == server->serverSocketPacket->address.host && server->clients[i].ip.port == server->serverSocketPacket->address.port) {
+			server->whoSentThePacket = i;
 			return 1;
-
 		}
 	}
 	return 0;
@@ -44,11 +41,6 @@ void newClient(int *nrReady, Network *server) {
 }
 
 int AcceptSocket(Network *server) {
-	if (server->next_player >= MAX_SOCKETS) {
-		fprintf(stderr, "ER: Overriding socket at index %d.\n", server->next_player);
-		closeSocket(server, server->next_player);
-	}
-
 	char packetdata[MAX_PACKET];
 
 	int success = receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
@@ -59,11 +51,18 @@ int AcceptSocket(Network *server) {
 
 	//printf("\nIncoming: %s\n", packetdata);
 	if (!strcmp("HELLO\n", packetdata)) {
+
+		if (server->next_player >= MAX_SOCKETS) {
+			fprintf(stderr, "ER: Server full!.\n", server->next_player);
+			return 0;
+		}
+
 		printf("I got a new client that want to connect\n");
 
 		server->clients[server->next_player].ip = server->serverSocketPacket->address;
 
-		char data[] = "HELLO CLIENT";
+		char data[MAX_PACKET];
+		sprintf(data, "%s;%d;", "HELLO CLIENT", server->next_player);
 
 		sendPacket(data, server->clients[server->next_player].ip, server->serverSocket);
 		server->clients[server->next_player].inUse = 1;
