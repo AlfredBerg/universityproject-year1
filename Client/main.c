@@ -15,10 +15,7 @@
 #include "gravity.h"
 #include "walk.h"
 #include "jump.h"
-<<<<<<< HEAD
 #include "loadImage.h"
-=======
->>>>>>> 2669c340a7bcd5cb91762a709d7871c82d2cb24a
 
 void game_init(Game *game);
 int menu(Game *game);
@@ -32,20 +29,12 @@ void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
-<<<<<<< HEAD
-//#define MAX_IMAGES 1000
-=======
->>>>>>> 2669c340a7bcd5cb91762a709d7871c82d2cb24a
 
 int main(int argc, char** argv)
 {
 	Game game;
 
-<<<<<<< HEAD
-	game_init(&game);
-=======
 	initGame(&game);
->>>>>>> 2669c340a7bcd5cb91762a709d7871c82d2cb24a
 
 	while (game.running) {
 		game.running = menu(&game);
