@@ -37,7 +37,7 @@ void connectToServer(Network *client) {
 
 void positionToString(Player *player, char string[]) {
 	//x1;y1
-	sprintf(string, "%d;%d", player->p1.x, player->p1.y);
+	sprintf(string, "%d;%d;", player->p1.x, player->p1.y);
 }
 
 void sendPositionToServer(Network *client, Player *fighter) {
@@ -56,20 +56,22 @@ void updateServer(Player *fighter, Player *enemy,Network *client) {
 		return;
 	}
 
+	sendPositionToServer(client, fighter);
+
 	int num_rdy = SDLNet_CheckSockets(client->socketSet, 0);
 	char data[MAX_PACKET];
 	if ((SDLNet_SocketReady(client->serverSocket))) {
 
-		receivePacket(client->serverSocket, client->packet, data);
+		int success = receivePacket(client->serverSocket, client->packet, data);
+
+		if (!success) {
+			return;
+		}
+
 		printf("Incoming data: %s\n", data);
-		
 		parseData(data, enemy);
 	}
-
-	//Send a update to the server about my position
 	
-	//printf("\nMy data: %s\n", data);
-	sendPositionToServer(client, fighter);
 }
 
 void parseData(char serverdata[], Player *enemy) {
@@ -77,8 +79,6 @@ void parseData(char serverdata[], Player *enemy) {
 
 	decode(serverdata, parsedData, 4, 30);
 
-	printf("\nFirst data: %s", parsedData[0]);
-	printf("\nFirst data: %s", parsedData[1]);
 	enemy->x = atoi(parsedData[2]);
 	enemy->y = atoi(parsedData[3]);
 }

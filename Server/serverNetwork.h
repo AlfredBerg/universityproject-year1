@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_net.h>
+
 #include "clients.h"
 
 #define MAX_PACKET 0xFF
@@ -23,6 +24,6 @@ typedef struct network Network;
 int AcceptSocket(Network *server);
 void closeSocket(Network *server, int index);
 void newClient(int *nrReady, Network *server);
-void receivePacket(UDPsocket socket, UDPpacket *packet, char string[]);
+
 
 void sendPacket(char data[], IPaddress ip, UDPsocket socket);

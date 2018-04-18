@@ -15,7 +15,7 @@
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 10
-#define TICK_RATE 1000
+#define TICK_RATE 500
 
 void init(Network *server);
 void quit(Network *server);
@@ -28,18 +28,6 @@ int main(int argc, char **argv)
 	Network server;
 
 	init(&server);
-
-	/*
-	int exit = 0;
-
-	while (!exit) {
-		if (SDLNet_UDP_Recv(server.serverSocket, packet)) {
-			printf("I got a packet\n");
-			printf("Packet data: %s\n From %d\n", packet->data, packet->address);
-
-		}
-	}
-	*/
 
 	Uint32 lastTick = SDL_GetTicks();
 
@@ -89,7 +77,7 @@ void updateClients(Network *server, Uint32 *lastTick) {
 
 void gamestateToString(Network *server, char string[]) {
 	//x1;y1;x2;y2
-	sprintf(string, "%d;%d;%d;%d", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
+	sprintf(string, "%d;%d;%d;%d;", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
 }
 
 void quit(Network *server) {

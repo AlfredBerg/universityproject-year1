@@ -30,13 +30,19 @@ void sendPacket(char data[], IPaddress ip, UDPsocket socket) {
 	SDLNet_UDP_Send(socket, -1, send);
 }
 
-void receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
-	SDLNet_UDP_Recv(socket, packet);
+int receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
+	int recvSuccess = SDLNet_UDP_Recv(socket, packet);
+	if (!recvSuccess) {
+		return 0;
+	}
 
 	for (int i = 0; i < packet->len; i++) {
 		string[i] = packet->data[i];
 	}
 	string[packet->len] = '\0';
+
+	return 1;
+
 }
 
 void decode(char indata[], char data[][30], int dataLength, int stringlength){

@@ -12,12 +12,34 @@
 #include "SDL_net.h"
 #include "serverNetwork.h"
 #include "sharedNetwork.h"
+#include "clients.h"
 
+updatePositions(Network *server, char indata[]) {
+	char data[5][30];
+
+	decode(indata, data, MAX_PACKET, 2);
+	
+	server->clients[1].xPos = atoi(data[0]);
+	server->clients[1].yPos = atoi(data[1]);
+
+
+	//server->clients[1].xPos = 123;
+}
+
+
+int isClient(Network *server) {
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		if (server->clients[i].ip.host == server->serverSocketPacket->address.host && server->clients[i].ip.port == server->serverSocketPacket->address.port) {
+			return 1;
+
+		}
+	}
+	return 0;
+}
 
 void newClient(int *nrReady, Network *server) {
 	int newClientAccepted = AcceptSocket(server);
 	(*nrReady)--;
-	
 
 }
 
@@ -28,23 +50,34 @@ int AcceptSocket(Network *server) {
 	}
 
 	char packetdata[MAX_PACKET];
-	receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
-	printf("\nIncoming: %s\n", packetdata);
-	if (strcmp("HELLO\n", packetdata)) {
+
+	int success = receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
+
+	if (!success) {
 		return 0;
 	}
 
-	printf("I got a new client that want to connect\n");
-	//Make the client send further request to a new port
+	//printf("\nIncoming: %s\n", packetdata);
+	if (!strcmp("HELLO\n", packetdata)) {
+		printf("I got a new client that want to connect\n");
 
-	server->clients[server->next_player].ip = server->serverSocketPacket->address;
+		server->clients[server->next_player].ip = server->serverSocketPacket->address;
 
-	char data[] = "HELLO CLIENT";
+		char data[] = "HELLO CLIENT";
 
-	sendPacket(data, server->clients[server->next_player].ip, server->serverSocket);
-	server->clients[server->next_player].inUse = 1;
-	server->next_player++;
-	return 1;
+		sendPacket(data, server->clients[server->next_player].ip, server->serverSocket);
+		server->clients[server->next_player].inUse = 1;
+		server->next_player++;
+		return 1;
+	}
+	else if (isClient(server)){
+		updatePositions(server, packetdata);
+	}
+	else {
+		puts("Unknown packet recived");
+	}
+
+	return 0;
 }
 
 void closeSocket(Network *server, int index) {

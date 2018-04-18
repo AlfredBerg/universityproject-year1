@@ -6,7 +6,7 @@
 #include "playerStruct.h"
 
 #define MAX_PACKET 1024
-#define TICK_RATE 1000
+#define TICK_RATE 500
 
 struct network {
 	int playerID;
