@@ -67,7 +67,7 @@ void game_init(Game *game)
 
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		WINDOW_LENGTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
@@ -92,7 +92,7 @@ int menu(Game *game) {
 	textRect.w = 150;
 	textRect.h = 80;
 
-	SDL_Rect backRect = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT };
+	SDL_Rect backRect = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT };
 
 	bool startGame = true;
 	bool menuLoop = true;
@@ -218,7 +218,7 @@ int rungame(Game *game) {
 								
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
+	SDL_Rect bild = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT }; //(x, y, hight, width)
 
 														  //SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 														  //SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
