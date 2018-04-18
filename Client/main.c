@@ -17,10 +17,13 @@
 #include "gravity.h"
 #include "walk.h"
 #include "jump.h"
+<<<<<<< HEAD
 
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
+=======
+>>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
 
 int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
@@ -29,12 +32,27 @@ int rungame(Game *game);
 void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump);
 void walk1(Player *player, SDL_Rect *weapon, int *prevKey);
 void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
+<<<<<<< HEAD
+=======
+
+
+#define WINDOWLENGTH 800
+#define WINDOWHEIGHT 600
+#define UP 1
+#define LEFT 2
+#define RIGHT 3
+>>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
 
 int main(int argc, char** argv)
 {
 	Game game;
 	initGame(&game);
 
+<<<<<<< HEAD
+=======
+	game_init(&game);
+
+>>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
 	while (game.running) {
 		game.running = menu(&game);
 		while (game.running) {
