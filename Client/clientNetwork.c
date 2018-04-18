@@ -97,8 +97,7 @@ void parseData(char serverdata[], Player *player, Network *client) {
 		if (client->playerID == i) {
 			continue;
 		}
-
-		player[i].x = atoi(parsedData[i]);
-		player[i].y = atoi(parsedData[i + 1]);
+		player[i].x = atoi(parsedData[i * 2]);
+		player[i].y = atoi(parsedData[i * 2 + 1]);
 	}
 }
