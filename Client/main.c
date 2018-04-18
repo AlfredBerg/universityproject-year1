@@ -30,7 +30,7 @@ int rungame(Game *game, Network *client);
 #define RIGHT 3
 #define SERVERPORT 12346
 #define CLIENTPORT 53132
-#define SERVERIP "127.0.0.1"
+#define SERVERIP "130.229.138.5"
 
 
 int main(int argc, char** argv)
@@ -114,6 +114,7 @@ void game_init(Game *game, Network *client){
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
+	client->playerID = 0;
 
 	connectToServer(client);
 }
@@ -359,15 +360,15 @@ int rungame(Game *game, Network *client) {
 			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D] && players[0].x < 730) {
+		if (KeyState[SDL_SCANCODE_D] && players[client->playerID].x < 730) {
 			sprite += 1;
-			players[0].x += 10;
+			players[client->playerID].x += 10;
 			bild5.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A] && players[0].x > -10) {
+		else if (KeyState[SDL_SCANCODE_A] && players[client->playerID].x > -10) {
 			sprite -= 1;
-			players[0].x -= 10;
+			players[client->playerID].x -= 10;
 			bild5.x -= 10;
 			prevKey = LEFT;
 		}
@@ -383,7 +384,7 @@ int rungame(Game *game, Network *client) {
 			sprite += 1;
 			bild2.y += 10;
 			bild5.y += 10;
-		} */
+		} 
 
 		if (KeyState[SDL_SCANCODE_RIGHT] && players[1].x < 712) {
 			sprite2 += 1;
@@ -401,7 +402,7 @@ int rungame(Game *game, Network *client) {
 			gravity(&players[1], &bild7);
 		
 		
-		/* DOWN ISN'T USED
+		 DOWN ISN'T USED
 		else if (KeyState[SDL_SCANCODE_DOWN] && bild3.y < 485) {
 			sprite2 += 1;
 			bild3.y += 10;
@@ -414,17 +415,20 @@ int rungame(Game *game, Network *client) {
 			bild6.x += 10;
 			rPressed = true;
 		}
+		/*/
 		if (KeyState[SDL_SCANCODE_P]) {
 			bild8 = bild7;
 			SourcePosition2 = bild8.x;
 			bild8.x -= 10;
 			pPressed = true;
 		}
+		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
+			bild8.x -= 10;
+		*/
 		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true)
 			bild6.x += 10;
 
-		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
-			bild8.x -= 10;
+		
 
 		//clear screen with black
 		SDL_RenderClear(game->renderer);
@@ -435,13 +439,20 @@ int rungame(Game *game, Network *client) {
 		if (rPressed == true)
 			SDL_RenderCopy(game->renderer, image6_texture, NULL, &bild6);
 
-		if (pPressed == true)
+		/*if (pPressed == true)
 			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
+			*/
 
-		players[0].p1.x = players[0].x;
-		players[0].p1.y = players[0].y;
-		players[1].p1.x = players[1].x;
-		players[1].p1.y = players[1].y;
+		for (int j = 0; j < 4; j++) {
+			if (j == client->playerID) {
+				players[client->playerID].p1.x = players[client->playerID].x;
+				players[client->playerID].p1.y = players[client->playerID].y;
+			}
+			else {
+				players[j].p1.x = players[j].x;
+				players[j].p1.y = players[j].y;
+			}
+		}
 
 		/*
 		//Checking if sword hit player1

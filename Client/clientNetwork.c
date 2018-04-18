@@ -16,16 +16,19 @@
 
 void connectToServer(Network *client) {
 	char data[MAX_PACKET] = "HELLO\n";
+	char decoded[2][30];
 
 	sendPacket(data, client->serverIP, client->serverSocket);
 
 	SDL_Delay(500); //test delay
 
 	receivePacket(client->serverSocket, client->packet, data);
-
-	if (!strcmp(data, "HELLO CLIENT")) {
+	if (compareString(data,"HELLO CLIENT", 12)) {
 		printf("I am now connected to the server!\n");
+		decode(data, decoded, 2, 30);
+		client->playerID = atoi(decoded[1]);
 		client->connectedToServer = 1;
+		printf("PLAYER ID: %d \n", client->playerID);
 	}
 	/*
 	else {
