@@ -6,7 +6,7 @@
 #include "player.h"
 
 #define MAX_PACKET 1024
-#define TICK_RATE 10
+#define TICK_RATE 30
 
 struct network {
 	int playerID;
@@ -20,5 +20,5 @@ struct network {
 typedef struct network Network;
 
 void updateServer(Player *player, Network *client);
-void parseData(char serverdata[], Player *enemy);
+void parseData(char serverdata[], Player *player, Network *client);
 void connectToServer(Network *client);
