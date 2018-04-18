@@ -232,7 +232,7 @@ int restart(Game* game) {
 int rungame(Game *game, Network *client) {
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
-	
+
 	if (!backgroundsound)
 		printf("got me good");
 
@@ -242,10 +242,12 @@ int rungame(Game *game, Network *client) {
 
 	
 	//Create two players
-	Player fighter = { "Erik", 3, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, fighter.Image), {60, 400, 140, 200}};
-	Player enemy = { "Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, enemy.Image), {500, 50, 120, 120}};
-	printf("%d, %d\n", fighter.p1.x, fighter.p1.y);
-	printf("%d, %d", fighter.x, fighter.y);
+	Player players[2] = { 
+		{ "Erik", 3, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[0].Image), {60, 400, 140, 200} },
+		{ "Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[1].Image), {500, 50, 120, 120} }
+	};
+	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
+	printf("%d, %d", players[0].x, players[0].y);
 
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
@@ -314,7 +316,7 @@ int rungame(Game *game, Network *client) {
 
 	while (running)
 	{
-		updateServer(&fighter, &enemy, client);
+		updateServer(&players[0], &players[1], client);
 
 		if (sprite >= 8)
 			sprite = 1;
@@ -330,10 +332,10 @@ int rungame(Game *game, Network *client) {
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
 		SDL_Rect srcrect = { sprite * 75, 0, 75, 132 };
-		SDL_Rect dstrect = { fighter.p1.x, fighter.p1.y, 75, 132 };
+		SDL_Rect dstrect = { players[0].p1.x, players[0].p1.y, 75, 132 };
 
 		SDL_Rect srcrect2 = { sprite2 * 64, 64, 64, 64 };
-		SDL_Rect dstrect2 = { enemy.p1.x, enemy.p1.y, 120, 120 };
+		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 120 };
 
 
 
@@ -357,23 +359,23 @@ int rungame(Game *game, Network *client) {
 			}
 		}
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D] && fighter.x < 730) {
+		if (KeyState[SDL_SCANCODE_D] && players[0].x < 730) {
 			sprite += 1;
-			fighter.x += 10;
+			players[0].x += 10;
 			bild5.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A] && fighter.x > -10) {
+		else if (KeyState[SDL_SCANCODE_A] && players[0].x > -10) {
 			sprite -= 1;
-			fighter.x -= 10;
+			players[0].x -= 10;
 			bild5.x -= 10;
 			prevKey = LEFT;
 		}
 		//if (prevKey == UP) {
 			
 		//}
-			jump(&fighter, &bild5, &isJumping, &jumpTime, &doJump1);
-			gravity(&fighter, &bild5);
+			jump(&players[0], &bild5, &isJumping, &jumpTime, &doJump1);
+			gravity(&players[0], &bild5);
 		
 		
 		/* DOWN ISN'T USED
@@ -383,20 +385,20 @@ int rungame(Game *game, Network *client) {
 			bild5.y += 10;
 		} */
 
-		if (KeyState[SDL_SCANCODE_RIGHT] && enemy.x < 712) {
+		if (KeyState[SDL_SCANCODE_RIGHT] && players[1].x < 712) {
 			sprite2 += 1;
-			enemy.x += 10;
+			players[1].x += 10;
 			bild7.x += 10;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_LEFT] && enemy.x > -22) {
+		else if (KeyState[SDL_SCANCODE_LEFT] && players[1].x > -22) {
 			sprite2 -= 1;
-			enemy.x -= 10;
+			players[1].x -= 10;
 			bild7.x -= 10;
 			prevKey = LEFT;
 		}
-			jump(&enemy, &bild7, &isJumping, &jumpTime, &doJump2);
-			gravity(&enemy, &bild7);
+			jump(&players[1], &bild7, &isJumping, &jumpTime, &doJump2);
+			gravity(&players[1], &bild7);
 		
 		
 		/* DOWN ISN'T USED
@@ -436,15 +438,15 @@ int rungame(Game *game, Network *client) {
 		if (pPressed == true)
 			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
 
-		fighter.p1.x = fighter.x;
-		fighter.p1.y = fighter.y;
-		enemy.p1.x = enemy.x;
-		enemy.p1.y = enemy.y;
+		players[0].p1.x = players[0].x;
+		players[0].p1.y = players[0].y;
+		players[1].p1.x = players[1].x;
+		players[1].p1.y = players[1].y;
 
 		//Checking if sword hit player1
-		if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
-			if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
-				SDL_DestroyTexture(enemy.Texture);
+		if (bild6.x >= players[1].p1.x + 40 && bild6.x <= players[1].p1.x + 50) {
+			if (bild6.y <= players[1].p1.y + 99 && bild6.y >= players[1].p1.y) {
+				SDL_DestroyTexture(players[1].Texture);
 				SDL_DestroyTexture(image7_texture);
 				SDL_DestroyTexture(image8_texture);
 				whynotwork = 0;
@@ -455,9 +457,9 @@ int rungame(Game *game, Network *client) {
 		}
 
 		//Checking if sword hit player2
-		if (bild8.x <= fighter.p1.x + 40 && bild8.x >= fighter.p1.x - 50)
-			if (bild8.y <= fighter.p1.y + 120 && bild8.y >= fighter.p1.y - 20) {
-				SDL_DestroyTexture(fighter.Texture);
+		if (bild8.x <= players[0].p1.x + 40 && bild8.x >= players[0].p1.x - 50)
+			if (bild8.y <= players[0].p1.y + 120 && bild8.y >= players[0].p1.y - 20) {
+				SDL_DestroyTexture(players[0].Texture);
 				SDL_DestroyTexture(image5_texture);
 				SDL_DestroyTexture(image6_texture);
 				whynotwork = 2;
@@ -475,8 +477,8 @@ int rungame(Game *game, Network *client) {
 
 		}
 
-		SDL_RenderCopy(game->renderer, fighter.Texture, &srcrect, &dstrect);//draw
-		SDL_RenderCopy(game->renderer, enemy.Texture, &srcrect2, &dstrect2);
+		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);//draw
+		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
 		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
 		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
