@@ -22,10 +22,10 @@
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
-=======
->>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
+	====== =
+	>>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
 
-int menu(Game *game);
+	int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(Game *game);
 int rungame(Game *game);
@@ -33,7 +33,7 @@ void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *
 void walk1(Player *player, SDL_Rect *weapon, int *prevKey);
 void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
 <<<<<<< HEAD
-=======
+	====== =
 
 
 #define WINDOWLENGTH 800
@@ -41,24 +41,24 @@ void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
->>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
+	>>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
 
-int main(int argc, char** argv)
+	int main(int argc, char** argv)
 {
 	Game game;
 	initGame(&game);
 
-<<<<<<< HEAD
-=======
-	game_init(&game);
+	<<<<<<< HEAD
+		====== =
+		game_init(&game);
 
->>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
-	while (game.running) {
-		game.running = menu(&game);
+	>>>>>>> a49a4e427816e39174ecc3ad9db675a6e982afd2
 		while (game.running) {
-			game.running = rungame(&game);
+			game.running = menu(&game);
+			while (game.running) {
+				game.running = rungame(&game);
+			}
 		}
-	}
 
 	SDL_DestroyRenderer(game.renderer);
 	SDL_DestroyWindow(game.window);
@@ -236,8 +236,8 @@ int rungame(Game *game) {
 	//Define where on the "screen" we want to draw the texture
 	SDL_Rect bild = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT }; //(x, y, hight, width)
 
-														  //SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
-														  //SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
+															//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
+															//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
 	SDL_Rect bild5 = { 100, 450, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
