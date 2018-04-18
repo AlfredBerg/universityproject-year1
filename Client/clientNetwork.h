@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_net.h>
-#include "playerStruct.h"
+#include "player.h"
 
 #define MAX_PACKET 1024
 #define TICK_RATE 500

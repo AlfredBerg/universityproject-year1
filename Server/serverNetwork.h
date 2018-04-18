@@ -15,6 +15,7 @@ struct network {
 	Client clients[MAX_SOCKETS];
 	UDPsocket serverSocket;
 	UDPpacket *serverSocketPacket;
+	int whoSentThePacket;
 	SDLNet_SocketSet socketSet;
 	UDPsocket sockets[MAX_SOCKETS];
 	int running;

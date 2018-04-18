@@ -442,6 +442,7 @@ int rungame(Game *game, Network *client) {
 		enemy.p1.y = enemy.y;
 
 		//Checking if sword hit player1
+		/*
 		if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
 			if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
 				SDL_DestroyTexture(enemy.Texture);
@@ -464,6 +465,8 @@ int rungame(Game *game, Network *client) {
 				//again = true;
 				running = false;
 			}
+
+		*/
 
 		if(whynotwork == 0)
 		SDL_RenderCopy(game->renderer, image9_texture, NULL, &bild9);
