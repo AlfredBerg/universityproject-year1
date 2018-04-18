@@ -294,7 +294,7 @@ int rungame(Game *game, Network *client) {
 	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
-	SDL_Rect bild5 = { 100, 450, 15, 40 };
+	SDL_Rect bild5 = { players[client->playerID].x, players[client->playerID].y + 20, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
 	SDL_Rect bild7 = { 530, 450, 15, 40 };
 	SDL_Rect bild8 = { 530, 490, 15, 40 };
