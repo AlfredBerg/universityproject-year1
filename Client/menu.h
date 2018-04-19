@@ -13,7 +13,7 @@ struct menu {
 	IPaddress ip;
 	int nrOfPlayers;
 	int play;
-	int countdown; 
+	int countdown;
 	int sound;
 	int exit;
 };

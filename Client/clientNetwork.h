@@ -7,6 +7,9 @@
 
 #define MAX_PACKET 1024
 #define TICK_RATE 30
+#define SERVERPORT 12346
+#define CLIENTPORT 53132
+#define SERVERIP "130.229.138.5"
 
 struct network {
 	int playerID;

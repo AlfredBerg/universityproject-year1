@@ -15,39 +15,37 @@
 #include "gravity.h"
 #include "sharedNetwork.h"
 #include "clientNetwork.h"
+#include "walk.h"
+#include "jump.h"
+#include "loadImage.h"
 
-void game_init(Game *game, Network *client);
 int menu(Game *game);
 int menuOptions(SDL_Event event, bool *menuLoop);
 int restart(Game *game);
 
 int rungame(Game *game, Network *client);
+void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump);
+void walk1(Player *player, SDL_Rect *weapon, int *prevKey);
+void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
 
-#define WINDOWLENGTH 800
-#define WINDOWHEIGHT 600
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
-#define SERVERPORT 12346
-#define CLIENTPORT 53132
-#define SERVERIP "130.229.138.5"
-
 
 int main(int argc, char** argv)
 {
 	Game game;
 	Network client;
-	game_init(&game, &client);
 
-	while (game.running){
-		game.running=menu(&game);
+	initGame(&game, &client);
+
+	while (game.running) {
+		game.running = menu(&game);
 		while (game.running) {
-			game.running=rungame(&game, &client);
-			//if(game.running)
-			//	game.running = restart(&game);
+			game.running = rungame(&game, &client);
 		}
 	}
-	
+
 	SDL_DestroyRenderer(game.renderer);
 	SDL_DestroyWindow(game.window);
 	SDL_Quit();
@@ -71,7 +69,7 @@ void game_init(Game *game, Network *client){
 
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		WINDOWLENGTH, WINDOWHEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		WINDOW_LENGTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
@@ -126,7 +124,7 @@ int menu(Game *game) {
 
 	SDL_Surface *textImage = TTF_RenderText_Solid(font, "START", color);
 	SDL_Surface *menuImage = IMG_Load("startscreen.jpg");
-		
+
 	SDL_Texture *text = SDL_CreateTextureFromSurface(game->renderer, textImage);
 	SDL_FreeSurface(textImage);
 	SDL_Texture *background = SDL_CreateTextureFromSurface(game->renderer, menuImage);
@@ -138,20 +136,19 @@ int menu(Game *game) {
 	textRect.w = 150;
 	textRect.h = 80;
 
-	SDL_Rect backRect = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT };
+	SDL_Rect backRect = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT };
 
 	bool startGame = true;
 	bool menuLoop = true;
 	SDL_Event event;
 	/*while(menuLoop){
-		if (SDL_PollEvent(&event) != 0) {
-			startGame = menuOptions(event, &menuLoop);
-		}
-
-		SDL_RenderClear(game->renderer);
-		SDL_RenderCopy(game->renderer, background, NULL, &backRect);
-		SDL_RenderCopy(game->renderer, text, NULL, &textRect);
-		SDL_RenderPresent(game->renderer);
+	if (SDL_PollEvent(&event) != 0) {
+	startGame = menuOptions(event, &menuLoop);
+	}
+	SDL_RenderClear(game->renderer);
+	SDL_RenderCopy(game->renderer, background, NULL, &backRect);
+	SDL_RenderCopy(game->renderer, text, NULL, &textRect);
+	SDL_RenderPresent(game->renderer);
 	}*/
 	SDL_DestroyTexture(text);
 	SDL_DestroyTexture(background);
@@ -160,11 +157,11 @@ int menu(Game *game) {
 
 int menuOptions(SDL_Event event, bool *menuLoop) {
 	bool running = true;
-	if (event.type == SDL_QUIT){
+	if (event.type == SDL_QUIT) {
 		running = false;
 		*menuLoop = false;
 	}
-		
+
 	else if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == SDL_BUTTON_LEFT) {
 			if (event.button.x > 100 && event.button.x < 250 && event.button.y>280 && event.button.y < 340) {
@@ -183,7 +180,7 @@ int restart(Game* game) {
 	SDL_Color color = { 255, 255, 255, 255 };
 	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
 
-	SDL_Texture *rematch_Texture=SDL_CreateTextureFromSurface(game->renderer, rematch);  
+	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
 	SDL_FreeSurface(rematch);
 
 	SDL_Rect RematchFontRect;
@@ -194,7 +191,7 @@ int restart(Game* game) {
 	SDL_Event ev;
 
 	bool running = true;
-	while(running) {
+	while (running) {
 
 		while (SDL_PollEvent(&ev) != 0)
 		{
@@ -205,12 +202,12 @@ int restart(Game* game) {
 			{
 				if (ev.button.button == SDL_BUTTON_LEFT) {
 
-					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340){
+					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
 						SDL_DestroyTexture(rematch_Texture);
 						running = true;
 						return running;
 
-					}	
+					}
 				}
 			}
 		}
@@ -224,13 +221,14 @@ int restart(Game* game) {
 
 		SDL_RenderPresent(game->renderer);
 
-	
+
 	}
 	SDL_DestroyTexture(rematch_Texture);
 	return running;
-	
+
 }
 int rungame(Game *game, Network *client) {
+
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
 
@@ -253,40 +251,16 @@ int rungame(Game *game, Network *client) {
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 
-	const Uint8 *KeyState;
 
+	SDL_Surface *images[MAX_IMAGES];
+	SDL_Texture *images_Texture[MAX_IMAGES];
+	
+	loadImage(&images);
 	//load an image file
 
-	SDL_Surface *image = IMG_Load("bowser.png");
-	SDL_Surface *image2 = IMG_Load("mansprite.png");
-	SDL_Surface *image3 = IMG_Load("deathsprite.png");
-	SDL_Surface *image4 = IMG_Load("deathwins.jpg");
-
-	SDL_Surface *image5 = IMG_Load("sword1.png");
-	SDL_Surface *image6 = IMG_Load("sword1.png");
-
-	SDL_Surface *image7 = IMG_Load("sword2.png");
-	SDL_Surface *image8 = IMG_Load("sword2.png");
-	SDL_Surface *image9 = IMG_Load("humanwin.png");
-
-	SDL_Texture *image_texture = SDL_CreateTextureFromSurface(game->renderer, image);
-	SDL_FreeSurface(image);
-	//SDL_Texture *image2_texture = SDL_CreateTextureFromSurface(game->renderer, image2);
-	//SDL_FreeSurface(image2);
-	//SDL_Texture *image3_texture = SDL_CreateTextureFromSurface(game->renderer, image3);
-	//SDL_FreeSurface(image3);
-	SDL_Texture *image4_texture = SDL_CreateTextureFromSurface(game->renderer, image4);
-	SDL_FreeSurface(image4);
-	SDL_Texture *image5_texture = SDL_CreateTextureFromSurface(game->renderer, image5);
-	SDL_FreeSurface(image5);
-	SDL_Texture *image6_texture = SDL_CreateTextureFromSurface(game->renderer, image6);
-	SDL_FreeSurface(image6);
-	SDL_Texture *image7_texture = SDL_CreateTextureFromSurface(game->renderer, image7);
-	SDL_FreeSurface(image7);
-	SDL_Texture *image8_texture = SDL_CreateTextureFromSurface(game->renderer, image8);
-	SDL_FreeSurface(image8);
-	SDL_Texture *image9_texture = SDL_CreateTextureFromSurface(game->renderer, image9);
-	SDL_FreeSurface(image9);
+	int nrOfImages=8;
+	for (int i = 0; i<nrOfImages; i++)
+		images_Texture[i] = SDL_CreateTextureFromSurface(game->renderer, images[i]);
 
 	//Fulkod för att avgöra enemyID
 	int enemyID;
@@ -298,16 +272,16 @@ int rungame(Game *game, Network *client) {
 	}
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOWLENGTH, WINDOWHEIGHT }; //(x, y, hight, width)
+	SDL_Rect bild = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT }; //(x, y, hight, width)
 
-	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
-	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
+														  //SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
+														  //SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
 	SDL_Rect bild5 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
 	SDL_Rect bild7 = { players[enemyID].x + 50, players[enemyID].y + 40, 15, 40 };
 	SDL_Rect bild8 = { 530, 490, 15, 40 };
-	SDL_Rect bild9 = { 150, 100, 550, 300 };
+	SDL_Rect bild9 = { 150, 100, 550, 300};
 
 	Mix_PlayMusic(backgroundsound, -1);
 	bool pPressed = false;
@@ -319,11 +293,13 @@ int rungame(Game *game, Network *client) {
 	sprite[0] = 1;
 	sprite[1] = 1;
 
-	int prevKey = 0;
+	int prevKey1 = 0;
+	int prevKey2 = 0;
 	int isJumping = 0;
 	int jumpTime = 0;
 	int doJump1 = 0;
 	int doJump2 = 0;
+	int direction = 0;
 
 	while (running)
 	{
@@ -350,6 +326,10 @@ int rungame(Game *game, Network *client) {
 		SDL_Rect srcrect2 = { sprite[1] * 64, 64, 64, 64 };
 		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 120 };
 
+	
+
+		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
+
 
 
 		// Check for various events (keyboard, mouse, touch, close)
@@ -370,26 +350,30 @@ int rungame(Game *game, Network *client) {
 					doJump2 = 1;
 				}
 			}
+		
 		}
+
+		const Uint8 *KeyState;
+		//Move fighter
 		KeyState = SDL_GetKeyboardState(NULL);
+		
 		if (KeyState[SDL_SCANCODE_D] && players[client->playerID].x < 730) {
 			sprite[client->playerID] += 1;
 			players[client->playerID].x += 10;
 			bild5.x += 10;
-			prevKey = RIGHT;
+			prevKey1 = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_A] && players[client->playerID].x > -10) {
 			sprite[client->playerID] -= 1;
 			players[client->playerID].x -= 10;
 			bild5.x -= 10;
-			prevKey = LEFT;
+			prevKey1 = LEFT;
 		}
 		//if (prevKey == UP) {
 			
 		//}
 			jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump1);
 			gravity(&players[client->playerID], &bild5);
-		
 		
 
 		if (KeyState[SDL_SCANCODE_R]) {
@@ -411,14 +395,14 @@ int rungame(Game *game, Network *client) {
 		SDL_RenderClear(game->renderer);
 
 		//draw
-		SDL_RenderCopy(game->renderer, image_texture, NULL, &bild);
+		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &bild);
 
 		if (rPressed == true)
-			SDL_RenderCopy(game->renderer, image6_texture, NULL, &bild6);
-
-		/*if (pPressed == true)
-			SDL_RenderCopy(game->renderer, image8_texture, NULL, &bild8);
-			*/
+			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &bild6);
+		/*
+		if (pPressed == true)
+			SDL_RenderCopy(game->renderer, images_Texture[5], NULL, &bild8);
+		*/
 
 		for (int j = 0; j < 4; j++) {
 			if (j == client->playerID) {
@@ -436,11 +420,15 @@ int rungame(Game *game, Network *client) {
 		if (bild6.x >= players[1].p1.x + 40 && bild6.x <= players[1].p1.x + 50) {
 			if (bild6.y <= players[1].p1.y + 99 && bild6.y >= players[1].p1.y) {
 				SDL_DestroyTexture(players[1].Texture);
-				SDL_DestroyTexture(image7_texture);
-				SDL_DestroyTexture(image8_texture);
+				SDL_DestroyTexture(images_Texture[4]);
+				SDL_DestroyTexture(images_Texture[5]);
+		if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
+			if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
+				SDL_DestroyTexture(enemy.Texture);
+
 				whynotwork = 0;
 				//again = true;
-				running=false;
+				running = false;
 
 			}
 		}
@@ -449,28 +437,29 @@ int rungame(Game *game, Network *client) {
 		if (bild8.x <= players[0].p1.x + 40 && bild8.x >= players[0].p1.x - 50)
 			if (bild8.y <= players[0].p1.y + 120 && bild8.y >= players[0].p1.y - 20) {
 				SDL_DestroyTexture(players[0].Texture);
-				SDL_DestroyTexture(image5_texture);
-				SDL_DestroyTexture(image6_texture);
+				SDL_DestroyTexture(images_Texture[2]);
+				SDL_DestroyTexture(images_Texture[3]);
 				whynotwork = 2;
 				//again = true;
 				running = false;
 			}
 		*/
 
-		if(whynotwork == 0)
-		SDL_RenderCopy(game->renderer, image9_texture, NULL, &bild9);
+		if (whynotwork == 0)
+			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
 		if (whynotwork == 2)
-		SDL_RenderCopy(game->renderer, image4_texture, NULL, &bild4);
-		if (again==true) {
+			SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
+		if (again == true) {
 
-		//restart(window, renderer);
+			//restart(window, renderer);
 
 		}
 
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);//draw
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
-		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
+		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &bild5);
+		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
+
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 
 		SDL_RenderPresent(game->renderer);//show what was drawn
