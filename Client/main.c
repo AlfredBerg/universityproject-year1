@@ -391,35 +391,6 @@ int rungame(Game *game, Network *client) {
 			gravity(&players[client->playerID], &bild5);
 		
 		
-		/* DOWN ISN'T USED
-		else if (KeyState[SDL_SCANCODE_S] && bild2.y < 470) {
-			sprite += 1;
-			bild2.y += 10;
-			bild5.y += 10;
-		} 
-
-		if (KeyState[SDL_SCANCODE_RIGHT] && players[1].x < 712) {
-			sprite2 += 1;
-			players[1].x += 10;
-			bild7.x += 10;
-			prevKey = RIGHT;
-		}
-		else if (KeyState[SDL_SCANCODE_LEFT] && players[1].x > -22) {
-			sprite2 -= 1;
-			players[1].x -= 10;
-			bild7.x -= 10;
-			prevKey = LEFT;
-		}
-			jump(&players[1], &bild7, &isJumping, &jumpTime, &doJump2);
-			gravity(&players[1], &bild7);
-		
-		
-		 DOWN ISN'T USED
-		else if (KeyState[SDL_SCANCODE_DOWN] && bild3.y < 485) {
-			sprite2 += 1;
-			bild3.y += 10;
-			bild7.y += 10;
-		} */
 
 		if (KeyState[SDL_SCANCODE_R]) {
 			bild6 = bild5;
@@ -427,13 +398,7 @@ int rungame(Game *game, Network *client) {
 			bild6.x += 10;
 			rPressed = true;
 		}
-		/*/
-		if (KeyState[SDL_SCANCODE_P]) {
-			bild8 = bild7;
-			SourcePosition2 = bild8.x;
-			bild8.x -= 10;
-			pPressed = true;
-		}
+		/*
 		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
 			bild8.x -= 10;
 		*/
