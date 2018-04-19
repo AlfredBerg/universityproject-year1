@@ -199,8 +199,6 @@ int rungame(Game *game, Network *client) {
 		enemyID = 1;
 	}
 
-	initMap();
-
 	//Define where on the "screen" we want to draw the texture
 	SDL_Rect bild = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT }; //(x, y, hight, width)
 
