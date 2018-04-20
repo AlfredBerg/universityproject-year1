@@ -11,7 +11,7 @@
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 10
-#define TICK_RATE 20
+#define TICK_RATE 10
 
 struct network {
 	int next_player;
