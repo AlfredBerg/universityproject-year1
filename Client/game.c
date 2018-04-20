@@ -2,12 +2,13 @@
 #include "clientNetwork.h"
 #include "stdbool.h"
 #include "loadImage.h"
+#include "player.h"
 
 void initGame(Game *game, Network *client)
 {
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
+	
 	//initialize support for loading png and JPEG image
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
@@ -190,29 +191,22 @@ int rungame(Game *game, Network *client) {
 	sprite[0] = 1;
 	sprite[1] = 1;
 
-	int prevKey1 = 0;
-	int prevKey2 = 0;
+	int prevKey = 0;
 	int isJumping = 0;
 	int jumpTime = 0;
-	int doJump1 = 0;
-	int doJump2 = 0;
-	int direction = 0;
+	int doJump = 0;
 
 	while (running)
 	{
 		updateServer(players, client);
 
+		
 		if (sprite[client->playerID] >= 8)
 			sprite[client->playerID] = 1;
 		else if (sprite[client->playerID] <= 0)
 			sprite[client->playerID] = 7;
-		/*
-		if (sprite2 >= 8)
-		sprite2 = 1;
-		else if (sprite2 <= 0)
-		sprite2 = 7;
-		*/
 
+		
 		//for sprite
 		//Uint32 ticks = SDL_GetTicks(); (time based)
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
@@ -237,41 +231,26 @@ int rungame(Game *game, Network *client) {
 				running = false;
 				return running;
 			}
-			else if (event.type == SDL_KEYDOWN) {
-				if (event.key.keysym.sym == SDLK_w) {
-					//printf("W is pressed");
-					doJump1 = 1;
-				}
-				if (event.key.keysym.sym == SDLK_UP) {
-					//printf("UP is pressed");
-					doJump2 = 1;
-				}
-			}
-
 		}
 
-		const Uint8 *KeyState;
 		//Move fighter
+		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
-
-		if (KeyState[SDL_SCANCODE_D] && players[client->playerID].x < 730) {
+		if (KeyState[SDL_SCANCODE_D]) { 
 			sprite[client->playerID] += 1;
-			players[client->playerID].x += 10;
-			bild5.x += 10;
-			prevKey1 = RIGHT;
+			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A] && players[client->playerID].x > -10) {
+		else if (KeyState[SDL_SCANCODE_A]) { 
 			sprite[client->playerID] -= 1;
-			players[client->playerID].x -= 10;
-			bild5.x -= 10;
-			prevKey1 = LEFT;
+			prevKey = LEFT;
 		}
-		//if (prevKey == UP) {
-
-		//}
-		jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump1);
+		if (KeyState[SDL_SCANCODE_W]) { 
+			doJump = 1;
+		}
+		
+		walk(&players[client->playerID], &bild5, &prevKey);
+		jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump);
 		gravity(&players[client->playerID], &bild5);
-
 
 		if (KeyState[SDL_SCANCODE_R]) {
 			bild6 = bild5;
@@ -279,13 +258,9 @@ int rungame(Game *game, Network *client) {
 			bild6.x += 10;
 			rPressed = true;
 		}
-		/*
-		if (SourcePosition2 != bild8.x && bild8.x >= -10 && pPressed == true)
-		bild8.x -= 10;
-		*/
+	
 		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true)
 			bild6.x += 10;
-
 
 
 		//clear screen with black
@@ -296,10 +271,8 @@ int rungame(Game *game, Network *client) {
 
 		if (rPressed == true)
 			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &bild6);
-		/*
-		if (pPressed == true)
-		SDL_RenderCopy(game->renderer, images_Texture[5], NULL, &bild8);
-		*/
+		
+
 
 		for (int j = 0; j < 4; j++) {
 			if (j == client->playerID) {

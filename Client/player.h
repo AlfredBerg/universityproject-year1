@@ -17,3 +17,6 @@ struct player {
 	SDL_Rect p1;
 };
 typedef struct player Player;
+
+void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump);
+void walk(Player *player, SDL_Rect *weapon, int *prevKey);

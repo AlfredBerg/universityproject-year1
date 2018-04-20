@@ -17,17 +17,7 @@
 #include "gravity.h"
 #include "sharedNetwork.h"
 #include "clientNetwork.h"
-#include "walk.h"
-#include "jump.h"
 #include "map.h"
-
-void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump);
-void walk1(Player *player, SDL_Rect *weapon, int *prevKey);
-void walk2(Player *player, SDL_Rect *weapon, int *prevKey);
-
-#define UP 1
-#define LEFT 2
-#define RIGHT 3
 
 int main(int argc, char** argv)
 {
