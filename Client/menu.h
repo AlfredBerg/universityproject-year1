@@ -18,3 +18,6 @@ struct menu {
 	int exit;
 };
 typedef struct menu Menu;
+
+int menu(Game *game);
+int menuOptions(SDL_Event event, bool *menuLoop);

@@ -11,6 +11,9 @@
 #define WINDOW_LENGTH 800
 #define WINDOW_HEIGHT 600
 #define MAX_PLAYERS 4
+#define UP 1
+#define LEFT 2
+#define RIGHT 3
 
 struct game {
 
@@ -24,3 +27,5 @@ struct game {
 typedef struct game Game;
 
 void initGame(Game *game, Network *client);
+int restart(Game *game);
+int rungame(Game *game, Network *client);
