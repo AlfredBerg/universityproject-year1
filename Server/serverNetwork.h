@@ -9,6 +9,10 @@
 #define MAX_PACKET 0xFF
 #define MAX_SOCKETS 0x4
 
+#define PORTNR 12346
+#define SOCKET_TIMEOUT 10
+#define TICK_RATE 20
+
 struct network {
 	int next_player;
 	IPaddress serverIP;
@@ -25,6 +29,7 @@ typedef struct network Network;
 int AcceptSocket(Network *server);
 void closeSocket(Network *server, int index);
 void newClient(int *nrReady, Network *server);
+void updateClients(Network *server, Uint32 *lastTick);
 
 
 void sendPacket(char data[], IPaddress ip, UDPsocket socket);

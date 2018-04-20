@@ -6,7 +6,7 @@
 #include "player.h"
 
 #define MAX_PACKET 1024
-#define TICK_RATE 30
+#define TICK_RATE 20
 #define SERVERPORT 12346
 #define CLIENTPORT 53132
 #define SERVERIP "127.0.0.1"

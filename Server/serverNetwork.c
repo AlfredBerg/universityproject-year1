@@ -14,11 +14,28 @@
 #include "sharedNetwork.h"
 #include "clients.h"
 
+void updateClients(Network *server, Uint32 *lastTick) {
+
+	if (SDL_TICKS_PASSED(SDL_GetTicks(), *lastTick + TICK_RATE)) {
+
+		char data[MAX_PACKET];
+		gamestateToString(server, data);
+
+		//puts(data);
+
+		for (int i = 0; i < MAX_SOCKETS; i++) {
+			sendPacket(data, server->clients[i].ip, server->serverSocket);
+		}
+
+		*lastTick = SDL_GetTicks();
+	}
+}
+
 updatePositions(Network *server, char indata[]) {
 	char data[5][30];
 
 	decode(indata, data, MAX_PACKET, 2);
-	printf("Who sen packet: %d\n", server->whoSentThePacket);
+	//printf("Who sen packet: %d\n", server->whoSentThePacket);
 	server->clients[server->whoSentThePacket].xPos = atoi(data[0]);
 	server->clients[server->whoSentThePacket].yPos = atoi(data[1]);
 }

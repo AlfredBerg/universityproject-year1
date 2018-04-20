@@ -13,9 +13,6 @@
 #include "serverNetwork.h"
 #include "sharedNetwork.h"
 
-#define PORTNR 12346
-#define SOCKET_TIMEOUT 10
-#define TICK_RATE 30
 
 void init(Network *server);
 void quit(Network *server);
@@ -32,7 +29,12 @@ int main(int argc, char **argv)
 	Uint32 lastTick = SDL_GetTicks();
 
 	int nrReady = 0;
+	int looptime;
+	int timerCount = 0;
 	while (server.running) {
+
+		looptime = SDL_GetTicks();
+
 
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
 
@@ -52,6 +54,14 @@ int main(int argc, char **argv)
 				newClient(&nrReady, &server);
 			}
 		}
+	
+		//Used to see responsiveness of the server
+		timerCount++;
+		if (timerCount == 100) {
+			printf("Loop time: %d\n", SDL_GetTicks() - looptime);
+			timerCount = 0;
+		}
+		
 	}
 
 	quit(&server);
@@ -59,21 +69,6 @@ int main(int argc, char **argv)
 	return(0);
 }
 
-
-void updateClients(Network *server, Uint32 *lastTick) {
-	
-	if (SDL_TICKS_PASSED(SDL_GetTicks(), *lastTick + TICK_RATE)) {
-		
-		char data[MAX_PACKET];
-		gamestateToString(server, data);
-		puts(data);
-		for (int i = 0; i < MAX_SOCKETS; i++) {
-			sendPacket(data, server->clients[i].ip, server->serverSocket);
-		}
-
-		*lastTick = SDL_GetTicks();
-	}
-}
 
 void gamestateToString(Network *server, char string[]) {
 	//x1;y1;x2;y2

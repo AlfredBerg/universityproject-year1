@@ -81,7 +81,7 @@ void updateServer(Player *player, Network *client) {
 			return;
 		}
 
-		printf("Incoming data: %s\n", data);
+		//printf("Incoming data: %s\n", data);
 		parseData(data, player, client);
 	}
 	
