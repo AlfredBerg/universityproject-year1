@@ -196,9 +196,18 @@ int rungame(Game *game, Network *client) {
 	int jumpTime = 0;
 	int doJump = 0;
 
+	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
+
 	while (running)
 	{
-		updateServer(players, client);
+		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + 20)) {
+			//Do between ticks
+			updateServer(players, client);
+			continue;
+		}
+		//Do when game tick
+		renderTick = SDL_GetTicks();
+
 
 		
 		if (sprite[client->playerID] >= 8)
@@ -328,8 +337,9 @@ int rungame(Game *game, Network *client) {
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
 
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
-
 		SDL_RenderPresent(game->renderer);//show what was drawn
+
+		
 	}
 	running = true;
 	return running;
