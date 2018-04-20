@@ -8,7 +8,7 @@ void initGame(Game *game, Network *client)
 {
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-	
+
 	//initialize support for loading png and JPEG image
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
@@ -22,7 +22,7 @@ void initGame(Game *game, Network *client)
 
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-									WINDOW_LENGTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		WINDOW_LENGTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	client->lastTick = SDL_GetTicks();
@@ -125,7 +125,6 @@ int restart(Game* game) {
 
 }
 
-
 int rungame(Game *game, Network *client) {
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
@@ -209,13 +208,13 @@ int rungame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 
 
-		
+
 		if (sprite[client->playerID] >= 8)
 			sprite[client->playerID] = 1;
 		else if (sprite[client->playerID] <= 0)
 			sprite[client->playerID] = 7;
 
-		
+
 		//for sprite
 		//Uint32 ticks = SDL_GetTicks(); (time based)
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
@@ -245,18 +244,18 @@ int rungame(Game *game, Network *client) {
 		//Move fighter
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
-		if (KeyState[SDL_SCANCODE_D]) { 
+		if (KeyState[SDL_SCANCODE_D]) {
 			sprite[client->playerID] += 1;
 			prevKey = RIGHT;
 		}
-		else if (KeyState[SDL_SCANCODE_A]) { 
+		else if (KeyState[SDL_SCANCODE_A]) {
 			sprite[client->playerID] -= 1;
 			prevKey = LEFT;
 		}
-		if (KeyState[SDL_SCANCODE_W]) { 
+		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
 		}
-		
+
 		walk(&players[client->playerID], &bild5, &prevKey);
 		jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump);
 		gravity(&players[client->playerID], &bild5);
@@ -267,7 +266,7 @@ int rungame(Game *game, Network *client) {
 			bild6.x += 10;
 			rPressed = true;
 		}
-	
+
 		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true)
 			bild6.x += 10;
 
@@ -280,7 +279,7 @@ int rungame(Game *game, Network *client) {
 
 		if (rPressed == true)
 			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &bild6);
-		
+
 
 
 		for (int j = 0; j < 4; j++) {
@@ -339,8 +338,14 @@ int rungame(Game *game, Network *client) {
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 		SDL_RenderPresent(game->renderer);//show what was drawn
 
-		
+
 	}
 	running = true;
 	return running;
+}
+
+void quitGame(Game *game){
+	SDL_DestroyRenderer(game->renderer);
+	SDL_DestroyWindow(game->window);
+	SDL_Quit();
 }

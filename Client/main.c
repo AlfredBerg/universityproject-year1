@@ -33,10 +33,6 @@ int main(int argc, char** argv)
 		}
 	}
 
-	SDL_DestroyRenderer(game.renderer);
-	SDL_DestroyWindow(game.window);
-	SDL_Quit();
+	quitGame(&game);
 	return 0;
 }
-
-

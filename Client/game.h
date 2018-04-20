@@ -29,3 +29,4 @@ typedef struct game Game;
 void initGame(Game *game, Network *client);
 int restart(Game *game);
 int rungame(Game *game, Network *client);
+void quitGame(Game *game);
