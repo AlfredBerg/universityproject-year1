@@ -125,7 +125,7 @@ int restart(Game* game) {
 
 }
 
-int rungame(Game *game, Network *client) {
+int runGame(Game *game, Network *client) {
 
 	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
 

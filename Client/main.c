@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 	while (game.running) {
 		game.running = menu(&game);
 		while (game.running) {
-			game.running = rungame(&game, &client);
+			game.running = runGame(&game, &client);
 		}
 	}
 
