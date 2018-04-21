@@ -13,3 +13,4 @@ struct weapon {
 	int isPickedUp;
 };
 typedef struct weapon Weapon;
+

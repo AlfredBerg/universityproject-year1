@@ -4,6 +4,8 @@
 #include "loadImage.h"
 #include "player.h"
 
+#define RENDER_TICK 20
+
 void initGame(Game *game, Network *client)
 {
 	// Initialize SDL and audio system
@@ -24,10 +26,11 @@ void initGame(Game *game, Network *client)
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOW_LENGTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	game->debug = 1;
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
-	client->playerID = 0;
+	client->playerID = 1;
 
 	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
 
@@ -139,8 +142,8 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[2] = {
-		{ "Erik", 3, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 140, 200 } },
-	{ "Skull", 100, 500, 50, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 120, 120 } }
+		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+	{ "Skull", 100, 300, 400, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 70, 120 } }
 	};
 	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
 	printf("%d, %d", players[0].x, players[0].y);
@@ -152,7 +155,7 @@ int runGame(Game *game, Network *client) {
 	SDL_Surface *images[MAX_IMAGES];
 	SDL_Texture *images_Texture[MAX_IMAGES];
 
-	loadImage(&images);
+	loadImage(images);
 	//load an image file
 
 	int nrOfImages = 8;
@@ -199,7 +202,7 @@ int runGame(Game *game, Network *client) {
 
 	while (running)
 	{
-		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + 20)) {
+		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
 			updateServer(players, client);
 			continue;
@@ -208,12 +211,12 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 
 
-
+		
 		if (sprite[client->playerID] >= 8)
 			sprite[client->playerID] = 1;
 		else if (sprite[client->playerID] <= 0)
 			sprite[client->playerID] = 7;
-
+		
 
 		//for sprite
 		//Uint32 ticks = SDL_GetTicks(); (time based)
@@ -319,6 +322,16 @@ int runGame(Game *game, Network *client) {
 		running = false;
 		}
 		*/
+
+
+		if (game->debug == 1) {
+			SDL_RenderDrawRect(game->renderer, &players[1].p1);
+			SDL_RenderDrawRect(game->renderer, &players[0].p1);
+			if (SDL_HasIntersection(&players[1].p1, &players[0].p1)) {
+				printf("COLLISION\n");
+			}
+		}
+
 
 		if (whynotwork == 0)
 			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);

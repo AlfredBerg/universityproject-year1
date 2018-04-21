@@ -9,7 +9,7 @@
 #define TICK_RATE 10
 #define SERVERPORT 12346
 #define CLIENTPORT 53132
-#define SERVERIP "130.229.139.124"
+#define SERVERIP "127.0.0.1"
 
 struct network {
 	int playerID;

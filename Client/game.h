@@ -22,6 +22,7 @@ struct game {
 	int connectedPlayers[MAX_PLAYERS];
 	SDL_Window* window;
 	SDL_Renderer* renderer;
+	int debug;
 
 };
 typedef struct game Game;
