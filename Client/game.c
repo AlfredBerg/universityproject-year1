@@ -1,10 +1,7 @@
 #include "game.h"
 #include "clientNetwork.h"
 #include "stdbool.h"
-#include "loadImage.h"
 #include "player.h"
-
-#define RENDER_TICK 20
 
 void initGame(Game *game, Network *client)
 {
@@ -24,7 +21,7 @@ void initGame(Game *game, Network *client)
 
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		WINDOW_LENGTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+									WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	game->debug = 1;
 
@@ -130,10 +127,7 @@ int restart(Game* game) {
 
 int runGame(Game *game, Network *client) {
 
-	Mix_Music *backgroundsound = Mix_LoadMUS("hello.mp3");
-
-	if (!backgroundsound)
-		printf("Sound is not working\n");
+	playBackgroundMusic();
 
 	int SourcePosition = 0;
 	int SourcePosition2 = 0;
@@ -142,11 +136,13 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[2] = {
-		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, 0,IMG_Load("deathsprite.png"),SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 70, 120 } }
+		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
+	{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 70, 120 } }
 	};
+
+	//Only for test
 	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
-	printf("%d, %d", players[0].x, players[0].y);
+	printf("%d, %d\n", players[0].x, players[0].y);
 
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
@@ -155,8 +151,15 @@ int runGame(Game *game, Network *client) {
 	SDL_Surface *images[MAX_IMAGES];
 	SDL_Texture *images_Texture[MAX_IMAGES];
 
-	loadImage(images);
-	//load an image file
+	//Load images
+	images[0] = IMG_Load("bowser.png");
+	images[1] = IMG_Load("deathwins.jpg");
+	images[2] = IMG_Load("sword1.png");
+	images[3] = IMG_Load("sword1.png");
+	images[4] = IMG_Load("sword2.png");
+	images[5] = IMG_Load("sword2.png");
+	images[6] = IMG_Load("humanwin.png");
+	images[7] = IMG_Load("Tileset.png");
 
 	int nrOfImages = 8;
 	for (int i = 0; i<nrOfImages; i++)
@@ -172,7 +175,7 @@ int runGame(Game *game, Network *client) {
 	}
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT }; //(x, y, hight, width)
+	SDL_Rect bild = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT }; //(x, y, hight, width)
 
 															//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 															//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
@@ -183,7 +186,6 @@ int runGame(Game *game, Network *client) {
 	SDL_Rect bild8 = { 530, 490, 15, 40 };
 	SDL_Rect bild9 = { 150, 100, 550, 300 };
 
-	Mix_PlayMusic(backgroundsound, -1);
 	bool pPressed = false;
 	bool rPressed = false;
 	bool running = true;
@@ -211,12 +213,12 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 
 
-		
+
 		if (sprite[client->playerID] >= 8)
 			sprite[client->playerID] = 1;
 		else if (sprite[client->playerID] <= 0)
 			sprite[client->playerID] = 7;
-		
+
 
 		//for sprite
 		//Uint32 ticks = SDL_GetTicks(); (time based)
@@ -357,8 +359,16 @@ int runGame(Game *game, Network *client) {
 	return running;
 }
 
-void quitGame(Game *game){
+void quitGame(Game *game) {
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
 	SDL_Quit();
+}
+
+void playBackgroundMusic() {
+	Mix_Music *backgroundMusic = Mix_LoadMUS("hello.mp3");
+
+	if (!backgroundMusic)
+		printf("Background music is not working\n");
+	Mix_PlayMusic(backgroundMusic, -1);
 }

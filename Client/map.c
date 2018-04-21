@@ -22,7 +22,16 @@ int map[MAP_HEIGHT][MAP_WIDTH] =
 	{ 2,1,1,1,1,1,1,2,1,1,2,2,2,2,4,4 },
 	{ 2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,1 }	};
 
-void createRectangle(SDL_Rect *rectangle, int x, int y, int w, int h) {
+SDL_Rect createRectangle(int x, int y, int w, int h) {
+	SDL_Rect rectangle;
+	rectangle.x = x;
+	rectangle.y = y;
+	rectangle.w = w;
+	rectangle.h = h;
+	return rectangle;
+}
+
+void createRect(SDL_Rect *rectangle, int x, int y, int w, int h) {
 	rectangle->x = x;
 	rectangle->y = y;
 	rectangle->w = w;
@@ -33,13 +42,13 @@ void initTiles() {
 	int x = 0, y = 0;
 
 	for (int i = 0; i < NR_OF_TILES; i++) {
-		createRectangle(&tiles[i], x, y, 64, 64);
+		createRect(&tiles[i], x, y, 64, 64);
 		x += 64;										//move tile to the side, increment to next tile
 	}
 }
 
 void drawMap() {
-	SDL_Surface *tmp = IMG_Load("tiles.png");
+	SDL_Surface *tmp = IMG_Load("tiles.png");			//test 
 	SDL_FreeSurface(tmp);
 
 	int tile = 4;

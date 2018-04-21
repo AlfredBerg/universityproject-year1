@@ -8,12 +8,14 @@
 
 #include "clientNetwork.h"
 
-#define WINDOW_LENGTH 800
+#define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define MAX_PLAYERS 4
 #define UP 1
 #define LEFT 2
 #define RIGHT 3
+#define RENDER_TICK 20
+#define MAX_IMAGES 1000
 
 struct game {
 
@@ -31,3 +33,4 @@ void initGame(Game *game, Network *client);
 int restart(Game *game);
 int runGame(Game *game, Network *client);
 void quitGame(Game *game);
+void playBackgroundMusic();

@@ -24,7 +24,7 @@ int menu(Game *game) {
 	textRect.w = 150;
 	textRect.h = 80;
 
-	SDL_Rect backRect = { 0, 0, WINDOW_LENGTH, WINDOW_HEIGHT };
+	SDL_Rect backRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
 	bool startGame = true;
 	bool menuLoop = true;
