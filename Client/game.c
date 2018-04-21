@@ -1,6 +1,5 @@
 #include "game.h"
 #include "clientNetwork.h"
-#include "stdbool.h"
 #include "player.h"
 
 void initGame(Game *game, Network *client)
@@ -22,6 +21,12 @@ void initGame(Game *game, Network *client)
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 									WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+
+	//Window icon
+	SDL_Surface *icon = IMG_Load("sword1.png");
+	SDL_SetWindowIcon(game->window, icon);
+	SDL_FreeSurface(icon);
+
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	game->debug = 1;
 
@@ -68,7 +73,6 @@ void initGame(Game *game, Network *client)
 	}
 
 	connectToServer(client);
-
 }
 
 int restart(Game* game) {
@@ -80,20 +84,17 @@ int restart(Game* game) {
 	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
 	SDL_FreeSurface(rematch);
 
-	SDL_Rect RematchFontRect;
-	RematchFontRect.x = 200;
-	RematchFontRect.y = 260;
-	RematchFontRect.w = 150;
-	RematchFontRect.h = 80;
+	SDL_Rect RematchFontRect = {200, 260, 150, 80};
+
 	SDL_Event ev;
 
-	bool running = true;
+	int running = 1;
 	while (running) {
 
 		while (SDL_PollEvent(&ev) != 0)
 		{
 			if (ev.type == SDL_QUIT)
-				running = false;
+				running = 0;
 
 			else if (ev.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -101,7 +102,7 @@ int restart(Game* game) {
 
 					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
 						SDL_DestroyTexture(rematch_Texture);
-						running = true;
+						running = 1;
 						return running;
 
 					}
@@ -122,7 +123,6 @@ int restart(Game* game) {
 	}
 	SDL_DestroyTexture(rematch_Texture);
 	return running;
-
 }
 
 int runGame(Game *game, Network *client) {
@@ -133,11 +133,10 @@ int runGame(Game *game, Network *client) {
 	int SourcePosition2 = 0;
 	int whynotwork = 1;
 
-
 	//Create two players
 	Player players[2] = {
 		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 70, 120 } }
+		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 70, 120 } }
 	};
 
 	//Only for test
@@ -147,7 +146,6 @@ int runGame(Game *game, Network *client) {
 	//initialize support for flipping images
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 
-
 	SDL_Surface *images[MAX_IMAGES];
 	SDL_Texture *images_Texture[MAX_IMAGES];
 
@@ -155,15 +153,19 @@ int runGame(Game *game, Network *client) {
 	images[0] = IMG_Load("bowser.png");
 	images[1] = IMG_Load("deathwins.jpg");
 	images[2] = IMG_Load("sword1.png");
-	images[3] = IMG_Load("sword1.png");
+	images[3] = IMG_Load("sword1.png");			//dubbel
 	images[4] = IMG_Load("sword2.png");
-	images[5] = IMG_Load("sword2.png");
+	images[5] = IMG_Load("sword2.png");			//dubbel
 	images[6] = IMG_Load("humanwin.png");
 	images[7] = IMG_Load("Tileset.png");
 
+	//Create texture for each image
 	int nrOfImages = 8;
-	for (int i = 0; i<nrOfImages; i++)
+	for (int i = 0; i < nrOfImages; i++) {
 		images_Texture[i] = SDL_CreateTextureFromSurface(game->renderer, images[i]);
+		SDL_FreeSurface(images[i]);
+	}
+
 
 	//Fulkod för att avgöra enemyID
 	int enemyID;
@@ -175,10 +177,9 @@ int runGame(Game *game, Network *client) {
 	}
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT }; //(x, y, hight, width)
-
-															//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
-															//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
+	SDL_Rect bild = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
+	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
 	SDL_Rect bild5 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
@@ -186,11 +187,14 @@ int runGame(Game *game, Network *client) {
 	SDL_Rect bild8 = { 530, 490, 15, 40 };
 	SDL_Rect bild9 = { 150, 100, 550, 300 };
 
-	bool pPressed = false;
-	bool rPressed = false;
-	bool running = true;
-	bool again = false;
+	int pPressed = 0;
+	int rPressed = 0;
+
+	int running = 1;
+	int again = 0;
+
 	SDL_Event event;
+
 	int sprite[2];
 	sprite[0] = 1;
 	sprite[1] = 1;
@@ -231,7 +235,6 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 120 };
 
 
-
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
 
 
@@ -241,7 +244,7 @@ int runGame(Game *game, Network *client) {
 		{
 			//const char* key = SDL_GetKeyName(event.key.keysym.sym);
 			if (event.type == SDL_QUIT) {
-				running = false;
+				running = 0;
 				return running;
 			}
 		}
@@ -269,10 +272,10 @@ int runGame(Game *game, Network *client) {
 			bild6 = bild5;
 			SourcePosition = bild6.x;
 			bild6.x += 10;
-			rPressed = true;
+			rPressed = 1;
 		}
 
-		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == true)
+		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == 1)
 			bild6.x += 10;
 
 
@@ -282,7 +285,7 @@ int runGame(Game *game, Network *client) {
 		//draw
 		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &bild);
 
-		if (rPressed == true)
+		if (rPressed == 1)
 			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &bild6);
 
 
@@ -309,8 +312,8 @@ int runGame(Game *game, Network *client) {
 		if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
 		SDL_DestroyTexture(enemy.Texture);
 		whynotwork = 0;
-		//again = true;
-		running = false;
+		//again = 1;
+		running = 0;
 		}
 		}
 		//Checking if sword hit player2
@@ -320,8 +323,8 @@ int runGame(Game *game, Network *client) {
 		SDL_DestroyTexture(images_Texture[2]);
 		SDL_DestroyTexture(images_Texture[3]);
 		whynotwork = 2;
-		//again = true;
-		running = false;
+		//again = 1;
+		running = 0;
 		}
 		*/
 
@@ -339,23 +342,19 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
 		if (whynotwork == 2)
 			SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
-		if (again == true) {
-
+		if (again == 1) {
 			//restart(window, renderer);
-
 		}
 
-		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);//draw
+		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
 		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &bild5);
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
-
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
-		SDL_RenderPresent(game->renderer);//show what was drawn
 
-
+		SDL_RenderPresent(game->renderer); //show what was drawn
 	}
-	running = true;
+	running = 1;
 	return running;
 }
 
