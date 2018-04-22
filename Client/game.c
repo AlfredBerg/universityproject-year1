@@ -32,7 +32,7 @@ void initGame(Game *game, Network *client)
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
-	client->playerID = 1;
+	client->playerID = 0;
 
 	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
 
@@ -203,6 +203,7 @@ int runGame(Game *game, Network *client) {
 	int isJumping = 0;
 	int jumpTime = 0;
 	int doJump = 0;
+	int loopCount = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -216,7 +217,7 @@ int runGame(Game *game, Network *client) {
 		//Do when game tick
 		renderTick = SDL_GetTicks();
 
-
+		loopCount++;
 
 		if (sprite[client->playerID] >= 8)
 			sprite[client->playerID] = 1;
@@ -253,11 +254,13 @@ int runGame(Game *game, Network *client) {
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
 		if (KeyState[SDL_SCANCODE_D]) {
-			sprite[client->playerID] += 1;
+			if(!(loopCount % 3))
+				sprite[client->playerID] += 1;
 			prevKey = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_A]) {
-			sprite[client->playerID] -= 1;
+			if (!(loopCount % 3))
+				sprite[client->playerID] -= 1;
 			prevKey = LEFT;
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
