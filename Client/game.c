@@ -136,7 +136,7 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 	Player players[2] = {
 		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 70, 120 } }
+		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
 	};
 
 	//Only for test
@@ -183,7 +183,7 @@ int runGame(Game *game, Network *client) {
 	SDL_Rect bild4 = { 150, 100, 500, 325 };
 	SDL_Rect bild5 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };
 	SDL_Rect bild6 = { 100, 450, 15, 40 };
-	SDL_Rect bild7 = { players[enemyID].x + 50, players[enemyID].y + 40, 15, 40 };
+	SDL_Rect bild7 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };
 	SDL_Rect bild8 = { 530, 490, 15, 40 };
 	SDL_Rect bild9 = { 150, 100, 550, 300 };
 
@@ -232,8 +232,8 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect srcrect = { sprite[0] * 75, 0, 75, 132 };
 		SDL_Rect dstrect = { players[0].p1.x, players[0].p1.y, 75, 132 };
 
-		SDL_Rect srcrect2 = { sprite[1] * 64, 64, 64, 64 };
-		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 120 };
+		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
+		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 140 };
 
 
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
