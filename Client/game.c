@@ -20,7 +20,7 @@ void initGame(Game *game, Network *client)
 
 	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-									WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	//Window icon
 	SDL_Surface *icon = IMG_Load("sword1.png");
@@ -84,7 +84,7 @@ int restart(Game* game) {
 	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
 	SDL_FreeSurface(rematch);
 
-	SDL_Rect RematchFontRect = {200, 260, 150, 80};
+	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
 
 	SDL_Event ev;
 
@@ -135,8 +135,8 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[2] = {
-		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+	{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
 
 	//Only for test
@@ -150,7 +150,7 @@ int runGame(Game *game, Network *client) {
 	SDL_Texture *images_Texture[MAX_IMAGES];
 
 	//Load images
-	images[0] = IMG_Load("bowser.png");
+	images[0] = IMG_Load("bowser.png");			//background
 	images[1] = IMG_Load("deathwins.jpg");
 	images[2] = IMG_Load("sword1.png");
 	images[3] = IMG_Load("sword1.png");			//dubbel
@@ -177,17 +177,15 @@ int runGame(Game *game, Network *client) {
 	}
 
 	//Define where on the "screen" we want to draw the texture
-	SDL_Rect bild = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
-	SDL_Rect bild4 = { 150, 100, 500, 325 };
-	SDL_Rect bild5 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };
-	SDL_Rect bild6 = { 100, 450, 15, 40 };
-	SDL_Rect bild7 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };
-	SDL_Rect bild8 = { 530, 490, 15, 40 };
-	SDL_Rect bild9 = { 150, 100, 550, 300 };
+	//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
+	SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
+	SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
+	SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
+	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
+	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
 
-	int pPressed = 0;
 	int rPressed = 0;
 
 	int running = 1;
@@ -254,7 +252,7 @@ int runGame(Game *game, Network *client) {
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
 		if (KeyState[SDL_SCANCODE_D]) {
-			if(!(loopCount % 3))
+			if (!(loopCount % 3))
 				sprite[client->playerID] += 1;
 			prevKey = RIGHT;
 		}
@@ -267,29 +265,30 @@ int runGame(Game *game, Network *client) {
 			doJump = 1;
 		}
 
-		walk(&players[client->playerID], &bild5, &prevKey);
-		jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump);
-		gravity(&players[client->playerID], &bild5);
+		walk(&players[client->playerID], &sword1, &prevKey);
+		jump(&players[client->playerID], &sword1, &isJumping, &jumpTime, &doJump);
+		gravity(&players[client->playerID], &sword1);
 
 		if (KeyState[SDL_SCANCODE_R]) {
-			bild6 = bild5;
-			SourcePosition = bild6.x;
-			bild6.x += 10;
+			swordRect = sword1;
+			SourcePosition = swordRect.x;
+			swordRect.x += 10;
 			rPressed = 1;
 		}
 
-		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == 1)
-			bild6.x += 10;
+		if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
+			swordRect.x += 10;
 
 
-		//clear screen with black
+		//Clear screen with black
 		SDL_RenderClear(game->renderer);
 
-		//draw
-		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &bild);
+		//Draw background
+		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
 
 		if (rPressed == 1)
-			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &bild6);
+			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &swordRect);
 
 
 
@@ -340,7 +339,8 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-
+		/*
+		//Displays death wins or human wins
 		if (whynotwork == 0)
 			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
 		if (whynotwork == 2)
@@ -348,11 +348,12 @@ int runGame(Game *game, Network *client) {
 		if (again == 1) {
 			//restart(window, renderer);
 		}
+		*/
 
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &bild5);
-		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
+		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &sword1);
+		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &sword2);
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
