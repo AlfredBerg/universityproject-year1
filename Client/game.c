@@ -1,6 +1,7 @@
 #include "game.h"
 #include "clientNetwork.h"
 #include "player.h"
+#include "weapon.h"
 
 void initGame(Game *game, Network *client)
 {
@@ -139,6 +140,10 @@ int runGame(Game *game, Network *client) {
 		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 70, 120 } }
 	};
 
+	Weapon weapons[1] = {
+		{ 0, 50, 50, 10, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 500, 400, 70, 120 }, 0 }
+	};
+
 	//Only for test
 	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
 	printf("%d, %d\n", players[0].x, players[0].y);
@@ -209,6 +214,7 @@ int runGame(Game *game, Network *client) {
 
 	while (running)
 	{
+		//---------------------------Game state------------------------------------
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
 			updateServer(players, client);
@@ -216,7 +222,7 @@ int runGame(Game *game, Network *client) {
 		}
 		//Do when game tick
 		renderTick = SDL_GetTicks();
-
+		
 		loopCount++;
 
 		if (sprite[client->playerID] >= 8)
@@ -232,10 +238,13 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect srcrect = { sprite[0] * 75, 0, 75, 132 };
 		SDL_Rect dstrect = { players[0].p1.x, players[0].p1.y, 75, 132 };
 
-		SDL_Rect srcrect2 = { sprite[1] * 64, 64, 64, 64 };
+		SDL_Rect srcrect2 = { sprite[1] * 64 + 20, 64, 64, 64 };
 		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 120 };
 
+		SDL_Rect srcWeapon0 = { 0, 0, 128, 128 };
+		SDL_Rect dstWeapon0 = { weapons[0].rect.x, weapons[0].rect.y, 120, 120 };
 
+		
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
 
 
@@ -271,6 +280,17 @@ int runGame(Game *game, Network *client) {
 		jump(&players[client->playerID], &bild5, &isJumping, &jumpTime, &doJump);
 		gravity(&players[client->playerID], &bild5);
 
+		for (int j = 0; j < 4; j++) {
+			if (j == client->playerID) {
+				players[client->playerID].p1.x = players[client->playerID].x;
+				players[client->playerID].p1.y = players[client->playerID].y;
+			}
+			else {
+				players[j].p1.x = players[j].x;
+				players[j].p1.y = players[j].y;
+			}
+		}
+
 		if (KeyState[SDL_SCANCODE_R]) {
 			bild6 = bild5;
 			SourcePosition = bild6.x;
@@ -280,6 +300,8 @@ int runGame(Game *game, Network *client) {
 
 		if (SourcePosition != bild6.x && bild6.x <= 800 && rPressed == 1)
 			bild6.x += 10;
+
+		//---------------------------Render------------------------------------
 
 
 		//clear screen with black
@@ -292,17 +314,6 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &bild6);
 
 
-
-		for (int j = 0; j < 4; j++) {
-			if (j == client->playerID) {
-				players[client->playerID].p1.x = players[client->playerID].x;
-				players[client->playerID].p1.y = players[client->playerID].y;
-			}
-			else {
-				players[j].p1.x = players[j].x;
-				players[j].p1.y = players[j].y;
-			}
-		}
 
 		/*
 		//Checking if sword hit player1
@@ -331,15 +342,14 @@ int runGame(Game *game, Network *client) {
 		}
 		*/
 
-
 		if (game->debug == 1) {
 			SDL_RenderDrawRect(game->renderer, &players[1].p1);
 			SDL_RenderDrawRect(game->renderer, &players[0].p1);
+			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 			if (SDL_HasIntersection(&players[1].p1, &players[0].p1)) {
 				printf("COLLISION\n");
 			}
 		}
-
 
 		if (whynotwork == 0)
 			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
@@ -348,9 +358,10 @@ int runGame(Game *game, Network *client) {
 		if (again == 1) {
 			//restart(window, renderer);
 		}
-
+		
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
+		SDL_RenderCopy(game->renderer, weapons[0].Texture, &srcWeapon0, &dstWeapon0);
 		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &bild5);
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
