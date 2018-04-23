@@ -3,8 +3,8 @@
 #include "player.h"
 #include "weapon.h"
 
-void initGame(Game *game, Network *client)
-{
+void initGame(Game *game) {
+
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -13,126 +13,24 @@ void initGame(Game *game, Network *client)
 
 	//initialize the mixer
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	playBackgroundMusic();
 
 	if (TTF_Init() < 0) {
 		printf("SDL error -> %s\n", SDL_GetError());
 		exit(1);
 	}
 
-	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
-	//Window icon
-	SDL_Surface *icon = IMG_Load("sword1.png");
-	SDL_SetWindowIcon(game->window, icon);
-	SDL_FreeSurface(icon);
-
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	game->debug = 1;
+	game->running = 1;
 
-	client->lastTick = SDL_GetTicks();
-	client->connectedToServer = 0;
-	client->playerID = 0;
-
-	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
-
-	// Initialize SDL_net
-	if (SDLNet_Init() != 0) {
-		fprintf(stderr, "Error initializing SDL_NET %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	//Listen on all interfaces
-	if (SDLNet_ResolveHost(&client->serverIP, SERVERIP, SERVERPORT)) {
-		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	//Open port
-	client->serverSocket = SDLNet_UDP_Open(CLIENTPORT);
-	if (!(client->serverSocket)) {
-		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	client->packet = SDLNet_AllocPacket(1024);
-	if (!client->packet) {
-		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	client->socketSet = SDLNet_AllocSocketSet(1);
-	if (client->socketSet == NULL) {
-		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-		exit(-1);
-	}
-
-	if (SDLNet_UDP_AddSocket(client->socketSet, client->serverSocket) == -1) {
-		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-		exit(-1);
-	}
-
-	connectToServer(client);
 }
 
-int restart(Game* game) {
-
-	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
-	SDL_Color color = { 255, 255, 255, 255 };
-	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
-
-	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
-	SDL_FreeSurface(rematch);
-
-	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
-
-	SDL_Event ev;
-
-	int running = 1;
-	while (running) {
-
-		while (SDL_PollEvent(&ev) != 0)
-		{
-			if (ev.type == SDL_QUIT)
-				running = 0;
-
-			else if (ev.type == SDL_MOUSEBUTTONDOWN)
-			{
-				if (ev.button.button == SDL_BUTTON_LEFT) {
-
-					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
-						SDL_DestroyTexture(rematch_Texture);
-						running = 1;
-						return running;
-
-					}
-				}
-			}
-		}
-		SDL_RenderClear(game->renderer);
-		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
-		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
-		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
-		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
-		*/
-
-		SDL_RenderPresent(game->renderer);
-
-
-	}
-	SDL_DestroyTexture(rematch_Texture);
-	return running;
-}
 
 int runGame(Game *game, Network *client) {
-
-	playBackgroundMusic();
-
-	int SourcePosition = 0;
-	int SourcePosition2 = 0;
-	int whynotwork = 1;
 
 	//Create two players
 	Player players[2] = {
@@ -286,22 +184,14 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		if (KeyState[SDL_SCANCODE_R]) {
-			swordRect = sword1;
-			SourcePosition = swordRect.x;
-			swordRect.x += 10;
-			rPressed = 1;
-		}
-
-		if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
-			swordRect.x += 10;
+		
 
 		//---------------------------Render------------------------------------
 
 		//Clear screen with black
 		SDL_RenderClear(game->renderer);
 
-		//Draw background
+	
 		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
 
@@ -394,3 +284,81 @@ void playBackgroundMusic() {
 		printf("Background music is not working\n");
 	Mix_PlayMusic(backgroundMusic, -1);
 }
+
+//*****************restart() not yet implemented********************
+//int restart(Game* game) {
+//
+//	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
+//	SDL_Color color = { 255, 255, 255, 255 };
+//	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
+//
+//	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
+//	SDL_FreeSurface(rematch);
+//
+//	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
+//
+//	SDL_Event ev;
+//
+//	int running = 1;
+//	while (running) {
+//
+//		while (SDL_PollEvent(&ev) != 0)
+//		{
+//			if (ev.type == SDL_QUIT)
+//				running = 0;
+//
+//			else if (ev.type == SDL_MOUSEBUTTONDOWN)
+//			{
+//				if (ev.button.button == SDL_BUTTON_LEFT) {
+//
+//					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
+//						SDL_DestroyTexture(rematch_Texture);
+//						running = 1;
+//						return running;
+//
+//					}
+//				}
+//			}
+//		}
+//		SDL_RenderClear(game->renderer);
+//		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
+//		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
+//		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
+//		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
+//		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
+//		*/
+//
+//		SDL_RenderPresent(game->renderer);
+//
+//
+//	}
+//	SDL_DestroyTexture(rematch_Texture);
+//	return running;
+//}
+
+
+
+//*****************moved from initGame********************
+//Window icon
+/*SDL_Surface *icon = IMG_Load("sword1.png");
+SDL_SetWindowIcon(game->window, icon);
+SDL_FreeSurface(icon);*/
+
+//SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
+
+
+
+//*****************moved from runGame*********************
+//int SourcePosition = 0;
+//int SourcePosition2 = 0;
+//int whynotwork = 1;
+
+//if (KeyState[SDL_SCANCODE_R]) {
+//	swordRect = sword1;
+//	SourcePosition = swordRect.x;
+//	swordRect.x += 10;
+//	rPressed = 1;
+//}
+//
+//if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
+//swordRect.x += 10; */

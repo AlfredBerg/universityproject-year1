@@ -101,3 +101,48 @@ void parseData(char serverdata[], Player *player, Network *client) {
 		player[i].y = atoi(parsedData[i * 2 + 1]);
 	}
 }
+
+void initClient(Network *client) {
+
+	client->lastTick = SDL_GetTicks();
+	client->connectedToServer = 0;
+	client->playerID = 0;
+
+	// Initialize SDL_net
+	if (SDLNet_Init() != 0) {
+		fprintf(stderr, "Error initializing SDL_NET %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	//Listen on all interfaces
+	if (SDLNet_ResolveHost(&client->serverIP, SERVERIP, SERVERPORT)) {
+		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	//Open port
+	client->serverSocket = SDLNet_UDP_Open(CLIENTPORT);
+	if (!(client->serverSocket)) {
+		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	client->packet = SDLNet_AllocPacket(1024);
+	if (!client->packet) {
+		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	client->socketSet = SDLNet_AllocSocketSet(1);
+	if (client->socketSet == NULL) {
+		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+		exit(-1);
+	}
+
+	if (SDLNet_UDP_AddSocket(client->socketSet, client->serverSocket) == -1) {
+		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+		exit(-1);
+	}
+
+	connectToServer(client);
+}

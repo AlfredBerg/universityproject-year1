@@ -29,7 +29,7 @@ struct game {
 };
 typedef struct game Game;
 
-void initGame(Game *game, Network *client);
+void initGame(Game *game); 
 int restart(Game *game);
 int runGame(Game *game, Network *client);
 void quitGame(Game *game);
