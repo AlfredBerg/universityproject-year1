@@ -141,7 +141,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Weapon weapons[1] = {
-		{ 0, 50, 50, 10, IMG_Load("sword1.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 15, 40 }, 0 }
+		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 46, 31 }, 0 }
 	};
 
 	//Only for test
@@ -298,7 +298,6 @@ int runGame(Game *game, Network *client) {
 
 		//---------------------------Render------------------------------------
 
-
 		//Clear screen with black
 		SDL_RenderClear(game->renderer);
 
@@ -338,13 +337,22 @@ int runGame(Game *game, Network *client) {
 		}
 		*/
 
+
+		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
 			SDL_RenderDrawRect(game->renderer, &players[1].p1);
 			SDL_RenderDrawRect(game->renderer, &players[0].p1);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
+
 			if (SDL_HasIntersection(&players[1].p1, &players[0].p1)) {
 				printf("COLLISION\n");
 			}
+			
+			if (SDL_HasIntersection(&players[0].p1, &weapons[0].rect))
+				printf("PICKUP\n");
+
+			if (SDL_HasIntersection(&players[1].p1, &weapons[0].rect))
+				printf("PICKUP\n");
 		}
 
 		/*
@@ -356,16 +364,13 @@ int runGame(Game *game, Network *client) {
 		if (again == 1) {
 		//restart(window, renderer);
 		}
-
-		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
-		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, weapons[0].Texture, &srcWeapon0, &dstWeapon0);
-		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &bild5);
-		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
 		*/
 
-		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
+		//Draw players
+		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
+
+		//Draw weapons / pickups
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &sword1);
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &sword2);
