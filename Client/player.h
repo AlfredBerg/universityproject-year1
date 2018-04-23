@@ -1,20 +1,23 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <SDL.h>
 #include <SDL_image.h>
-#define NAMELENGTH 50
+
+#define NAME_LENGTH 50
+#define LEFT 2
+#define RIGHT 3
 
 struct player {
-
-	char name[NAMELENGTH];
+	char name[NAME_LENGTH];
 	int life;
 	int x;
 	int y;
 	int weaponID;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
-	SDL_Rect p1;
+	SDL_Rect rect;
 };
 typedef struct player Player;
 

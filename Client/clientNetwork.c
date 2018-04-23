@@ -23,7 +23,7 @@ void connectToServer(Network *client) {
 	SDL_Delay(500); //test delay
 
 	receivePacket(client->serverSocket, client->packet, data);
-	if (compareString(data,"HELLO CLIENT", 12)) {
+	if (compareString(data, "HELLO CLIENT", 12)) {
 		printf("I am now connected to the server!\n");
 		decode(data, decoded, 2, 30);
 		client->playerID = atoi(decoded[1]);
@@ -32,8 +32,8 @@ void connectToServer(Network *client) {
 	}
 	/*
 	else {
-		puts("I could not connect to the server, quiting");
-		exit(0);
+	puts("I could not connect to the server, quiting");
+	exit(0);
 	}
 	*/
 
@@ -50,7 +50,7 @@ int compareString(char str1[], char str2[], int len) {
 
 void positionToString(Player *player, char string[]) {
 	//x1;y1
-	sprintf(string, "%d;%d;", player->p1.x, player->p1.y);
+	sprintf(string, "%d;%d;", player->rect.x, player->rect.y);
 }
 
 void sendPositionToServer(Network *client, Player *fighter) {
@@ -60,7 +60,7 @@ void sendPositionToServer(Network *client, Player *fighter) {
 		puts(data);
 		sendPacket(data, client->serverIP, client->serverSocket);
 		client->lastTick = SDL_GetTicks();
-		
+
 	}
 }
 
@@ -84,7 +84,7 @@ void updateServer(Player *player, Network *client) {
 		//printf("Incoming data: %s\n", data);
 		parseData(data, player, client);
 	}
-	
+
 }
 
 void parseData(char serverdata[], Player *player, Network *client) {
@@ -92,7 +92,7 @@ void parseData(char serverdata[], Player *player, Network *client) {
 
 	decode(serverdata, parsedData, 4, 30);
 
-	
+
 	for (int i = 0; i < 4; i++) {
 		if (client->playerID == i) {
 			continue;

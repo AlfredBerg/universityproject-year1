@@ -145,7 +145,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	//Only for test
-	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
+	printf("%d, %d\n", players[0].rect.x, players[0].rect.y);
 	printf("%d, %d\n", players[0].x, players[0].y);
 
 	//initialize support for flipping images
@@ -234,10 +234,10 @@ int runGame(Game *game, Network *client) {
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
 		SDL_Rect srcrect = { sprite[0] * 75, 0, 75, 132 };
-		SDL_Rect dstrect = { players[0].p1.x, players[0].p1.y, 75, 132 };
+		SDL_Rect dstrect = { players[0].rect.x, players[0].rect.y, 75, 132 };
 
 		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
-		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 140 };
+		SDL_Rect dstrect2 = { players[1].rect.x, players[1].rect.y, 120, 140 };
 
 
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
@@ -277,12 +277,12 @@ int runGame(Game *game, Network *client) {
 
 		for (int j = 0; j < 4; j++) {
 			if (j == client->playerID) {
-				players[client->playerID].p1.x = players[client->playerID].x;
-				players[client->playerID].p1.y = players[client->playerID].y;
+				players[client->playerID].rect.x = players[client->playerID].x;
+				players[client->playerID].rect.y = players[client->playerID].y;
 			}
 			else {
-				players[j].p1.x = players[j].x;
-				players[j].p1.y = players[j].y;
+				players[j].rect.x = players[j].x;
+				players[j].rect.y = players[j].y;
 			}
 		}
 
@@ -340,18 +340,18 @@ int runGame(Game *game, Network *client) {
 
 		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
-			SDL_RenderDrawRect(game->renderer, &players[1].p1);
-			SDL_RenderDrawRect(game->renderer, &players[0].p1);
+			SDL_RenderDrawRect(game->renderer, &players[1].rect);
+			SDL_RenderDrawRect(game->renderer, &players[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 
-			if (SDL_HasIntersection(&players[1].p1, &players[0].p1)) {
+			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
 				printf("COLLISION\n");
 			}
 			
-			if (SDL_HasIntersection(&players[0].p1, &weapons[0].rect))
+			if (SDL_HasIntersection(&players[0].rect, &weapons[0].rect))
 				printf("PICKUP\n");
 
-			if (SDL_HasIntersection(&players[1].p1, &weapons[0].rect))
+			if (SDL_HasIntersection(&players[1].rect, &weapons[0].rect))
 				printf("PICKUP\n");
 		}
 
@@ -374,7 +374,6 @@ int runGame(Game *game, Network *client) {
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &sword1);
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &sword2);
-		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}
