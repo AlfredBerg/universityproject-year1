@@ -27,7 +27,7 @@ void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *
 }
 
 void walk(Player *player, SDL_Rect *weapon, int *prevKey) {
-	if (*prevKey == RIGHT && player->x < 730) {
+	if (*prevKey == RIGHT && player->x < 750) {
 		player->x += 10;
 		weapon->x += 10;
 	}
