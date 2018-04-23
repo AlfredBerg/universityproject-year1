@@ -10,6 +10,7 @@ struct weapon {
 	int dmg;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
+	SDL_Rect rect;
 	int isPickedUp;
 };
 typedef struct weapon Weapon;
