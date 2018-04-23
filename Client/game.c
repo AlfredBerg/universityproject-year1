@@ -39,7 +39,7 @@ void initGame(Game *game, Network *client)
 
 	// Initialize SDL_net
 	if (SDLNet_Init() != 0) {
-		fprintf(stderr, "Erro initializing SDL_NET %s\n", SDLNet_GetError());
+		fprintf(stderr, "Error initializing SDL_NET %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
@@ -136,12 +136,12 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[2] = {
-		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
+		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[1] = {
-		{ 0, 50, 50, 10, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 500, 400, 70, 120 }, 0 }
+		{ 0, 50, 50, 10, IMG_Load("sword1.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 15, 40 }, 0 }
 	};
 
 	//Only for test
@@ -185,11 +185,11 @@ int runGame(Game *game, Network *client) {
 	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
+	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
+	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
 	SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
 	SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
 	SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
-	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
-	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
 
 	int rPressed = 0;
 
@@ -220,7 +220,7 @@ int runGame(Game *game, Network *client) {
 		}
 		//Do when game tick
 		renderTick = SDL_GetTicks();
-		
+
 		loopCount++;
 
 		if (sprite[client->playerID] >= 8)
@@ -239,10 +239,7 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
 		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 140 };
 
-		SDL_Rect srcWeapon0 = { 0, 0, 128, 128 };
-		SDL_Rect dstWeapon0 = { weapons[0].rect.x, weapons[0].rect.y, 120, 120 };
 
-		
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
 
 
@@ -353,13 +350,13 @@ int runGame(Game *game, Network *client) {
 		/*
 		//Displays death wins or human wins
 		if (whynotwork == 0)
-			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
+		SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
 		if (whynotwork == 2)
-			SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
+		SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
 		if (again == 1) {
-			//restart(window, renderer);
+		//restart(window, renderer);
 		}
-		
+
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, &srcWeapon0, &dstWeapon0);
@@ -369,7 +366,7 @@ int runGame(Game *game, Network *client) {
 
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, weapons[0].Texture, &srcWeapon0, &dstWeapon0);
+		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &sword1);
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &sword2);
 		//SDL_RenderCopy(renderer, text, NULL, &textRect);
