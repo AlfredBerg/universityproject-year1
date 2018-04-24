@@ -40,7 +40,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
-		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
+		{ 1, 400, 40, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
 	};
 	weapons[0].Texture = SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image);
 

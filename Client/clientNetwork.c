@@ -108,7 +108,7 @@ void initClient(Network *client) {
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
-	client->playerID = 0;
+	client->playerID = 1;
 
 	// Initialize SDL_net
 	if (SDLNet_Init() != 0) {

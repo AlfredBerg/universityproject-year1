@@ -21,11 +21,11 @@ void gravity(Player *player, Weapon weapons[]) {
 			continue;
 		}
 
-		if (weapons[i].y < 580 && weapons[i].y > 0) {
+		if (weapons[i].y < 500 && weapons[i].y > 0) {
 			weapons[i].y += 10;
 		}
-		else if (weapons[i].y >= 580) {
-			weapons[i].y = 580;
+		else if (weapons[i].y >= 500) {
+			weapons[i].y = 500;
 		}
 		else {
 			weapons[i].y += 20;
