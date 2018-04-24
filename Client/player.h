@@ -16,7 +16,9 @@ struct player {
 	int life;
 	int x;
 	int y;
-	int weaponID;
+	int weaponID; //Place that weapon has in weapon array
+	int weaponFired;
+	int tickThatWeaponFired;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
 	SDL_Rect rect;

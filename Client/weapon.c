@@ -1,11 +1,14 @@
 #pragma once
 #include "player.h"
 #include "weapon.h"
+#include "clientNetwork.h"
 
 void pickUpWeapon(Weapon weapons[], Player players[]);
+void fireWeapon(Weapon weapons[], Player players[], Network *client);
 
-void weaponActions(Weapon weapons[], Player players[]) {
-	//fireWeapon();
+void weaponActions(Weapon weapons[], Player players[], Network *client) {
+	fireWeapon(weapons, players, client);
+
 	pickUpWeapon(weapons, players);
 	
 	//Move with player if picked up
@@ -29,6 +32,29 @@ void weaponActions(Weapon weapons[], Player players[]) {
 	}
 
 
+
+}
+
+void fireWeapon(Weapon weapons[], Player players[], Network *client) {
+	if (players[client->playerID].weaponFired == 1) {
+		int weaponId = players[client->playerID].weaponID;
+
+		players[client->playerID].weaponFired = 0;
+
+		if (!SDL_TICKS_PASSED(SDL_GetTicks(), players[client->playerID].tickThatWeaponFired + weapons[weaponId].fireRate)) {
+			//Detects if the weapon should fire
+			return;
+		}
+
+		printf("Shots fired!\n");
+
+		//shoot(&weapons[weaponId], 0, weapons[weaponId].x, weapons[weaponId].y);
+
+		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
+	}
+}
+
+void shoot(Weapon *weapon, int direction, int x, int y) {
 
 }
 

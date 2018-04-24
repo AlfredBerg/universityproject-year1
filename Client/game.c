@@ -35,12 +35,11 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
+		{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
 	};
-
 	Weapon weapons[MAXNRWEAPONS] = {
-		{ 1, 400, 40, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
+		{ 0, 400, 40, 10, 500, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
 	};
 	weapons[0].Texture = SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image);
 
@@ -170,12 +169,15 @@ int runGame(Game *game, Network *client) {
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
 		}
+		if (KeyState[SDL_SCANCODE_SPACE]) {
+			players[client->playerID].weaponFired = 1;
+		}
 
 		walk(&players[client->playerID], &prevKey);
 		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump);
 		gravity(&players[client->playerID], weapons);
 
-		for (int j = 0; j < 4; j++) {
+		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
 				players[client->playerID].rect.x = players[client->playerID].x;
 				players[client->playerID].rect.y = players[client->playerID].y;
@@ -186,14 +188,13 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		weaponActions(weapons, players);
+		weaponActions(weapons, players, client);
 		
 
 		//---------------------------Render------------------------------------
 
 		//Clear screen with black
 		SDL_RenderClear(game->renderer);
-
 	
 		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
