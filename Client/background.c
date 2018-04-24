@@ -2,12 +2,12 @@
 #include "SDL.h"
 #include "game.h"
 #include "background.h"
+#include "textureManager.h"
 
 void displayBackground(Game *game) {
+	SDL_Texture *clouds = loadTexture("assets/CloudsBack.png", game);
+	SDL_RenderCopy(game->renderer, clouds, NULL, NULL);
 
-	SDL_Surface *image = IMG_Load("bowser.png");
-	SDL_Texture *image_Texture = SDL_CreateTextureFromSurface(game->renderer, image);
-	SDL_FreeSurface(image);
-	SDL_Rect rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-	SDL_RenderCopy(game->renderer, image_Texture, NULL, &rect);
+	SDL_Texture *nature = loadTexture("assets/BGFront.png", game);
+	SDL_RenderCopy(game->renderer, nature, NULL, NULL);
 }
