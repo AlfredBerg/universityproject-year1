@@ -157,7 +157,6 @@ int runGame(Game *game, Network *client) {
 
 		displayBackground(game);
 
-
 		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
 			SDL_RenderDrawRect(game->renderer, &players[1].rect);
