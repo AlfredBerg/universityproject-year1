@@ -22,6 +22,7 @@ struct network {
 };
 typedef struct network Network;
 
+void initClient(Network *client);
 void updateServer(Player *player, Network *client);
 void parseData(char serverdata[], Player *player, Network *client);
 void connectToServer(Network *client);

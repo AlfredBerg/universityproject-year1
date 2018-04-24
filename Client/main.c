@@ -24,7 +24,8 @@ int main(int argc, char** argv)
 	Game game;
 	Network client;
 
-	initGame(&game, &client);
+	initGame(&game); 
+	initClient(&client);
 
 	while (game.running) {
 		game.running = menu(&game);

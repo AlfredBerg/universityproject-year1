@@ -3,8 +3,8 @@
 #include "player.h"
 #include "weapon.h"
 
-void initGame(Game *game, Network *client)
-{
+void initGame(Game *game) {
+
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -13,140 +13,38 @@ void initGame(Game *game, Network *client)
 
 	//initialize the mixer
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	playBackgroundMusic();
 
 	if (TTF_Init() < 0) {
 		printf("SDL error -> %s\n", SDL_GetError());
 		exit(1);
 	}
 
-	game->running = 1;
 	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
-	//Window icon
-	SDL_Surface *icon = IMG_Load("sword1.png");
-	SDL_SetWindowIcon(game->window, icon);
-	SDL_FreeSurface(icon);
-
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	game->debug = 1;
+	game->running = 1;
 
-	client->lastTick = SDL_GetTicks();
-	client->connectedToServer = 0;
-	client->playerID = 0;
-
-	SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
-
-	// Initialize SDL_net
-	if (SDLNet_Init() != 0) {
-		fprintf(stderr, "Erro initializing SDL_NET %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	//Listen on all interfaces
-	if (SDLNet_ResolveHost(&client->serverIP, SERVERIP, SERVERPORT)) {
-		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	//Open port
-	client->serverSocket = SDLNet_UDP_Open(CLIENTPORT);
-	if (!(client->serverSocket)) {
-		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	client->packet = SDLNet_AllocPacket(1024);
-	if (!client->packet) {
-		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
-	client->socketSet = SDLNet_AllocSocketSet(1);
-	if (client->socketSet == NULL) {
-		fprintf(stderr, "ER: SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-		exit(-1);
-	}
-
-	if (SDLNet_UDP_AddSocket(client->socketSet, client->serverSocket) == -1) {
-		fprintf(stderr, "ER: SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
-		exit(-1);
-	}
-
-	connectToServer(client);
 }
 
-int restart(Game* game) {
-
-	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
-	SDL_Color color = { 255, 255, 255, 255 };
-	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
-
-	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
-	SDL_FreeSurface(rematch);
-
-	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
-
-	SDL_Event ev;
-
-	int running = 1;
-	while (running) {
-
-		while (SDL_PollEvent(&ev) != 0)
-		{
-			if (ev.type == SDL_QUIT)
-				running = 0;
-
-			else if (ev.type == SDL_MOUSEBUTTONDOWN)
-			{
-				if (ev.button.button == SDL_BUTTON_LEFT) {
-
-					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
-						SDL_DestroyTexture(rematch_Texture);
-						running = 1;
-						return running;
-
-					}
-				}
-			}
-		}
-		SDL_RenderClear(game->renderer);
-		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
-		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
-		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
-		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
-		*/
-
-		SDL_RenderPresent(game->renderer);
-
-
-	}
-	SDL_DestroyTexture(rematch_Texture);
-	return running;
-}
 
 int runGame(Game *game, Network *client) {
 
-	playBackgroundMusic();
-
-	int SourcePosition = 0;
-	int SourcePosition2 = 0;
-	int whynotwork = 1;
-
 	//Create two players
 	Player players[2] = {
-		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
+		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[1] = {
-		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 50, 50 }, 0 }
+		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 46, 31 }, 0 }
 	};
 	weapons[0].Texture = SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image);
 
 	//Only for test
-	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
+	printf("%d, %d\n", players[0].rect.x, players[0].rect.y);
 	printf("%d, %d\n", players[0].x, players[0].y);
 
 	//initialize support for flipping images
@@ -187,11 +85,11 @@ int runGame(Game *game, Network *client) {
 	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
 	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
 	//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
+	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
+	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
 	SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
 	SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
 	SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
-	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
-	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
 
 	int rPressed = 0;
 
@@ -222,7 +120,7 @@ int runGame(Game *game, Network *client) {
 		}
 		//Do when game tick
 		renderTick = SDL_GetTicks();
-		
+
 		loopCount++;
 
 		if (sprite[client->playerID] >= 8)
@@ -236,15 +134,15 @@ int runGame(Game *game, Network *client) {
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
 		SDL_Rect srcrect = { sprite[0] * 75, 0, 75, 132 };
-		SDL_Rect dstrect = { players[0].p1.x, players[0].p1.y, 75, 132 };
+		SDL_Rect dstrect = { players[0].rect.x, players[0].rect.y, 75, 132 };
 
 		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
-		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 140 };
+		SDL_Rect dstrect2 = { players[1].rect.x, players[1].rect.y, 120, 140 };
 
 		SDL_Rect srcWeapon0 = { 0, 0, 60, 60 };
 		SDL_Rect dstWeapon0 = { weapons[0].rect.x, weapons[0].rect.y, 50, 50 };
 
-		
+
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
 
 
@@ -282,31 +180,23 @@ int runGame(Game *game, Network *client) {
 
 		for (int j = 0; j < 4; j++) {
 			if (j == client->playerID) {
-				players[client->playerID].p1.x = players[client->playerID].x;
-				players[client->playerID].p1.y = players[client->playerID].y;
+				players[client->playerID].rect.x = players[client->playerID].x;
+				players[client->playerID].rect.y = players[client->playerID].y;
 			}
 			else {
-				players[j].p1.x = players[j].x;
-				players[j].p1.y = players[j].y;
+				players[j].rect.x = players[j].x;
+				players[j].rect.y = players[j].y;
 			}
 		}
 
-		if (KeyState[SDL_SCANCODE_R]) {
-			swordRect = sword1;
-			SourcePosition = swordRect.x;
-			swordRect.x += 10;
-			rPressed = 1;
-		}
-
-		if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
-			swordRect.x += 10;
+		
 
 		//---------------------------Render------------------------------------
 
 		//Clear screen with black
 		SDL_RenderClear(game->renderer);
 
-		//Draw background
+	
 		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
 
@@ -342,34 +232,44 @@ int runGame(Game *game, Network *client) {
 		}
 		*/
 
+
+		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
-			SDL_RenderDrawRect(game->renderer, &players[1].p1);
-			SDL_RenderDrawRect(game->renderer, &players[0].p1);
+			SDL_RenderDrawRect(game->renderer, &players[1].rect);
+			SDL_RenderDrawRect(game->renderer, &players[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
-			if (SDL_HasIntersection(&players[1].p1, &players[0].p1)) {
+
+			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
 				printf("COLLISION\n");
 			}
+			
+			if (SDL_HasIntersection(&players[0].rect, &weapons[0].rect))
+				printf("PICKUP\n");
+
+			if (SDL_HasIntersection(&players[1].rect, &weapons[0].rect))
+				printf("PICKUP\n");
 		}
 
 		/*
 		//Displays death wins or human wins
 		if (whynotwork == 0)
-			SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
+		SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
 		if (whynotwork == 2)
-			SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
+		SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
 		if (again == 1) {
-			//restart(window, renderer);
+		//restart(window, renderer);
 		}
-		
 
 		*/
 
-		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
+		//Draw players
+		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);
 		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, weapons[0].Texture, &srcWeapon0, &dstWeapon0);
+
+		//Draw weapons / pickups
+		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &sword1);
 		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &sword2);
-		//SDL_RenderCopy(renderer, text, NULL, &textRect);
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}
@@ -390,3 +290,81 @@ void playBackgroundMusic() {
 		printf("Background music is not working\n");
 	Mix_PlayMusic(backgroundMusic, -1);
 }
+
+//*****************restart() not yet implemented********************
+//int restart(Game* game) {
+//
+//	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
+//	SDL_Color color = { 255, 255, 255, 255 };
+//	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
+//
+//	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
+//	SDL_FreeSurface(rematch);
+//
+//	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
+//
+//	SDL_Event ev;
+//
+//	int running = 1;
+//	while (running) {
+//
+//		while (SDL_PollEvent(&ev) != 0)
+//		{
+//			if (ev.type == SDL_QUIT)
+//				running = 0;
+//
+//			else if (ev.type == SDL_MOUSEBUTTONDOWN)
+//			{
+//				if (ev.button.button == SDL_BUTTON_LEFT) {
+//
+//					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
+//						SDL_DestroyTexture(rematch_Texture);
+//						running = 1;
+//						return running;
+//
+//					}
+//				}
+//			}
+//		}
+//		SDL_RenderClear(game->renderer);
+//		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
+//		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
+//		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
+//		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
+//		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
+//		*/
+//
+//		SDL_RenderPresent(game->renderer);
+//
+//
+//	}
+//	SDL_DestroyTexture(rematch_Texture);
+//	return running;
+//}
+
+
+
+//*****************moved from initGame********************
+//Window icon
+/*SDL_Surface *icon = IMG_Load("sword1.png");
+SDL_SetWindowIcon(game->window, icon);
+SDL_FreeSurface(icon);*/
+
+//SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
+
+
+
+//*****************moved from runGame*********************
+//int SourcePosition = 0;
+//int SourcePosition2 = 0;
+//int whynotwork = 1;
+
+//if (KeyState[SDL_SCANCODE_R]) {
+//	swordRect = sword1;
+//	SourcePosition = swordRect.x;
+//	swordRect.x += 10;
+//	rPressed = 1;
+//}
+//
+//if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
+//swordRect.x += 10; */
