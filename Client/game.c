@@ -192,11 +192,9 @@ int runGame(Game *game, Network *client) {
 		//---------------------------Render------------------------------------
 
 		//Clear screen with black
-		SDL_RenderClear(game->renderer);
-
+		//SDL_RenderClear(game->renderer);
+		displayBackground(game);
 	
-		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
 
 
 		/*
