@@ -44,7 +44,7 @@ void initGame(Game *game) {
 		exit(1);
 	}
 
-	game->window = SDL_CreateWindow("knifekillers", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	game->window = SDL_CreateWindow("Grupp10", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -63,9 +63,9 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 	Player players[MAXPLAYERS] = {
 		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
-
+		{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
+
 	Weapon weapons[MAXNRWEAPONS] = {
 		{ 0, 400, 40, 10, 500, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
 	};
@@ -82,8 +82,6 @@ int runGame(Game *game, Network *client) {
 	else {
 		enemyID = 1;
 	}
-
-	int rPressed = 0;
 
 	int running = 1;
 	int again = 0;

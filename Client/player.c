@@ -1,13 +1,7 @@
 #pragma once
 #include "player.h"
 
-#define LEFT 2
-#define RIGHT 3
-
-
-
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump) {
-
 	if ((*doJump == 1))
 	{
 		if (!*isJumping) {

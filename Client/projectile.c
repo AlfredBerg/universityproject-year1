@@ -24,4 +24,3 @@ void moveProjectiles(Projectile projectiles[]) {
 		}
 	}
 }
-
