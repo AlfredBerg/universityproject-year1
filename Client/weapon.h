@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "clientNetwork.h"
+#include "projectile.h"
 
 #define MAXNRWEAPONS 1
 
@@ -13,6 +14,7 @@ struct weapon {
 	int y;
 	int dmg;
 	int fireRate;
+	int projectileType;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
 	SDL_Rect rect;
@@ -20,4 +22,4 @@ struct weapon {
 };
 typedef struct weapon Weapon;
 
-void weaponActions(Weapon weapons[], Player players[], Network *client);
+void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]);

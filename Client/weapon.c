@@ -2,12 +2,15 @@
 #include "player.h"
 #include "weapon.h"
 #include "clientNetwork.h"
+#include "projectile.h"
+
+#define MAXBULLETS 100
 
 void pickUpWeapon(Weapon weapons[], Player players[]);
-void fireWeapon(Weapon weapons[], Player players[], Network *client);
+void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]);
 
-void weaponActions(Weapon weapons[], Player players[], Network *client) {
-	fireWeapon(weapons, players, client);
+void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
+	fireWeapon(weapons, players, client, projectiles);
 
 	pickUpWeapon(weapons, players);
 	
@@ -35,7 +38,7 @@ void weaponActions(Weapon weapons[], Player players[], Network *client) {
 
 }
 
-void fireWeapon(Weapon weapons[], Player players[], Network *client) {
+void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
 	if (players[client->playerID].weaponFired == 1) {
 		int weaponId = players[client->playerID].weaponID;
 
@@ -48,14 +51,10 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client) {
 
 		printf("Shots fired!\n");
 
-		//shoot(&weapons[weaponId], 0, weapons[weaponId].x, weapons[weaponId].y);
+		fireProjectile(&projectiles[weapons[weaponId].projectileType], 1, weapons[weaponId].x, weapons[weaponId].y);
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 	}
-}
-
-void shoot(Weapon *weapon, int direction, int x, int y) {
-
 }
 
 void pickUpWeapon(Weapon weapons[], Player players[]) {

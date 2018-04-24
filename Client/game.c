@@ -3,6 +3,8 @@
 #include "player.h"
 #include "weapon.h"
 #include "gravity.h"
+#include "background.h"
+#include "projectile.h"
 
 void initGame(Game *game) {
 
@@ -40,7 +42,11 @@ int runGame(Game *game, Network *client) {
 
 	};
 	Weapon weapons[MAXNRWEAPONS] = {
-		{ 0, 400, 40, 10, 500, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
+		{ 0, 400, 40, 10, 500, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
+	};
+
+	Projectile projectiles[MAXPROJECTILES] = {
+		{ 0, 10, 10, 0, 10, 10, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
 	};
 
 	//Fulkod för att avgöra enemyID
@@ -147,7 +153,7 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		weaponActions(weapons, players, client);
+		weaponActions(weapons, players, client, projectiles);
 		
 
 		//---------------------------Render------------------------------------
@@ -163,8 +169,13 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &players[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 
+
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
 				printf("COLLISION\n");
+			}
+
+			for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
+				SDL_RenderDrawRect(game->renderer, &projectiles[0].rect[i]);
 			}
 		}
 
