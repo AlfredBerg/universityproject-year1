@@ -8,8 +8,8 @@
 
 #include "clientNetwork.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 640
 #define MAX_PLAYERS 4
 #define UP 1
 #define LEFT 2
@@ -33,7 +33,7 @@ struct game {
 };
 typedef struct game Game;
 
-void initGame(Game *game); 
+void initGame(Game *game);
 int restart(Game *game);
 int runGame(Game *game, Network *client);
 void quitGame(Game *game);
