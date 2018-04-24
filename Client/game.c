@@ -2,6 +2,7 @@
 #include "clientNetwork.h"
 #include "player.h"
 #include "weapon.h"
+#include "gravity.h"
 
 void initGame(Game *game) {
 
@@ -33,13 +34,13 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client) {
 
 	//Create two players
-	Player players[2] = {
+	Player players[MAXPLAYERS] = {
 		{ "Erik", 100, 60, 400, 1, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
 		{ "Skull", 100, 300, 400, 0, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
 	};
 
-	Weapon weapons[1] = {
-		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 46, 31 }, 0 }
+	Weapon weapons[MAXNRWEAPONS] = {
+		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
 	};
 	weapons[0].Texture = SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image);
 
@@ -139,9 +140,6 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
 		SDL_Rect dstrect2 = { players[1].rect.x, players[1].rect.y, 120, 140 };
 
-		SDL_Rect srcWeapon0 = { 0, 0, 60, 60 };
-		SDL_Rect dstWeapon0 = { weapons[0].rect.x, weapons[0].rect.y, 50, 50 };
-
 
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
 
@@ -189,6 +187,8 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
+
+		weaponActions(weapons, players);
 		
 
 		//---------------------------Render------------------------------------
@@ -242,12 +242,6 @@ int runGame(Game *game, Network *client) {
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
 				printf("COLLISION\n");
 			}
-			
-			if (SDL_HasIntersection(&players[0].rect, &weapons[0].rect))
-				printf("PICKUP\n");
-
-			if (SDL_HasIntersection(&players[1].rect, &weapons[0].rect))
-				printf("PICKUP\n");
 		}
 
 		/*

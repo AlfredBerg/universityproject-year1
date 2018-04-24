@@ -9,6 +9,8 @@
 #define LEFT 2
 #define RIGHT 3
 
+#define MAXPLAYERS 2
+
 struct player {
 	char name[NAME_LENGTH];
 	int life;

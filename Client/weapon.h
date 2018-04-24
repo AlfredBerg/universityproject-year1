@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_image.h>
+
+#define MAXNRWEAPONS 1
+
 struct weapon {
 	int id;
 	int x;
@@ -15,3 +18,4 @@ struct weapon {
 };
 typedef struct weapon Weapon;
 
+void weaponActions(Weapon weapons[], Player players[]);

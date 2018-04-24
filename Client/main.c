@@ -14,7 +14,6 @@
 #include "game.h"
 #include "menu.h"
 #include "weapon.h"
-#include "gravity.h"
 #include "sharedNetwork.h"
 #include "clientNetwork.h"
 #include "map.h"

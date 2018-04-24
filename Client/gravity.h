@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include "weapon.h"
 
 void gravity(Player *player, SDL_Rect *weapon, Weapon weapons[]) {
 	if (player->y < 480 && player->y > 0) {
@@ -18,5 +19,19 @@ void gravity(Player *player, SDL_Rect *weapon, Weapon weapons[]) {
 		weapon->y = player->y + 50;
 	}
 
-	weapons[0].rect.y += 1;
+	for (int i = 0; i < MAXNRWEAPONS; i++) {
+		if (weapons[i].isPickedUp == 1) {
+			continue;
+		}
+
+		if (weapons[i].y < 580 && weapons[i].y > 0) {
+			weapons[i].y += 10;
+		}
+		else if (weapons[i].y >= 580) {
+			weapons[i].y = 580;
+		}
+		else {
+			weapons[i].y += 20;
+		}
+	}
 }
