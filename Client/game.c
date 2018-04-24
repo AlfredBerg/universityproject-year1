@@ -6,6 +6,26 @@
 #include "background.h"
 #include "projectile.h"
 #include "textureManager.h"
+#include "tile.h"
+#include "map.h"
+
+static int map[MAP_HEIGHT][MAP_WIDTH] =
+{ { 1,1,2,2,2,2,2,2,1,1,2,2,2,2,2,1 },
+{ 1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1 },
+{ 2,1,1,1,2,2,2,2,1,1,2,2,2,2,2,1 },
+{ 2,1,1,2,2,1,1,2,1,1,2,2,2,2,2,1 },
+{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,4,1 },
+{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,2,1 },
+{ 2,1,1,4,4,4,1,2,1,1,2,2,4,2,2,1 },
+{ 2,2,2,4,4,4,2,1,2,3,3,3,4,2,2,1 },
+{ 1,1,2,2,2,2,2,3,4,3,3,3,4,2,2,2 },
+{ 1,1,1,1,2,1,1,2,1,3,3,3,2,2,2,3 },
+{ 2,1,1,1,2,2,2,2,1,1,2,2,2,2,2,1 },
+{ 2,1,1,2,2,1,1,2,1,1,3,2,2,2,4,4 },
+{ 2,1,1,4,2,1,1,2,1,1,3,2,2,2,2,4 },
+{ 2,1,1,1,2,1,1,2,1,1,3,3,3,3,3,4 },
+{ 2,1,1,1,1,1,1,2,1,1,2,2,2,2,4,4 },
+{ 2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,1 } };
 
 void initGame(Game *game) {
 
@@ -79,6 +99,16 @@ int runGame(Game *game, Network *client) {
 	int loopCount = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
+
+	//Init map
+	Tile createMap[MAP_WIDTH][MAP_HEIGHT];
+	int i, j = 0;
+	for (i = 0; i < MAP_WIDTH; i++) {
+		for (j = 0; j < MAP_HEIGHT; j++) {
+			createMap[i][j].ID = map[i][j];
+			initTiles1(game, &createMap[i][j], i, j);
+		}
+	}
 
 	while (running)
 	{
@@ -169,6 +199,14 @@ int runGame(Game *game, Network *client) {
 		displayBackground(game);
 
 		drawMap(game);
+
+		//Display map
+		int i, j = 0;
+		for (i = 0; i < MAP_WIDTH; i++) {
+			for (j = 0; j < MAP_HEIGHT; j++) {
+				drawTiles1(game, &createMap[i][j], i, j);
+			}
+		}
 
 		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
