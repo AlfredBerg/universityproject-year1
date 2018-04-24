@@ -5,6 +5,7 @@
 #include "gravity.h"
 #include "background.h"
 #include "projectile.h"
+#include "textureManager.h"
 
 void initGame(Game *game) {
 
@@ -30,6 +31,10 @@ void initGame(Game *game) {
 	game->debug = 1;
 	game->running = 1;
 
+	game->cloudsBack = loadTexture("assets/CloudsBack.png", game);
+	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
+	game->bgBack = loadTexture("assets/BGBack.png", game);
+	game->bgFront = loadTexture("assets/BGFront.png", game);
 }
 
 

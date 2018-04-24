@@ -25,6 +25,10 @@ struct game {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	int debug;
+	SDL_Texture *cloudsBack;
+	SDL_Texture *cloudsFront;
+	SDL_Texture *bgBack;
+	SDL_Texture *bgFront;
 
 };
 typedef struct game Game;
