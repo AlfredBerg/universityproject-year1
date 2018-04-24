@@ -46,7 +46,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Projectile projectiles[MAXPROJECTILES] = {
-		{ 0, 10, 10, 0, 10, 10, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
+		{ 0, 10, 10, 0, 30, 30, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
 	};
 
 	//Fulkod för att avgöra enemyID
@@ -154,7 +154,7 @@ int runGame(Game *game, Network *client) {
 		}
 
 		weaponActions(weapons, players, client, projectiles);
-		
+		moveProjectiles(projectiles);
 
 		//---------------------------Render------------------------------------
 
@@ -185,6 +185,12 @@ int runGame(Game *game, Network *client) {
 
 		//Draw weapons / pickups
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
+
+		for (int i = 0; i < MAXPROJECTILES; i++) {
+			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
+				SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
+			}
+		}
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}

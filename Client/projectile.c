@@ -7,7 +7,6 @@ void fireProjectile(Projectile *projectile, int direction, int x, int y) {
 	if (projectile->projectilesFired >= MAXPROJECTILEOBJECTS) {
 		projectile->projectilesFired = 0;
 	}
-	
 
 	projectile->rect[projectile->projectilesFired].w = projectile->w;
 	projectile->rect[projectile->projectilesFired].h = projectile->h;
@@ -19,9 +18,10 @@ void fireProjectile(Projectile *projectile, int direction, int x, int y) {
 }
 
 void moveProjectiles(Projectile projectiles[]) {
-	
+	for (int i = 0; i < MAXPROJECTILES; i++) {
+		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
+			projectiles[i].rect[j].x += projectiles[i].speed;
+		}
+	}
 }
 
-void renderProjectiles(Projectile projectiles[]) {
-
-}
