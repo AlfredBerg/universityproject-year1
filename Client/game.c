@@ -37,40 +37,11 @@ int runGame(Game *game, Network *client) {
 	Player players[MAXPLAYERS] = {
 		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
 		{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
+
 	};
 	Weapon weapons[MAXNRWEAPONS] = {
 		{ 0, 400, 40, 10, 500, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
 	};
-	weapons[0].Texture = SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image);
-
-	//Only for test
-	printf("%d, %d\n", players[0].rect.x, players[0].rect.y);
-	printf("%d, %d\n", players[0].x, players[0].y);
-
-	//initialize support for flipping images
-	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
-
-	SDL_Surface *images[MAX_IMAGES];
-	SDL_Texture *images_Texture[MAX_IMAGES];
-
-	//Load images
-	images[0] = IMG_Load("bowser.png");			//background
-	images[1] = IMG_Load("deathwins.jpg");
-	images[2] = IMG_Load("sword1.png");
-	images[3] = IMG_Load("sword1.png");			//dubbel
-	images[4] = IMG_Load("sword2.png");
-	images[5] = IMG_Load("sword2.png");			//dubbel
-	images[6] = IMG_Load("humanwin.png");
-	images[7] = IMG_Load("Tileset.png");
-	
-
-	//Create texture for each image
-	int nrOfImages = 8;
-	for (int i = 0; i < nrOfImages; i++) {
-		images_Texture[i] = SDL_CreateTextureFromSurface(game->renderer, images[i]);
-		SDL_FreeSurface(images[i]);
-	}
-
 
 	//Fulkod för att avgöra enemyID
 	int enemyID;
@@ -81,16 +52,6 @@ int runGame(Game *game, Network *client) {
 		enemyID = 1;
 	}
 
-	//Define where on the "screen" we want to draw the texture
-	//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
-	//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
-	//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
-	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
-	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
-	//SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
-	//SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
-	//SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
-
 	int rPressed = 0;
 
 	int running = 1;
@@ -98,9 +59,7 @@ int runGame(Game *game, Network *client) {
 
 	SDL_Event event;
 
-	int sprite[2];
-	sprite[0] = 1;
-	sprite[1] = 1;
+	int sprite[2] = {1, 1};
 
 	int prevKey = 0;
 	int isJumping = 0;
@@ -118,7 +77,7 @@ int runGame(Game *game, Network *client) {
 			updateServer(players, client);
 			continue;
 		}
-		
+
 		renderTick = SDL_GetTicks();
 		loopCount++;
 
@@ -195,37 +154,8 @@ int runGame(Game *game, Network *client) {
 
 		//Clear screen with black
 		SDL_RenderClear(game->renderer);
-	
-		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
 
-
-		/*
-		//Checking if sword hit player1
-		if (bild6.x >= players[1].p1.x + 40 && bild6.x <= players[1].p1.x + 50) {
-		if (bild6.y <= players[1].p1.y + 99 && bild6.y >= players[1].p1.y) {
-		SDL_DestroyTexture(players[1].Texture);
-		SDL_DestroyTexture(images_Texture[4]);
-		SDL_DestroyTexture(images_Texture[5]);
-		if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
-		if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
-		SDL_DestroyTexture(enemy.Texture);
-		whynotwork = 0;
-		//again = 1;
-		running = 0;
-		}
-		}
-		//Checking if sword hit player2
-		if (bild8.x <= players[0].p1.x + 40 && bild8.x >= players[0].p1.x - 50)
-		if (bild8.y <= players[0].p1.y + 120 && bild8.y >= players[0].p1.y - 20) {
-		SDL_DestroyTexture(players[0].Texture);
-		SDL_DestroyTexture(images_Texture[2]);
-		SDL_DestroyTexture(images_Texture[3]);
-		whynotwork = 2;
-		//again = 1;
-		running = 0;
-		}
-		*/
+		displayBackground(game);
 
 
 		//-----------------------------DEBUG MODE-----------------------------------
@@ -238,18 +168,6 @@ int runGame(Game *game, Network *client) {
 				printf("COLLISION\n");
 			}
 		}
-
-		/*
-		//Displays death wins or human wins
-		if (whynotwork == 0)
-		SDL_RenderCopy(game->renderer, images_Texture[6], NULL, &bild9);
-		if (whynotwork == 2)
-		SDL_RenderCopy(game->renderer, images_Texture[1], NULL, &bild4);
-		if (again == 1) {
-		//restart(window, renderer);
-		}
-
-		*/
 
 		//Draw players
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);
@@ -355,3 +273,42 @@ SDL_FreeSurface(icon);*/
 //
 //if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
 //swordRect.x += 10; */
+
+
+//*****************moved from runGame************************
+/*Checking if sword hit player1
+if (bild6.x >= players[1].p1.x + 40 && bild6.x <= players[1].p1.x + 50) {
+if (bild6.y <= players[1].p1.y + 99 && bild6.y >= players[1].p1.y) {
+SDL_DestroyTexture(players[1].Texture);
+SDL_DestroyTexture(images_Texture[4]);
+SDL_DestroyTexture(images_Texture[5]);
+if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
+if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
+SDL_DestroyTexture(enemy.Texture);
+whynotwork = 0;
+//again = 1;
+running = 0;
+}
+}
+//Checking if sword hit player2
+if (bild8.x <= players[0].p1.x + 40 && bild8.x >= players[0].p1.x - 50)
+if (bild8.y <= players[0].p1.y + 120 && bild8.y >= players[0].p1.y - 20) {
+SDL_DestroyTexture(players[0].Texture);
+SDL_DestroyTexture(images_Texture[2]);
+SDL_DestroyTexture(images_Texture[3]);
+whynotwork = 2;
+//again = 1;
+running = 0;
+}
+*/
+
+//*****************moved from runGame************************
+//Define where on the "screen" we want to draw the texture
+//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
+//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
+//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
+//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
+//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
+//SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
+//SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
+//SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
