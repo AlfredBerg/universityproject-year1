@@ -26,6 +26,7 @@ void drawMap(Game *game) {
 
 	SDL_Texture *tile2 = loadTexture("assets/t2.png", game);
 	SDL_Texture *tile10 = loadTexture("assets/t10.png", game);
+
 	SDL_Rect sRect = {0, 0, 16, 16};
 	SDL_Rect dRect = { 0, 0, 32, 32 };
 
@@ -46,6 +47,7 @@ void drawMap(Game *game) {
 
 			case 10:
 				SDL_RenderCopy(game->renderer, tile10, &sRect, &dRect);
+				break;
 			}
 		}
 	}
