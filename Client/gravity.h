@@ -5,18 +5,15 @@
 #include <SDL_image.h>
 #include "weapon.h"
 
-void gravity(Player *player, SDL_Rect *weapon, Weapon weapons[]) {
+void gravity(Player *player, Weapon weapons[]) {
 	if (player->y < 480 && player->y > 0) {
 		player->y += 10;
-		weapon->y = player->y + 50;
 	}
 	else if (player->y >= 480) {
 		player->y = 480;
-		weapon->y = player->y + 50;
 	}
 	else {
 		player->y += 20;
-		weapon->y = player->y + 50;
 	}
 
 	for (int i = 0; i < MAXNRWEAPONS; i++) {

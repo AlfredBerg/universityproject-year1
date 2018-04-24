@@ -14,6 +14,8 @@
 #include "player.h"
 #include "sharedNetwork.h"
 
+int compareString(char str1[], char str2[], int len);
+
 void connectToServer(Network *client) {
 	char data[MAX_PACKET] = "HELLO\n";
 	char decoded[2][30];

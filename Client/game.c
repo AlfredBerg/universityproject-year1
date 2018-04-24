@@ -88,9 +88,9 @@ int runGame(Game *game, Network *client) {
 	//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
 	//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
 	//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
-	SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
-	SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
-	SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
+	//SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
+	//SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
+	//SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7
 
 	int rPressed = 0;
 
@@ -119,9 +119,8 @@ int runGame(Game *game, Network *client) {
 			updateServer(players, client);
 			continue;
 		}
-		//Do when game tick
+		
 		renderTick = SDL_GetTicks();
-
 		loopCount++;
 
 		if (sprite[client->playerID] >= 8)
@@ -172,9 +171,9 @@ int runGame(Game *game, Network *client) {
 			doJump = 1;
 		}
 
-		walk(&players[client->playerID], &sword1, &prevKey);
-		jump(&players[client->playerID], &sword1, &isJumping, &jumpTime, &doJump);
-		gravity(&players[client->playerID], &sword1, weapons);
+		walk(&players[client->playerID], &prevKey);
+		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump);
+		gravity(&players[client->playerID], weapons);
 
 		for (int j = 0; j < 4; j++) {
 			if (j == client->playerID) {
@@ -187,7 +186,6 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-
 		weaponActions(weapons, players);
 		
 
@@ -199,10 +197,6 @@ int runGame(Game *game, Network *client) {
 	
 		SDL_Rect background = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 		SDL_RenderCopy(game->renderer, images_Texture[0], NULL, &background);
-
-		if (rPressed == 1)
-			SDL_RenderCopy(game->renderer, images_Texture[3], NULL, &swordRect);
-
 
 
 		/*
@@ -262,8 +256,6 @@ int runGame(Game *game, Network *client) {
 
 		//Draw weapons / pickups
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
-		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &sword1);
-		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &sword2);
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}

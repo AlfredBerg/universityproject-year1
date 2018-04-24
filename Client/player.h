@@ -23,5 +23,5 @@ struct player {
 };
 typedef struct player Player;
 
-void jump(Player *player, SDL_Rect *weapon, int *isJumping, int *jumpTime, int *doJump);
-void walk(Player *player, SDL_Rect *weapon, int *prevKey);
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump);
+void walk(Player *player, int *prevKey);
