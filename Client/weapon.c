@@ -1,19 +1,11 @@
 #pragma once
-#include "player.h"
 #include "weapon.h"
-#include "clientNetwork.h"
-#include "projectile.h"
-
-#define MAXBULLETS 100
-
-void pickUpWeapon(Weapon weapons[], Player players[]);
-void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]);
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
 	fireWeapon(weapons, players, client, projectiles);
 
 	pickUpWeapon(weapons, players);
-	
+
 	//Move with player if picked up
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
 		if (weapons[i].isPickedUp == 1) {
@@ -33,9 +25,6 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 		weapons[i].rect.x = weapons[i].x;
 		weapons[i].rect.y = weapons[i].y;
 	}
-
-
-
 }
 
 void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
@@ -62,7 +51,7 @@ void pickUpWeapon(Weapon weapons[], Player players[]) {
 		if (weapons[i].isPickedUp == 1) {
 			continue;
 		}
-		
+
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (SDL_HasIntersection(&players[j].rect, &weapons[i].rect)) {
 				printf("Pickup\n");

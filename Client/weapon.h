@@ -3,10 +3,13 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <SDL_image.h>
+
 #include "clientNetwork.h"
 #include "projectile.h"
+#include "player.h"
 
 #define MAXNRWEAPONS 1
+#define MAXBULLETS 100
 
 struct weapon {
 	int id;
@@ -23,3 +26,5 @@ struct weapon {
 typedef struct weapon Weapon;
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]);
+void pickUpWeapon(Weapon weapons[], Player players[]);
+void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]);
