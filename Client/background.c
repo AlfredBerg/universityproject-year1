@@ -1,13 +1,16 @@
 #pragma once
-#include "SDL.h"
-#include "game.h"
 #include "background.h"
 
 void displayBackground(Game *game) {
+	SDL_Texture *cloudsBack = loadTexture("assets/CloudsBack.png", game);
+	SDL_RenderCopy(game->renderer, cloudsBack, NULL, NULL);
 
-	SDL_Surface *image = IMG_Load("bowser.png");
-	SDL_Texture *image_Texture = SDL_CreateTextureFromSurface(game->renderer, image);
-	SDL_FreeSurface(image);
-	SDL_Rect rect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-	SDL_RenderCopy(game->renderer, image_Texture, NULL, &rect);
+	SDL_Texture *cloudsFront = loadTexture("assets/CloudsFront.png", game);
+	SDL_RenderCopy(game->renderer, cloudsFront, NULL, NULL);
+
+	SDL_Texture *bgBack = loadTexture("assets/BGBack.png", game);
+	SDL_RenderCopy(game->renderer, bgBack, NULL, NULL);
+
+	SDL_Texture *bgFront = loadTexture("assets/BGFront.png", game);
+	SDL_RenderCopy(game->renderer, bgFront, NULL, NULL);
 }

@@ -1,13 +1,6 @@
 #pragma once
 #include "SDL.h"
 #include  "game.h"
-
-struct background {
-
-	int x;
-	int y;
-
-};
-typedef struct background Background;
+#include "textureManager.h"
 
 void displayBackground(Game *game);
