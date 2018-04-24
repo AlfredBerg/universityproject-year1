@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-void gravity(Player *player, SDL_Rect *weapon) {
+void gravity(Player *player, SDL_Rect *weapon, Weapon weapons[]) {
 	if (player->y < 480 && player->y > 0) {
 		player->y += 10;
 		weapon->y = player->y + 50;
@@ -17,4 +17,6 @@ void gravity(Player *player, SDL_Rect *weapon) {
 		player->y += 20;
 		weapon->y = player->y + 50;
 	}
+
+	weapons[0].rect.y += 1;
 }

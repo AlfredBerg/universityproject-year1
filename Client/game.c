@@ -141,8 +141,9 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Weapon weapons[1] = {
-		{ 0, 50, 50, 10, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 500, 400, 70, 120 }, 0 }
+		{ 0, 50, 50, 10, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 500, 400, 50, 50 }, 0 }
 	};
+	weapons[0].Texture = SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image);
 
 	//Only for test
 	printf("%d, %d\n", players[0].p1.x, players[0].p1.y);
@@ -163,6 +164,7 @@ int runGame(Game *game, Network *client) {
 	images[5] = IMG_Load("sword2.png");			//dubbel
 	images[6] = IMG_Load("humanwin.png");
 	images[7] = IMG_Load("Tileset.png");
+	
 
 	//Create texture for each image
 	int nrOfImages = 8;
@@ -239,8 +241,8 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
 		SDL_Rect dstrect2 = { players[1].p1.x, players[1].p1.y, 120, 140 };
 
-		SDL_Rect srcWeapon0 = { 0, 0, 128, 128 };
-		SDL_Rect dstWeapon0 = { weapons[0].rect.x, weapons[0].rect.y, 120, 120 };
+		SDL_Rect srcWeapon0 = { 0, 0, 60, 60 };
+		SDL_Rect dstWeapon0 = { weapons[0].rect.x, weapons[0].rect.y, 50, 50 };
 
 		
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
@@ -276,7 +278,7 @@ int runGame(Game *game, Network *client) {
 
 		walk(&players[client->playerID], &sword1, &prevKey);
 		jump(&players[client->playerID], &sword1, &isJumping, &jumpTime, &doJump);
-		gravity(&players[client->playerID], &sword1);
+		gravity(&players[client->playerID], &sword1, weapons);
 
 		for (int j = 0; j < 4; j++) {
 			if (j == client->playerID) {
@@ -300,7 +302,6 @@ int runGame(Game *game, Network *client) {
 			swordRect.x += 10;
 
 		//---------------------------Render------------------------------------
-
 
 		//Clear screen with black
 		SDL_RenderClear(game->renderer);
@@ -360,11 +361,7 @@ int runGame(Game *game, Network *client) {
 			//restart(window, renderer);
 		}
 		
-		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
-		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
-		SDL_RenderCopy(game->renderer, weapons[0].Texture, &srcWeapon0, &dstWeapon0);
-		SDL_RenderCopy(game->renderer, images_Texture[2], NULL, &bild5);
-		SDL_RenderCopy(game->renderer, images_Texture[4], NULL, &bild7);
+
 		*/
 
 		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect); //draw
