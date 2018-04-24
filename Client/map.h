@@ -1,9 +1,10 @@
 #pragma once
-#define NR_OF_TILES 5
-#define MAP_HEIGHT 16
-#define MAP_WIDTH 16
+#include <SDL.h>
+#include <SDL_image.h>
+#include "game.h"
+#include "textureManager.h"
 
-SDL_Rect createRectangle(int x, int y, int w, int h);
-void createRect(SDL_Rect *rectangle, int x, int y, int w, int h);
-void initTiles();
-void drawMap();
+#define MAP_HEIGHT 20
+#define MAP_WIDTH 20
+
+void drawMap(Game *game);

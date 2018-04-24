@@ -42,12 +42,12 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image), { 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image), { 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+	{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 
 	};
 	Weapon weapons[MAXNRWEAPONS] = {
-		{ 0, 400, 40, 10, 500, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image), { 50, 50, 46, 31 }, 0 }
+		{ 0, 400, 40, 10, 500, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
 	};
 
 	Projectile projectiles[MAXPROJECTILES] = {
@@ -70,7 +70,7 @@ int runGame(Game *game, Network *client) {
 
 	SDL_Event event;
 
-	int sprite[2] = {1, 1};
+	int sprite[2] = { 1, 1 };
 
 	int prevKey = 0;
 	int isJumping = 0;
@@ -167,6 +167,8 @@ int runGame(Game *game, Network *client) {
 		SDL_RenderClear(game->renderer);
 
 		displayBackground(game);
+
+		drawMap(game);
 
 		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
