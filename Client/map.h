@@ -15,5 +15,5 @@ struct tile {
 };
 typedef struct tile Tile;
 
-void initTiles1(Game *game, Tile *tile, int x, int y);
-void drawTiles1(Game *game, Tile *tile, int x, int y);
+void initTiles(Game *game, Tile *tile, int x, int y);
+void drawTiles(Game *game, Tile *tile, int x, int y);

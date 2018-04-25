@@ -1,6 +1,6 @@
 #include "map.h"
 
-void initTiles1(Game *game, Tile *tile, int x, int y) {
+void initTiles(Game *game, Tile *tile, int x, int y) {
 	SDL_Rect rect = { x * 32, y * 32, 16, 16 };
 
 	switch (tile->ID) {
@@ -29,7 +29,7 @@ void initTiles1(Game *game, Tile *tile, int x, int y) {
 
 }
 
-void drawTiles1(Game *game, Tile *tile, int x, int y) {
+void drawTiles(Game *game, Tile *tile, int x, int y) {
 	SDL_Rect rect = { x * 32, y * 32, 32, 32 };
 
 	switch (tile->ID) {

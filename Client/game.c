@@ -8,7 +8,7 @@
 #include "textureManager.h"
 #include "map.h"
 
-static int map[MAP_HEIGHT][MAP_WIDTH] = {
+static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 	{ 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
@@ -30,25 +30,6 @@ static int map[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
 	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 };
-
-//Last map:
-//static int map[MAP_HEIGHT][MAP_WIDTH] =
-//{ { 1,1,2,2,2,2,2,2,1,1,2,2,2,2,2,1 },
-//{ 1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,1,2,2,2,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,2,2,1,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,4,1 },
-//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,4,4,4,2,2,1,1,2,2,4,2,2,1 },
-//{ 2,2,2,4,4,4,2,2,2,3,3,3,4,2,2,1 },
-//{ 1,1,2,2,2,2,2,3,4,3,3,3,4,2,2,2 },
-//{ 1,1,1,1,2,2,2,2,2,3,3,3,2,2,2,3 },
-//{ 2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1 },
-//{ 2,1,1,2,2,2,1,2,2,2,3,2,2,2,4,4 },
-//{ 2,1,1,4,2,2,1,2,2,2,3,2,2,2,2,4 },
-//{ 2,1,1,1,2,2,1,2,2,1,3,3,3,3,3,4 },
-//{ 2,1,1,1,1,1,1,2,2,1,2,2,2,2,4,4 },
-//{ 2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,1 } };
 
 void initGame(Game *game) {
 
@@ -122,12 +103,12 @@ int runGame(Game *game, Network *client) {
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
 	//Init map
-	Tile createMap[MAP_HEIGHT][MAP_WIDTH];
+	Tile map[MAP_HEIGHT][MAP_WIDTH];
 	int i, j = 0;
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
-			createMap[i][j].ID = map[i][j];
-			initTiles1(game, &createMap[i][j], j, i);
+			map[i][j].ID = lvl1[i][j];
+			initTiles(game, &map[i][j], j, i);
 		}
 	}
 
@@ -219,13 +200,11 @@ int runGame(Game *game, Network *client) {
 
 		displayBackground(game);
 
-		//drawMap(game);
-
 		//Display map
 		int i, j = 0;
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
-				drawTiles1(game, &createMap[i][j], j, i);
+				drawTiles(game, &map[i][j], j, i);
 			}
 		}
 
@@ -246,7 +225,7 @@ int runGame(Game *game, Network *client) {
 
 			for (i = 0; i < MAP_HEIGHT; i++) {
 				for (j = 0; j < MAP_WIDTH; j++) {
-					if (SDL_HasIntersection(&players[1].rect, &createMap[i][j].rect)) {
+					if (SDL_HasIntersection(&players[1].rect, &map[i][j].rect)) {
 						printf("COLLISION with tile\n");
 					}
 				}
@@ -290,6 +269,25 @@ void playBackgroundMusic() {
 		printf("Background music is not working\n");
 	Mix_PlayMusic(backgroundMusic, -1);
 }
+
+//Last map:
+//static int map[MAP_HEIGHT][MAP_WIDTH] =
+//{ { 1,1,2,2,2,2,2,2,1,1,2,2,2,2,2,1 },
+//{ 1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1 },
+//{ 2,1,1,1,2,2,2,2,1,1,2,2,2,2,2,1 },
+//{ 2,1,1,2,2,1,1,2,1,1,2,2,2,2,2,1 },
+//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,4,1 },
+//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,2,1 },
+//{ 2,1,1,4,4,4,2,2,1,1,2,2,4,2,2,1 },
+//{ 2,2,2,4,4,4,2,2,2,3,3,3,4,2,2,1 },
+//{ 1,1,2,2,2,2,2,3,4,3,3,3,4,2,2,2 },
+//{ 1,1,1,1,2,2,2,2,2,3,3,3,2,2,2,3 },
+//{ 2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1 },
+//{ 2,1,1,2,2,2,1,2,2,2,3,2,2,2,4,4 },
+//{ 2,1,1,4,2,2,1,2,2,2,3,2,2,2,2,4 },
+//{ 2,1,1,1,2,2,1,2,2,1,3,3,3,3,3,4 },
+//{ 2,1,1,1,1,1,1,2,2,1,2,2,2,2,4,4 },
+//{ 2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,1 } };
 
 //*****************restart() not yet implemented********************
 //int restart(Game* game) {
