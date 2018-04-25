@@ -2,12 +2,14 @@
 #include "SDL.h"
 #include "game.h"
 
-#define MAP_HEIGHT 20
+#define MAP_HEIGHT 32
 #define MAP_WIDTH 32
 
 struct tile {
 
 	int ID;
+	int x;
+	int y;
 	SDL_Surface *image;
 	SDL_Texture *texture;
 	SDL_Rect rect;

@@ -1,7 +1,9 @@
 #include "map.h"
 
 void initTiles(Game *game, Tile *tile, int x, int y) {
-	SDL_Rect rect = { x * 32, y * 32, 16, 16 };
+	SDL_Rect rect = { x * 32, y * 32, 32, 32 };
+	tile->x = x * 32;
+	tile->y = y * 32;
 
 	switch (tile->ID) {
 	case 2:

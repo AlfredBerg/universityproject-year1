@@ -27,9 +27,9 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
-	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0 },
+	//{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+	//{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 };
 
 void initGame(Game *game) {
@@ -100,10 +100,12 @@ int runGame(Game *game, Network *client) {
 	int sprite[2] = { 1, 1 };
 
 	int prevKey = 0;
+	int key = 0;
 	int isJumping = 0;
 	int jumpTime = 0;
 	int doJump = 0;
 	int loopCount = 0;
+	int enableWalk = 1;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -166,12 +168,12 @@ int runGame(Game *game, Network *client) {
 		if (KeyState[SDL_SCANCODE_D]) {
 			if (!(loopCount % 3))
 				sprite[client->playerID] += 1;
-			prevKey = RIGHT;
+			key = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_A]) {
 			if (!(loopCount % 3))
 				sprite[client->playerID] -= 1;
-			prevKey = LEFT;
+			key = LEFT;
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
@@ -180,7 +182,16 @@ int runGame(Game *game, Network *client) {
 			players[client->playerID].weaponFired = 1;
 		}
 
-		walk(&players[client->playerID], &prevKey);
+		//Collision detection player <-> tile
+		for (i = 0; i < MAP_HEIGHT; i++) {
+			for (j = 0; j < MAP_WIDTH; j++) {
+				if (SDL_HasIntersection(&players[0].rect, &map[i][j].rect)) {
+					enableWalk = handleCollision(&players[0], map[i][j].x, map[i][j].y, &key, &prevKey);
+				}
+			}
+		}
+
+		walk(&players[client->playerID], &key, &enableWalk, &prevKey);
 		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump);
 		gravity(&players[client->playerID], weapons);
 
@@ -224,14 +235,6 @@ int runGame(Game *game, Network *client) {
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
 				printf("COLLISION\n");
 				loseHealth(&players[0], 10);
-			}
-
-			for (i = 0; i < MAP_HEIGHT; i++) {
-				for (j = 0; j < MAP_WIDTH; j++) {
-					if (SDL_HasIntersection(&players[1].rect, &map[i][j].rect)) {
-						printf("COLLISION with tile\n");
-					}
-				}
 			}
 
 
