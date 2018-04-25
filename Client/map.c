@@ -1,59 +1,49 @@
 #include "map.h"
 
-void drawMap(Game *game) {
-	int map[20][32] = {
-		{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-		{ 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-		{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
-		{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-	};
+void initTiles1(Game *game, Tile *tile, int x, int y) {
+	SDL_Rect rect = { x * 32, y * 32, 16, 16 };
 
-	SDL_Texture *tile2 = loadTexture("assets/t2.png", game);
-	SDL_Texture *tile10 = loadTexture("assets/t10.png", game);
-	SDL_Texture *tile19 = loadTexture("assets/t19.png", game);
+	switch (tile->ID) {
+	case 2:
+		tile->image = IMG_Load("assets/t2.png");
+		tile->texture = SDL_CreateTextureFromSurface(game->renderer, tile->image);
+		SDL_FreeSurface(tile->image);
+		tile->rect = rect;
+		break;
 
-	SDL_Rect sRect = { 0, 0, 16, 16 };
-	SDL_Rect dRect = { 0, 0, 32, 32 };
+	case 10:
+		tile->image = IMG_Load("assets/t10.png");
+		tile->texture = SDL_CreateTextureFromSurface(game->renderer, tile->image);
+		SDL_FreeSurface(tile->image);
+		tile->rect = rect;
+		break;
 
-	int type = 0;
-	for (int row = 0; row < 20; row++) {
-		for (int col = 0; col < 32; col++) {
-			type = map[row][col];
-			dRect.x = col * 32;
-			dRect.y = row * 32;
+	case 19:
+		tile->image = IMG_Load("assets/t19.png");
+		tile->texture = SDL_CreateTextureFromSurface(game->renderer, tile->image);
+		SDL_FreeSurface(tile->image);
+		tile->rect = rect;
+		break;
 
-			switch (type) {
-			case 0:
-				break;
-
-			case 2:
-				SDL_RenderCopy(game->renderer, tile2, &sRect, &dRect);
-				break;
-
-			case 10:
-				SDL_RenderCopy(game->renderer, tile10, &sRect, &dRect);
-				break;
-
-			case 19:
-				SDL_RenderCopy(game->renderer, tile19, &sRect, &dRect);
-				break;
-			}
-		}
 	}
+
+}
+
+void drawTiles1(Game *game, Tile *tile, int x, int y) {
+	SDL_Rect rect = { x * 32, y * 32, 32, 32 };
+
+	switch (tile->ID) {
+	case 2:
+		SDL_RenderCopy(game->renderer, tile->texture, NULL, &rect);
+		break;
+
+	case 10:
+		SDL_RenderCopy(game->renderer, tile->texture, NULL, &rect);
+		break;
+
+	case 19:
+		SDL_RenderCopy(game->renderer, tile->texture, NULL, &rect);
+		break;
+	}
+
 }

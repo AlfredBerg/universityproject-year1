@@ -1,10 +1,19 @@
 #pragma once
-#include <SDL.h>
-#include <SDL_image.h>
+#include "SDL.h"
 #include "game.h"
-#include "textureManager.h"
 
 #define MAP_HEIGHT 20
-#define MAP_WIDTH 20
+#define MAP_WIDTH 32
 
-void drawMap(Game *game);
+struct tile {
+
+	int ID;
+	SDL_Surface *image;
+	SDL_Texture *texture;
+	SDL_Rect rect;
+
+};
+typedef struct tile Tile;
+
+void initTiles1(Game *game, Tile *tile, int x, int y);
+void drawTiles1(Game *game, Tile *tile, int x, int y);
