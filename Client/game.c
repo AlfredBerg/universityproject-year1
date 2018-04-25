@@ -7,6 +7,7 @@
 #include "projectile.h"
 #include "textureManager.h"
 #include "map.h"
+#include "pickup.h"
 
 static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
@@ -67,7 +68,7 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 	Player players[MAXPLAYERS] = {
 		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -76,6 +77,10 @@ int runGame(Game *game, Network *client) {
 
 	Projectile projectiles[MAXPROJECTILES] = {
 		{ 0, 10, 10, 0, 30, 30, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
+	};
+
+	Pickup pickups[MAX_NR_OF_PICKUPS] = {
+		{0, 550, 500, 5, IMG_Load("assets/crystal.png"), SDL_CreateTextureFromSurface(game->renderer, pickups[0].image), {pickups[0].x, pickups[0].y, 32, 32} }
 	};
 
 	//Fulkod för att avgöra enemyID
@@ -213,6 +218,7 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &players[1].rect);
 			SDL_RenderDrawRect(game->renderer, &players[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
+			SDL_RenderDrawRect(game->renderer, &pickups[0].rect);
 
 
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
@@ -243,6 +249,7 @@ int runGame(Game *game, Network *client) {
 
 		//Draw weapons / pickups
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
+		SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
 
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
