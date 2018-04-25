@@ -22,7 +22,7 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump) {
 }
 
 void walk(Player *player, int *prevKey) {
-	if (*prevKey == RIGHT && player->x < 750) {
+	if (*prevKey == RIGHT && player->x < 980) {
 		player->x += 10;
 	}
 	else if (*prevKey == LEFT && player->x > -10) {
