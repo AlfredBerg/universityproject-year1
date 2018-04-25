@@ -30,3 +30,7 @@ void walk(Player *player, int *prevKey) {
 	}
 	*prevKey = 0;
 }
+
+void loseHealth(Player *player, int damage) {
+	player->life -= damage;
+}

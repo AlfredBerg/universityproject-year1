@@ -30,6 +30,10 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
 	if (players[client->playerID].weaponFired == 1) {
 		int weaponId = players[client->playerID].weaponID;
+		players[client->playerID].weaponFired = 0;
+		if (weaponId == -1) {
+			return;
+		}
 
 		players[client->playerID].weaponFired = 0;
 

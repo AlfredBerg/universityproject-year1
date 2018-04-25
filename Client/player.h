@@ -16,7 +16,7 @@ struct player {
 	int life;
 	int x;
 	int y;
-	int weaponID; //Place that weapon has in weapon array
+	int weaponID; //Place that weapon has in weapon array , -1 means no weapon
 	int weaponFired;
 	int tickThatWeaponFired;
 	SDL_Surface *Image;
@@ -27,3 +27,4 @@ typedef struct player Player;
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump);
 void walk(Player *player, int *prevKey);
+void loseHealth(Player *player, int damage);

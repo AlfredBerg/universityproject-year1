@@ -67,8 +67,8 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, 1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, 0, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, -1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+		{ "Skull", 100, 300, 400, -1, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -223,10 +223,7 @@ int runGame(Game *game, Network *client) {
 
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
 				printf("COLLISION\n");
-			}
-
-			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
-				printf("COLLISION\n");
+				loseHealth(&players[0], 10);
 			}
 
 			for (i = 0; i < MAP_HEIGHT; i++) {
