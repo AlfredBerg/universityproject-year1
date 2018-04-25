@@ -7,6 +7,7 @@ struct tile {
 	int ID;
 	SDL_Surface *image;
 	SDL_Texture *texture;
+	SDL_Rect rect;
 
 };
 typedef struct tile Tile;
