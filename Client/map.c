@@ -28,12 +28,12 @@ void drawMap(Game *game) {
 	SDL_Texture *tile10 = loadTexture("assets/t10.png", game);
 	SDL_Texture *tile19 = loadTexture("assets/t19.png", game);
 
-	SDL_Rect sRect = {0, 0, 16, 16};
+	SDL_Rect sRect = { 0, 0, 16, 16 };
 	SDL_Rect dRect = { 0, 0, 32, 32 };
 
 	int type = 0;
 	for (int row = 0; row < 20; row++) {
-		for (int col = 0; col < 35; col++) {
+		for (int col = 0; col < 32; col++) {
 			type = map[row][col];
 			dRect.x = col * 32;
 			dRect.y = row * 32;

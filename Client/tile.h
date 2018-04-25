@@ -2,6 +2,9 @@
 #include "SDL.h"
 #include "game.h"
 
+#define MAP_HEIGHT 20
+#define MAP_WIDTH 20
+
 struct tile {
 
 	int ID;
@@ -14,4 +17,3 @@ typedef struct tile Tile;
 
 void initTiles1(Game *game, Tile *tile, int x, int y);
 void drawTiles1(Game *game, Tile *tile, int x, int y);
-
