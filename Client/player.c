@@ -32,5 +32,10 @@ void walk(Player *player, int *prevKey) {
 }
 
 void loseHealth(Player *player, int damage) {
+	if (!SDL_TICKS_PASSED(SDL_GetTicks(), player->tickThatLostHealth + INVULNERABILITY_TIME)) {
+		return;
+	}
+	printf("LOST HEALTH\n");
+	player->tickThatLostHealth = SDL_GetTicks();
 	player->life -= damage;
 }

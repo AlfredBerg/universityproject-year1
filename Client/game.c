@@ -17,16 +17,16 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 	{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
 	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
@@ -65,10 +65,14 @@ void initGame(Game *game) {
 
 int runGame(Game *game, Network *client) {
 
+	int checkIfEqual[TWONUMBERS] = { LEFT, NULL };
+	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
+
+
 	//Create two players
 	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, -1, 0, SDL_GetTicks(), IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, -1, 0, SDL_GetTicks(), IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+		{ "Skull", 100, 300, 400, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -139,15 +143,11 @@ int runGame(Game *game, Network *client) {
 		//Uint32 ticks = SDL_GetTicks(); (time based)
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
-		SDL_Rect srcrect = { sprite[0] * 75, 0, 75, 132 };
-		SDL_Rect dstrect = { players[0].rect.x, players[0].rect.y, 75, 132 };
-
-		SDL_Rect srcrect2 = { sprite[1] * 64 + 17, 64 + 15, 64, 64 };
-		SDL_Rect dstrect2 = { players[1].rect.x, players[1].rect.y, 120, 140 };
+		SDL_Rect srcrect[2] = { { sprite[0] * 75, 0, 75, 132 } , { sprite[1] * 64, 64 + 15, 64, 64 } };
+		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 75, 132 }, { players[1].rect.x, players[1].rect.y, 120, 140 } };
 
 
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
-
 
 
 		// Check for various events (keyboard, mouse, touch, close)
@@ -160,6 +160,7 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
+
 		//Move fighter
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
@@ -167,11 +168,13 @@ int runGame(Game *game, Network *client) {
 			if (!(loopCount % 3))
 				sprite[client->playerID] += 1;
 			prevKey = RIGHT;
+			players[client->playerID].lastDirection = RIGHT;
 		}
 		else if (KeyState[SDL_SCANCODE_A]) {
 			if (!(loopCount % 3))
 				sprite[client->playerID] -= 1;
 			prevKey = LEFT;
+			players[client->playerID].lastDirection = LEFT;
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
@@ -179,6 +182,7 @@ int runGame(Game *game, Network *client) {
 		if (KeyState[SDL_SCANCODE_SPACE]) {
 			players[client->playerID].weaponFired = 1;
 		}
+
 
 		walk(&players[client->playerID], &prevKey);
 		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump);
@@ -193,6 +197,8 @@ int runGame(Game *game, Network *client) {
 				players[j].rect.x = players[j].x;
 				players[j].rect.y = players[j].y;
 			}
+
+			//displayHealth(players[j]);
 		}
 
 		weaponActions(weapons, players, client, projectiles);
@@ -241,8 +247,14 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//Draw players
-		SDL_RenderCopy(game->renderer, players[0].Texture, &srcrect, &dstrect);
-		SDL_RenderCopy(game->renderer, players[1].Texture, &srcrect2, &dstrect2);
+		for (int i = 0; i < MAXPLAYERS; i++) {
+			if (players[i].lastDirection == LEFT) {
+				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+			}
+			else if (players[i].lastDirection == RIGHT)
+				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+		}
+
 
 		//Draw weapons / pickups
 		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
