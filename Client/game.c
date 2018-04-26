@@ -85,7 +85,7 @@ int runGame(Game *game, Network *client) {
 	Pickup pickups[MAX_NR_OF_PICKUPS];
 	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/crystal.png", 32, 32);
 	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/crystal.png", 32, 32);
-	int nrOfPickups = 1;
+	int nrOfPickups = 2;
 
 	//Fulkod för att avgöra enemyID
 	int enemyID;
@@ -282,15 +282,7 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		//Draw pickup
-		if (!pickups[0].isPickedUp)
-			SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
-		else
-			deletePickup(pickups, pickups[0].id, &nrOfPickups);
-
-		if (!pickups[1].isPickedUp)
-			SDL_RenderCopy(game->renderer, pickups[1].texture, NULL, &pickups[1].rect);
-
+		drawPickup(game, pickups, &nrOfPickups);
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}
