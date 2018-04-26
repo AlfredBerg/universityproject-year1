@@ -21,3 +21,4 @@ typedef struct pickup Pickup;
 void pickUpPickup(Pickup pickups[], Player players[]);
 Pickup createPickup(Game *game, int id, int x, int y, int healing, const char imageName[], int rectW, int rectH);
 void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups);
+void drawPickup(Game *game, Pickup pickups[], int *nrOfPickups);

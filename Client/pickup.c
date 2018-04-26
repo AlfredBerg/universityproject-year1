@@ -7,12 +7,15 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 			continue;
 		}
 
+
+		//OBS : Found a bug here ! Prints out 1 extra time
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (SDL_HasIntersection(&players[j].rect, &pickups[i].rect)) {
 				printf("Pickup pickup\n");
+				printf("Health = + %d\n", pickups[i].healing);
 				players[j].pickupID = pickups[i].id;
 				pickups[i].isPickedUp = 1;
-				//pickups[i].healing
+				players[j].life += pickups[i].healing;
 			}
 		}
 
@@ -43,5 +46,14 @@ void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups) {
 			*nrOfPickups = *nrOfPickups - 1;
 			printf("Deleted pickup\n");
 		}
+	}
+}
+
+void drawPickup(Game *game, Pickup pickups[], int *nrOfPickups) {
+	for (int i = 0; i < *nrOfPickups; i++) {
+		if(!pickups[i].isPickedUp)
+			SDL_RenderCopy(game->renderer, pickups[i].texture, NULL, &pickups[i].rect);
+		else
+			deletePickup(pickups, pickups[i].id, nrOfPickups);
 	}
 }

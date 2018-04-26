@@ -60,6 +60,8 @@ void initGame(Game *game) {
 	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
 	game->bgBack = loadTexture("assets/BGBack.png", game);
 	game->bgFront = loadTexture("assets/BGFront.png", game);
+
+	createWindowIcon(game);
 }
 
 
@@ -67,10 +69,11 @@ int runGame(Game *game, Network *client) {
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 
 	//Create two players
-	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
-	};
+
+	Player players[MAXPLAYERS];
+	players[0] = createPlayer(game, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
+	players[1] = createPlayer(game, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
+	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
 		{ 0, 400, 40, 10, 200, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
@@ -81,9 +84,9 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/crystal.png", 32, 32);
-	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/crystal.png", 32, 32);
-	int nrOfPickups = 1;
+	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png", 32, 32);
+	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png", 32, 32);
+	int nrOfPickups = 2;
 
 	//Fulkod för att avgöra enemyID
 	int enemyID;
@@ -278,15 +281,7 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		//Draw pickup
-		if (!pickups[0].isPickedUp)
-			SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
-		else
-			deletePickup(pickups, pickups[0].id, &nrOfPickups);
-
-		if (!pickups[1].isPickedUp)
-			SDL_RenderCopy(game->renderer, pickups[1].texture, NULL, &pickups[1].rect);
-
+		drawPickup(game, pickups, &nrOfPickups);
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}
@@ -307,6 +302,34 @@ void playBackgroundMusic() {
 		printf("Background music is not working\n");
 	Mix_PlayMusic(backgroundMusic, -1);
 }
+
+void createWindowIcon(Game *game) {
+	SDL_Surface *icon = IMG_Load("assets/crystal.png");
+	SDL_SetWindowIcon(game->window, icon);
+	SDL_FreeSurface(icon);
+}
+
+Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
+Player player;
+strcpy(player.name, name);
+player.life = 100;
+player.x = x;
+player.y = y;
+player.pickupID = -1;
+player.weaponID = -1;
+player.weaponFired = 0;
+player.tickThatWeaponFired = SDL_GetTicks();
+player.tickThatLostHealth = SDL_GetTicks();
+player.lastDirection = lastDirection;
+player.Image = IMG_Load(imageName);
+player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
+player.rect.x = x;
+player.rect.y = y;
+player.rect.w = rectW;
+player.rect.h = rectH;
+return player;
+}
+
 
 //Last map:
 //static int map[MAP_HEIGHT][MAP_WIDTH] =
@@ -377,17 +400,6 @@ void playBackgroundMusic() {
 //	SDL_DestroyTexture(rematch_Texture);
 //	return running;
 //}
-
-
-
-//*****************moved from initGame********************
-//Window icon
-/*SDL_Surface *icon = IMG_Load("sword1.png");
-SDL_SetWindowIcon(game->window, icon);
-SDL_FreeSurface(icon);*/
-
-//SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
-
 
 
 //*****************moved from runGame*********************
