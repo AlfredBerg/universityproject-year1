@@ -60,6 +60,8 @@ void initGame(Game *game) {
 	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
 	game->bgBack = loadTexture("assets/BGBack.png", game);
 	game->bgFront = loadTexture("assets/BGFront.png", game);
+
+	createWindowIcon(game);
 }
 
 
@@ -310,6 +312,13 @@ void playBackgroundMusic() {
 	Mix_PlayMusic(backgroundMusic, -1);
 }
 
+void createWindowIcon(Game *game) {
+	SDL_Surface *icon = IMG_Load("assets/crystal.png");
+	SDL_SetWindowIcon(game->window, icon);
+	SDL_FreeSurface(icon);
+}
+
+
 //Last map:
 //static int map[MAP_HEIGHT][MAP_WIDTH] =
 //{ { 1,1,2,2,2,2,2,2,1,1,2,2,2,2,2,1 },
@@ -379,17 +388,6 @@ void playBackgroundMusic() {
 //	SDL_DestroyTexture(rematch_Texture);
 //	return running;
 //}
-
-
-
-//*****************moved from initGame********************
-//Window icon
-/*SDL_Surface *icon = IMG_Load("sword1.png");
-SDL_SetWindowIcon(game->window, icon);
-SDL_FreeSurface(icon);*/
-
-//SDL_SetRenderDrawColor(game->renderer, 255, 0, 0, 255);
-
 
 
 //*****************moved from runGame*********************

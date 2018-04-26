@@ -38,3 +38,4 @@ int restart(Game *game);
 int runGame(Game *game, Network *client);
 void quitGame(Game *game);
 void playBackgroundMusic();
+void createWindowIcon(Game *game);
