@@ -12,7 +12,7 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 				printf("Pickup pickup\n");
 				players[j].pickupID = pickups[i].id;
 				pickups[i].isPickedUp = 1;
-				//pickups[i].healing
+				players[j].life += pickups[i].healing;
 			}
 		}
 
