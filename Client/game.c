@@ -64,10 +64,7 @@ void initGame(Game *game) {
 
 
 int runGame(Game *game, Network *client) {
-
-	int checkIfEqual[TWONUMBERS] = { LEFT, NULL };
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
-
 
 	//Create two players
 	Player players[MAXPLAYERS] = {
@@ -191,7 +188,7 @@ int runGame(Game *game, Network *client) {
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
 				if (SDL_HasIntersection(&players[0].rect, &map[i][j].rect)) {
-					enableWalk = handleCollision(&players[0], map[i][j].x, map[i][j].y, &key, &prevKey);
+					enableWalk = handleCollision(&players[0], map[i][j].rect.x, map[i][j].rect.y, &key, &prevKey);
 				}
 			}
 		}
@@ -259,9 +256,10 @@ int runGame(Game *game, Network *client) {
 				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
 		}
 
+		playerHealthbar(players, game->renderer);
 
 		//Draw weapons / pickups
-		if (players[client->playerID].lastDirection == LEFT) {
+		if (players[client->playerID].lastDirection == LEFT && weapons[0].isPickedUp == 1) {
 			SDL_RenderCopyEx(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
 		}
 		else {

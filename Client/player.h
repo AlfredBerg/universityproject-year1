@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+
 #define TWONUMBERS 2
 
 #define NAME_LENGTH 50
@@ -34,3 +35,4 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump);
 void walk(Player *player, int *key, int *enableWalk, int *prevKey);
 void loseHealth(Player *player, int damage);
 int handleCollision(Player *player, int tileX, int tileY, int *enableWalk, int *prevKey);
+void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);

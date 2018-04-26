@@ -1,5 +1,6 @@
 #pragma once
 #include "player.h"
+#include "game.h"
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump) {
 	if ((*doJump == 1))
@@ -65,3 +66,34 @@ int handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey
 	return enable;
 }
 
+void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
+
+	int width = 100, height = 5;
+
+	SDL_Surface *red, *green;
+	red = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	green = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+
+	SDL_Rect rect = { 0, 0, width, height };
+
+	SDL_FillRect(red, &rect, SDL_MapRGB(red->format, 255, 0, 0));
+
+	SDL_FillRect(green, &rect, SDL_MapRGB(green->format, 61, 229, 77));
+	
+	SDL_Texture *greenTexture = SDL_CreateTextureFromSurface(renderer, green);
+	SDL_Texture *redTexture = SDL_CreateTextureFromSurface(renderer, red);
+
+
+	SDL_Rect healthbar[MAXPLAYERS];
+	SDL_Rect healt[] = { 0, 0, width, height };
+
+
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		healthbar[i].x = players[i].x + 5;
+		healthbar[i].y = players[i].y - 10;
+		healthbar[i].h = height;
+		healthbar[i].w = players[i].life / 2;
+
+		SDL_RenderCopy(renderer, greenTexture, NULL, &healthbar[i]);
+	}
+}
