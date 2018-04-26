@@ -79,7 +79,7 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 	SDL_FillRect(red, &rect, SDL_MapRGB(red->format, 255, 0, 0));
 
 	SDL_FillRect(green, &rect, SDL_MapRGB(green->format, 61, 229, 77));
-	
+
 	SDL_Texture *greenTexture = SDL_CreateTextureFromSurface(renderer, green);
 	SDL_Texture *redTexture = SDL_CreateTextureFromSurface(renderer, red);
 

@@ -80,9 +80,10 @@ int runGame(Game *game, Network *client) {
 		{ 0, 10, 10, 0, 30, 30, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
 	};
 
-	Pickup pickups[MAX_NR_OF_PICKUPS] = {
-		{ 0, 550, 500, 5, IMG_Load("assets/crystal.png"), SDL_CreateTextureFromSurface(game->renderer, pickups[0].image),{ pickups[0].x, pickups[0].y, 32, 32 } }
-	};
+	Pickup pickups[MAX_NR_OF_PICKUPS];
+	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/crystal.png", 32, 32);
+	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/crystal.png", 32, 32);
+	int nrOfPickups = 1;
 
 	//Fulkod för att avgöra enemyID
 	int enemyID;
@@ -235,7 +236,6 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &players[1].rect);
 			SDL_RenderDrawRect(game->renderer, &players[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
-			SDL_RenderDrawRect(game->renderer, &pickups[0].rect);
 
 
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
@@ -281,9 +281,14 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//Draw pickup
-		if(!pickups[0].isPickedUp)
+		if (!pickups[0].isPickedUp)
 			SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
-			//else = Destroy pickups[0] -> will implement a struct-destroyer! /Sara
+		else
+			deletePickup(pickups, pickups[0].id, &nrOfPickups);
+
+		if (!pickups[1].isPickedUp)
+			SDL_RenderCopy(game->renderer, pickups[1].texture, NULL, &pickups[1].rect);
+
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}

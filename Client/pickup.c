@@ -18,3 +18,30 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 
 	}
 }
+
+Pickup createPickup(Game *game, int id, int x, int y, int healing, const char imageName[], int rectW, int rectH) {
+	Pickup pickup;
+	pickup.id = id;
+	pickup.x = x;
+	pickup.y = y;
+	pickup.healing = healing;
+	pickup.image = IMG_Load(imageName);
+	pickup.texture = SDL_CreateTextureFromSurface(game->renderer, pickup.image);
+	pickup.rect.x = x;
+	pickup.rect.y = y;
+	pickup.rect.w = rectW;
+	pickup.rect.h = rectH;
+	pickup.isPickedUp = 0;
+	return pickup;
+}
+
+void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups) {
+	for (int i = 0; i < *nrOfPickups; i++) {
+		if (pickupIDtoDelete == pickups[i].id) {
+			for (int j = 0; j < *nrOfPickups - 1; j++)
+				pickups[j] = pickups[j + 1];
+			*nrOfPickups = *nrOfPickups - 1;
+			printf("Deleted pickup\n");
+		}
+	}
+}
