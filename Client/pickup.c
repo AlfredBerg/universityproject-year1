@@ -7,9 +7,12 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 			continue;
 		}
 
+
+		//OBS : Found a bug here ! Prints out 1 extra time
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (SDL_HasIntersection(&players[j].rect, &pickups[i].rect)) {
 				printf("Pickup pickup\n");
+				printf("Health = + %d\n", pickups[i].healing);
 				players[j].pickupID = pickups[i].id;
 				pickups[i].isPickedUp = 1;
 				players[j].life += pickups[i].healing;

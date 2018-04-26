@@ -72,8 +72,7 @@ int runGame(Game *game, Network *client) {
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
 	players[1] = createPlayer(game, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
-	//	= {{ "Erik", 100, 60, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	//{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }};
+	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
 		{ 0, 400, 40, 10, 200, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
@@ -84,8 +83,8 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/crystal.png", 32, 32);
-	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/crystal.png", 32, 32);
+	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png", 32, 32);
+	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png", 32, 32);
 	int nrOfPickups = 2;
 
 	//Fulkod för att avgöra enemyID
