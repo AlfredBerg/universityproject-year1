@@ -76,7 +76,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
-		{ 0, 400, 40, 10, 500, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
+		{ 0, 400, 40, 10, 200, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
 	};
 
 	Projectile projectiles[MAXPROJECTILES] = {
@@ -268,13 +268,17 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		}
 
-
-		
 		SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
 
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
-				SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
+				if (projectiles[i].direction[j] == LEFT) {
+					SDL_RenderCopyEx(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+				}
+				else {
+					SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
+				}
+				
 			}
 		}
 

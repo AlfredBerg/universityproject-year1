@@ -54,7 +54,13 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 
 		printf("Shots fired!\n");
 
-		fireProjectile(&projectiles[weapons[weaponId].projectileType], 1, weapons[weaponId].x, weapons[weaponId].y);
+		if (players[client->playerID].lastDirection == LEFT) {
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x, weapons[weaponId].y);
+		}
+		else {
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x, weapons[weaponId].y);
+		}
+		
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 	}
