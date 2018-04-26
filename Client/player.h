@@ -20,6 +20,7 @@ struct player {
 	int life;
 	int x;
 	int y;
+	int pickupID;
 	int weaponID; //Place that weapon has in weapon array , -1 means no weapon
 	int weaponFired;
 	int tickThatWeaponFired;
@@ -34,5 +35,4 @@ typedef struct player Player;
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump);
 void walk(Player *player, int *key, int *enableWalk, int *prevKey);
 void loseHealth(Player *player, int damage);
-int handleCollision(Player *player, int tileX, int tileY, int *enableWalk, int *prevKey);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);

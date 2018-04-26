@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include "player.h"
 #include "clientNetwork.h"
+#include "game.h"
 
 #define MAX_NR_OF_PICKUPS 1
 
@@ -16,3 +17,5 @@ struct pickup {
 	int isPickedUp;
 };
 typedef struct pickup Pickup;
+
+void pickUpPickup(Pickup pickups[], Player players[]);

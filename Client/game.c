@@ -11,25 +11,25 @@
 
 static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-	{ 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-	{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0 },
-	//{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
-	//{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
+{ 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0 },
+//{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+//{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 };
 
 void initGame(Game *game) {
@@ -68,8 +68,8 @@ int runGame(Game *game, Network *client) {
 
 	//Create two players
 	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-		{ "Skull", 100, 300, 400, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Erik", 100, 60, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+	{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -81,7 +81,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Pickup pickups[MAX_NR_OF_PICKUPS] = {
-		{0, 550, 500, 5, IMG_Load("assets/crystal.png"), SDL_CreateTextureFromSurface(game->renderer, pickups[0].image), {pickups[0].x, pickups[0].y, 32, 32} }
+		{ 0, 550, 500, 5, IMG_Load("assets/crystal.png"), SDL_CreateTextureFromSurface(game->renderer, pickups[0].image),{ pickups[0].x, pickups[0].y, 32, 32 } }
 	};
 
 	//Fulkod för att avgöra enemyID
@@ -142,8 +142,8 @@ int runGame(Game *game, Network *client) {
 		//Uint32 ticks = SDL_GetTicks(); (time based)
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
-		SDL_Rect srcrect[2] = { { sprite[0] * 75, 0, 75, 132 } , { sprite[1] * 64, 64 + 15, 64, 64 } };
-		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 75, 132 }, { players[1].rect.x, players[1].rect.y, 120, 140 } };
+		SDL_Rect srcrect[2] = { { sprite[0] * 75, 0, 75, 132 } ,{ sprite[1] * 64, 64 + 15, 64, 64 } };
+		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 75, 132 },{ players[1].rect.x, players[1].rect.y, 120, 140 } };
 
 
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
@@ -210,6 +210,8 @@ int runGame(Game *game, Network *client) {
 			//displayHealth(players[j]);
 		}
 
+		pickUpPickup(pickups, players);
+
 		weaponActions(weapons, players, client, projectiles);
 		moveProjectiles(projectiles);
 
@@ -258,15 +260,13 @@ int runGame(Game *game, Network *client) {
 
 		playerHealthbar(players, game->renderer);
 
-		//Draw weapons / pickups
+		//Draw weapon
 		if (players[client->playerID].lastDirection == LEFT && weapons[0].isPickedUp == 1) {
 			SDL_RenderCopyEx(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
 		}
 		else {
 			SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		}
-
-		SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
 
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
@@ -276,9 +276,14 @@ int runGame(Game *game, Network *client) {
 				else {
 					SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
 				}
-				
+
 			}
 		}
+
+		//Draw pickup
+		if(!pickups[0].isPickedUp)
+			SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
+			//else = Destroy pickups[0] -> will implement a struct-destroyer! /Sara
 
 		SDL_RenderPresent(game->renderer); //show what was drawn
 	}
