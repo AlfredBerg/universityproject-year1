@@ -7,6 +7,11 @@
 #define MAXPROJECTILES 1
 #define MAXPROJECTILEOBJECTS 100
 
+struct objects {
+	int whoShot;
+};
+typedef struct objects Objects;
+
 struct projectile {
 	int id;
 	int dmg;
@@ -16,6 +21,7 @@ struct projectile {
 	int h;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
+	Objects projectileInfo[MAXPROJECTILEOBJECTS];
 	SDL_Rect rect[MAXPROJECTILEOBJECTS];
 	int direction[MAXPROJECTILEOBJECTS];
 };
@@ -23,4 +29,5 @@ typedef struct projectile Projectile;
 
 void moveProjectiles(Projectile projectiles[]);
 void fireProjectile(Projectile *projectile, int direction, int x, int y);
+void detectProjectileColision(Projectile *projectile, Player players[]);
 

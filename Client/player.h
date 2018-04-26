@@ -36,3 +36,4 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump);
 void walk(Player *player, int *key, int *enableWalk, int *prevKey);
 void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
+int handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey);

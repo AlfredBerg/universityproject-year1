@@ -69,7 +69,7 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 	Player players[MAXPLAYERS] = {
 		{ "Erik", 100, 60, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
+		{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
 	};
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -77,7 +77,7 @@ int runGame(Game *game, Network *client) {
 	};
 
 	Projectile projectiles[MAXPROJECTILES] = {
-		{ 0, 10, 10, 0, 30, 30, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
+		{ 0, 10, 12, 0, 30, 30, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
 	};
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
@@ -207,8 +207,6 @@ int runGame(Game *game, Network *client) {
 				players[j].rect.x = players[j].x;
 				players[j].rect.y = players[j].y;
 			}
-
-			//displayHealth(players[j]);
 		}
 
 		pickUpPickup(pickups, players);

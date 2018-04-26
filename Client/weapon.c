@@ -6,6 +6,10 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 
 	pickUpWeapon(weapons, players);
 
+	for (int i = 0; i < MAXPROJECTILES; i++) {
+		detectProjectileColision(&projectiles[i], players);
+	}
+
 	//Move with player if picked up
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
 		if (weapons[i].isPickedUp == 1) {
@@ -55,10 +59,10 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		printf("Shots fired!\n");
 
 		if (players[client->playerID].lastDirection == LEFT) {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x, weapons[weaponId].y);
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 10, weapons[weaponId].y);
 		}
 		else {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x, weapons[weaponId].y);
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 50, weapons[weaponId].y);
 		}
 
 
