@@ -19,6 +19,7 @@ struct player {
 	int life;
 	int x;
 	int y;
+	int pickupID;
 	int weaponID; //Place that weapon has in weapon array , -1 means no weapon
 	int weaponFired;
 	int tickThatWeaponFired;
