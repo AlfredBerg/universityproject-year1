@@ -10,10 +10,20 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
 		if (weapons[i].isPickedUp == 1) {
 			for (int j = 0; j < MAXPLAYERS; j++) {
-				if (weapons[i].id == players[j].weaponID) {
-					weapons[i].x = players[j].x + 30;
-					weapons[i].y = players[j].y + 50;
+				if (players[j].lastDirection == LEFT) {
+					if (weapons[i].id == players[j].weaponID) {
+						weapons[i].x = players[j].x - 20;
+						weapons[i].y = players[j].y + 50;
+					}
+
 				}
+				else {
+					if (weapons[i].id == players[j].weaponID) {
+						weapons[i].x = players[j].x + 20;
+						weapons[i].y = players[j].y + 50;
+					}
+				}
+
 			}
 
 		}

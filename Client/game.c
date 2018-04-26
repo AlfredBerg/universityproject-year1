@@ -261,7 +261,15 @@ int runGame(Game *game, Network *client) {
 
 
 		//Draw weapons / pickups
-		SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
+		if (players[client->playerID].lastDirection == LEFT) {
+			SDL_RenderCopyEx(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
+		}
+		else {
+			SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
+		}
+
+
+		
 		SDL_RenderCopy(game->renderer, pickups[0].texture, NULL, &pickups[0].rect);
 
 		for (int i = 0; i < MAXPROJECTILES; i++) {
