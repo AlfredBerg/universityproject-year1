@@ -2,7 +2,8 @@
 #include "player.h"
 #include "game.h"
 
-void jump(Player *player, int *isJumping, int *jumpTime, int *doJump) {
+
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *detectGround) {
 	if ((*doJump == 1))
 	{
 		if (!*isJumping) {
@@ -12,15 +13,17 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump) {
 			*isJumping = 1;
 			player->y -= 20;
 			--(*jumpTime);
+			*detectGround = 0;
 		}
 		if (*jumpTime <= 0) {
-			if (player->y == 480) {
+			if (*detectGround == 1) {
 				*doJump = 0;
 				*isJumping = 0;
 			}
 		}
 	}
 }
+
 
 void walk(Player *player, int *key, int *enableWalk, int *prevKey) {
 	if (*key == RIGHT && player->x < 980 && *enableWalk) {
@@ -43,28 +46,26 @@ void loseHealth(Player *player, int damage) {
 	player->life -= damage;
 }
 
+void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *detectGround, int *enableWalk) {
 
-int handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey) {
-	int enable = 1;
 	if (*key == LEFT && *key == *prevKey) {
-		if (tileX + 32 > player->x) { // 32 = tile width
-			enable = 0;
+		if ((tileX + 32 > player->x) && (tileY < (player->y + 93))) { // 32 = tile width
+			*enableWalk = 0;
 		}
-		else enable = 1;
 	}
-
 	else if (*key == RIGHT && *key == *prevKey) {
-		if (tileX < player->x + 75) { // 75 = player width
-			enable = 0;
+		if ((tileX < player->x + 75) && (tileY < (player->y + 93))) { // 75 = player width
+			*enableWalk = 0;
 		}
-		else enable = 1;
 	}
+	else if (tileY < player->y + 132) { // 132 = player height
+		*detectGround = 1;
+	}
+	else *enableWalk = 1;
 
-	//printf("\ntile x   = %d", tileX + 32); // 32 = tile width
-	//printf("\nplayer x = %d\n", player->x);
-
-	return enable;
 }
+
+
 
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 

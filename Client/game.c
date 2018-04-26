@@ -17,20 +17,21 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0 },
-//{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
-//{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0 },
+{ 2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0 },
+{ 2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0 },
+{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
+{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 };
+
 
 void initGame(Game *game) {
 
@@ -111,6 +112,7 @@ int runGame(Game *game, Network *client) {
 	int doJump = 0;
 	int loopCount = 0;
 	int enableWalk = 1;
+	int detectGround = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -187,19 +189,30 @@ int runGame(Game *game, Network *client) {
 			players[client->playerID].weaponFired = 1;
 		}
 
-
-		//Collision detection player <-> tile
+		//Collision detection player <-> tile 
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
 				if (SDL_HasIntersection(&players[0].rect, &map[i][j].rect)) {
-					enableWalk = handleCollision(&players[0], map[i][j].rect.x, map[i][j].rect.y, &key, &prevKey);
+					handleCollision(&players[0], map[i][j].x, map[i][j].y, &key, &prevKey, &detectGround, &enableWalk);
 				}
 			}
 		}
 
 		walk(&players[client->playerID], &key, &enableWalk, &prevKey);
-		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump);
-		gravity(&players[client->playerID], weapons);
+		detectGround = 0;
+
+		//Collision detection player <-> tile	
+		for (i = 0; i < MAP_HEIGHT; i++) {
+			for (j = 0; j < MAP_WIDTH; j++) {
+				if (SDL_HasIntersection(&players[0].rect, &map[i][j].rect)) {
+					handleCollision(&players[0], map[i][j].x, map[i][j].y, &key, &prevKey, &detectGround, &enableWalk);
+				}
+			}
+		}
+
+		gravity(&players[client->playerID], weapons, &detectGround);
+		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &detectGround);
+
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
