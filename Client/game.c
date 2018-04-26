@@ -69,10 +69,11 @@ int runGame(Game *game, Network *client) {
 	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
 
 	//Create two players
-	Player players[MAXPLAYERS] = {
-		{ "Erik", 100, 60, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
-	{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }
-	};
+	Player players[MAXPLAYERS];
+	players[0] = createPlayer(game, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
+	players[1] = createPlayer(game, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
+	//	= {{ "Erik", 100, 60, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), RIGHT, IMG_Load("mansprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[0].Image),{ 60, 400, 70, 120 } },
+	//{ "Skull", 100, 300, 400, -1, -1, 0, SDL_GetTicks(), SDL_GetTicks(), LEFT, IMG_Load("deathsprite.png"), SDL_CreateTextureFromSurface(game->renderer, players[1].Image),{ 500, 50, 52, 100 } }};
 
 	Weapon weapons[MAXNRWEAPONS] = {
 		{ 0, 400, 40, 10, 200, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
@@ -308,6 +309,27 @@ void createWindowIcon(Game *game) {
 	SDL_Surface *icon = IMG_Load("assets/crystal.png");
 	SDL_SetWindowIcon(game->window, icon);
 	SDL_FreeSurface(icon);
+}
+
+Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
+Player player;
+strcpy(player.name, name);
+player.life = 100;
+player.x = x;
+player.y = y;
+player.pickupID = -1;
+player.weaponID = -1;
+player.weaponFired = 0;
+player.tickThatWeaponFired = SDL_GetTicks();
+player.tickThatLostHealth = SDL_GetTicks();
+player.lastDirection = lastDirection;
+player.Image = IMG_Load(imageName);
+player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
+player.rect.x = x;
+player.rect.y = y;
+player.rect.w = rectW;
+player.rect.h = rectH;
+return player;
 }
 
 
