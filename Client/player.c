@@ -21,14 +21,16 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump) {
 	}
 }
 
-void walk(Player *player, int *prevKey) {
-	if (*prevKey == RIGHT && player->x < 980) {
+void walk(Player *player, int *key, int *enableWalk, int *prevKey) {
+	if (*key == RIGHT && player->x < 980 && *enableWalk) {
 		player->x += 10;
 	}
-	else if (*prevKey == LEFT && player->x > -10) {
+	else if (*key == LEFT && player->x > -10 && *enableWalk) {
 		player->x -= 10;
 	}
-	*prevKey = 0;
+	*prevKey = *key;
+	*key = 0;
+	*enableWalk = 1;
 }
 
 void loseHealth(Player *player, int damage) {
@@ -39,3 +41,27 @@ void loseHealth(Player *player, int damage) {
 	player->tickThatLostHealth = SDL_GetTicks();
 	player->life -= damage;
 }
+
+
+int handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey) {
+	int enable = 1;
+	if (*key == LEFT && *key == *prevKey) {
+		if (tileX + 32 > player->x) { // 32 = tile width
+			enable = 0;
+		}
+		else enable = 1;
+	}
+
+	else if (*key == RIGHT && *key == *prevKey) {
+		if (tileX < player->x + 75) { // 75 = player width
+			enable = 0;
+		}
+		else enable = 1;
+	}
+
+	//printf("\ntile x   = %d", tileX + 32); // 32 = tile width
+	//printf("\nplayer x = %d\n", player->x);
+
+	return enable;
+}
+

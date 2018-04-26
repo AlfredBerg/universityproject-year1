@@ -31,5 +31,6 @@ struct player {
 typedef struct player Player;
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump);
-void walk(Player *player, int *prevKey);
+void walk(Player *player, int *key, int *enableWalk, int *prevKey);
 void loseHealth(Player *player, int damage);
+int handleCollision(Player *player, int tileX, int tileY, int *enableWalk, int *prevKey);
