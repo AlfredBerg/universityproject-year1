@@ -60,7 +60,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		else {
 			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x, weapons[weaponId].y);
 		}
-		
+
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 	}
@@ -74,7 +74,7 @@ void pickUpWeapon(Weapon weapons[], Player players[]) {
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (SDL_HasIntersection(&players[j].rect, &weapons[i].rect)) {
-				printf("Pickup\n");
+				printf("Pickup weapon\n");
 				players[j].weaponID = weapons[i].id;
 				weapons[i].isPickedUp = 1;
 			}
