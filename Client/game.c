@@ -72,16 +72,16 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "knightsprite.png", 64, 96);
-	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "bearsprite.png", 64, 96);
+	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
+	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
 	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
-		{ 0, 400, 40, 10, 200, 0, IMG_Load("pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 46, 31 }, 0 }
+		{ 0, 400, 40, 10, 200, 0, IMG_Load("assets/pistol.png"), SDL_CreateTextureFromSurface(game->renderer, weapons[0].Image),{ 50, 50, 60, 60 }, 0 }
 	};
 
 	Projectile projectiles[MAXPROJECTILES] = {
-		{ 0, 10, 12, 0, 30, 30, IMG_Load("bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
+		{ 0, 10, 12, 0, 30, 30, IMG_Load("assets/bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
 	};
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
@@ -243,7 +243,7 @@ int runGame(Game *game, Network *client) {
 		int i, j = 0;
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
-				drawTiles(game->renderer, &map[i][j], j, i);	
+				drawTiles(game->renderer, &map[i][j], j, i);
 			}
 		}
 
