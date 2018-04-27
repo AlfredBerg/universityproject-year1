@@ -12,6 +12,7 @@
 #include "SDL_net.h"
 #include "serverNetwork.h"
 #include "sharedNetwork.h"
+#include "clients.h"
 
 
 void init(Network *server);
@@ -24,6 +25,7 @@ int main(int argc, char **argv)
 	Network server;
 
 	init(&server);
+
 
 	Uint32 lastTick = SDL_GetTicks();
 
@@ -145,10 +147,23 @@ void init(Network *server) {
 	server->next_player = 0;
 
 
+	//id, dmg, speed, w, h
+	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
+
+
+	server->projectileData[BULLET].id = 0;
+	server->projectileData[BULLET].dmg = 10;
+	server->projectileData[BULLET].speed = 12;
+	server->projectileData[BULLET].w = 30;
+	server->projectileData[BULLET].h = 30;
+	server->projectileData[BULLET].nrProjectilesShot = 0;
+
+
+
 	//Hardcoded stuff, remove me
-	server->clients[0].xPos = 4;
+	server->clients[0].xPos = 50;
 	server->clients[0].yPos = 50;
-	server->clients[1].xPos = 100;
+	server->clients[1].xPos = 400;
 	server->clients[1].yPos = 410;
 
 

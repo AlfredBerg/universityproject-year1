@@ -14,11 +14,13 @@
 #define TICK_RATE 30
 
 #define DATAFIELDSINPACKET 10
+#define NRPROJECTILES 1
 
 struct network {
 	int next_player;
 	IPaddress serverIP;
 	Client clients[MAX_SOCKETS];
+	ProjectileData projectileData[NRPROJECTILES];
 	UDPsocket serverSocket;
 	UDPpacket *serverSocketPacket;
 	int whoSentThePacket;

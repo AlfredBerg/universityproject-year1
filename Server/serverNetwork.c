@@ -31,30 +31,50 @@ void updateClients(Network *server, Uint32 *lastTick) {
 	}
 }
 
-void updatePositions(Network *server, char data[][500]) {
+void updatePositions(Network *server, char data[][30]) {
 	printf("Positions update\n");
 	server->clients[server->whoSentThePacket].xPos = atoi(data[1]);
 	server->clients[server->whoSentThePacket].yPos = atoi(data[2]);
 }
 
-updateServerdata(Network *server, char indata[]) {
-	char data[DATAFIELDSINPACKET][500];
+void createProjectiles(Network *server, char data[][30]) {
+	printf("Projectile created\n");
+	//projectile type, x, y, direction
+	if (server->projectileData[BULLET].nrProjectilesShot >= MAXPROJECTILEOBJECTS) {
+		server->projectileData[BULLET].nrProjectilesShot = 0;
+	}
 
-	puts(indata); //Debug see waht the server recives
+	int id = server->projectileData[BULLET].nrProjectilesShot;
+
+
+	server->projectileData[BULLET].Projectiles[id].id = id;
+	server->projectileData[BULLET].Projectiles[id].projectileType = atoi(data[1]);
+	server->projectileData[BULLET].Projectiles[id].x = atoi(data[2]);
+	server->projectileData[BULLET].Projectiles[id].y = atoi(data[3]);
+	server->projectileData[BULLET].Projectiles[id].direction = atoi(data[4]);
+
+
+	(server->projectileData[BULLET].nrProjectilesShot)++;
+}
+
+updateServerdata(Network *server, char indata[]) {
+	char data[DATAFIELDSINPACKET][30];
+
+	//puts(indata); //Debug see what the server recives
+
 
 	decode(indata, data, MAX_PACKET, DATAFIELDSINPACKET);
 
-	server->clients[server->whoSentThePacket].xPos = atoi(data[1]);
-	server->clients[server->whoSentThePacket].yPos = atoi(data[2]);
 
-	/*
 	switch (atoi(data[0])) //What kind of data is in this packet?
 	{
 	case 0: updatePositions(server, data); break;
+	case 1: createProjectiles(server, data); break;
 	default:
+		printf("Packet from known host but unknown data\n");
 		break;
 	}
-	*/
+	
 }
 
 

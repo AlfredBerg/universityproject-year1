@@ -7,6 +7,29 @@
 #include "serverNetwork.h"
 
 #define MAX_CLIENTS 4 
+#define MAXPROJECTILEOBJECTS 100
+
+#define BULLET 0
+struct projectiles {
+	int id;
+	int projectileType;
+	int x;
+	int y;
+	int direction;
+};
+typedef struct projectiles Projectiles;
+
+struct projectileData {
+	int id;
+	int dmg;
+	int speed;
+	int w;
+	int h;
+	int nrProjectilesShot;
+	Projectiles Projectiles[MAXPROJECTILEOBJECTS];
+};
+typedef struct projectileData ProjectileData;
+
 
 struct client {
 	IPaddress ip;
