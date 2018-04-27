@@ -72,13 +72,8 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 
 	Player players[MAXPLAYERS];
-<<<<<<< HEAD
-	players[0] = createPlayer(game, "Erik", 60, 400, RIGHT, "knightsprite.png", 75, 132);
-	players[1] = createPlayer(game, "Skull", 300, 400, LEFT, "bearsprite.png", 75, 132);
-=======
-	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
-	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
->>>>>>> 201ddcb9ce0aa764d7cb70a9345182d99a4ae9cf
+	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "knightsprite.png", 75, 132);
+	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "bearsprite.png", 75, 132);
 	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
