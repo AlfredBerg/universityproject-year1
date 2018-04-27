@@ -52,7 +52,7 @@ int compareString(char str1[], char str2[], int len) {
 
 void positionToString(Player *player, char string[]) {
 	//x1;y1;
-	sprintf(string, "%d;%d; ; ; ; ; ; ; ; ;", player->rect.x, player->rect.y);
+	sprintf(string, "0;%d;%d; ; ; ; ; ; ; ; ;", player->rect.x, player->rect.y);
 }
 
 void sendBulletToServer() {
