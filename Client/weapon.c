@@ -86,3 +86,20 @@ void pickUpWeapon(Weapon weapons[], Player players[]) {
 
 	}
 }
+
+Weapon createWeapon(Game *game, int id, int x, int y, int dmg, int fireRate, int projectileType, const char imageName[], int rectW, int rectH) {
+	Weapon weapon;
+	weapon.id = id;
+	weapon.x = x;
+	weapon.y = y;
+	weapon.dmg = dmg;
+	weapon.fireRate = fireRate;
+	weapon.Image = IMG_Load(imageName);
+	weapon.Texture = SDL_CreateTextureFromSurface(game->renderer, weapon.Image);
+	weapon.rect.x = x;
+	weapon.rect.y = y;
+	weapon.rect.w = rectW;
+	weapon.rect.h = rectH;
+	weapon.isPickedUp = 0;
+	return weapon;
+}
