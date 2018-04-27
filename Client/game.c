@@ -72,8 +72,13 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 
 	Player players[MAXPLAYERS];
+<<<<<<< HEAD
 	players[0] = createPlayer(game, "Erik", 60, 400, RIGHT, "knightsprite.png", 75, 132);
 	players[1] = createPlayer(game, "Skull", 300, 400, LEFT, "bearsprite.png", 75, 132);
+=======
+	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
+	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
+>>>>>>> 201ddcb9ce0aa764d7cb70a9345182d99a4ae9cf
 	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -266,13 +271,7 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//Draw players
-		for (int i = 0; i < MAXPLAYERS; i++) {
-			if (players[i].lastDirection == LEFT) {
-				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
-			}
-			else if (players[i].lastDirection == RIGHT)
-				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
-		}
+		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers);
 
 		playerHealthbar(players, game->renderer);
 
@@ -324,46 +323,42 @@ void createWindowIcon(Game *game) {
 	SDL_FreeSurface(icon);
 }
 
-Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
-Player player;
-strcpy(player.name, name);
-player.life = 100;
-player.x = x;
-player.y = y;
-player.pickupID = -1;
-player.weaponID = -1;
-player.weaponFired = 0;
-player.tickThatWeaponFired = SDL_GetTicks();
-player.tickThatLostHealth = SDL_GetTicks();
-player.lastDirection = lastDirection;
-player.Image = IMG_Load(imageName);
-player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
-player.rect.x = x;
-player.rect.y = y;
-player.rect.w = rectW;
-player.rect.h = rectH;
-return player;
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
+	Player player;
+	strcpy(player.name, name);
+	player.id = id;
+	player.life = 100;
+	player.x = x;
+	player.y = y;
+	player.pickupID = -1;
+	player.weaponID = -1;
+	player.weaponFired = 0;
+	player.tickThatWeaponFired = SDL_GetTicks();
+	player.tickThatLostHealth = SDL_GetTicks();
+	player.lastDirection = lastDirection;
+	player.Image = IMG_Load(imageName);
+	player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
+	player.rect.x = x;
+	player.rect.y = y;
+	player.rect.w = rectW;
+	player.rect.h = rectH;
+	return player;
 }
 
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (players[i].life > 0) {
+			if (players[i].lastDirection == LEFT) {
+				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+			}
+			else if (players[i].lastDirection == RIGHT)
+				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+		}
 
-//Last map:
-//static int map[MAP_HEIGHT][MAP_WIDTH] =
-//{ { 1,1,2,2,2,2,2,2,1,1,2,2,2,2,2,1 },
-//{ 1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,1,2,2,2,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,2,2,1,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,4,1 },
-//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,4,4,4,2,2,1,1,2,2,4,2,2,1 },
-//{ 2,2,2,4,4,4,2,2,2,3,3,3,4,2,2,1 },
-//{ 1,1,2,2,2,2,2,3,4,3,3,3,4,2,2,2 },
-//{ 1,1,1,1,2,2,2,2,2,3,3,3,2,2,2,3 },
-//{ 2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1 },
-//{ 2,1,1,2,2,2,1,2,2,2,3,2,2,2,4,4 },
-//{ 2,1,1,4,2,2,1,2,2,2,3,2,2,2,2,4 },
-//{ 2,1,1,1,2,2,1,2,2,1,3,3,3,3,3,4 },
-//{ 2,1,1,1,1,1,1,2,2,1,2,2,2,2,4,4 },
-//{ 2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,1 } };
+		else
+			deletePlayer(players, players[i].name, nrOfPlayers);
+	}
+}
 
 //*****************restart() not yet implemented********************
 //int restart(Game* game) {
