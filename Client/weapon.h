@@ -30,3 +30,4 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 void pickUpWeapon(Weapon weapons[], Player players[]);
 void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]);
 Weapon createWeapon(Game *game, int id, int x, int y, int dmg, int fireRate, int projectileType, const char imageName[], int rectW, int rectH);
+Projectile createProjectile(Game *game, int id, int dmg, int speed, int w, int h, const char imageName[]);
