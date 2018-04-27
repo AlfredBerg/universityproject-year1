@@ -98,3 +98,14 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 		SDL_RenderCopy(renderer, greenTexture, NULL, &healthbar[i]);
 	}
 }
+
+void deletePlayer(Player players[], char playerName[], int *nrOfPlayers) {
+	for (int i = 0; i < *nrOfPlayers; i++) {
+		if (strcmp(playerName, players[i].name == 0)){
+			for (int j = 0; j < *nrOfPlayers - 1; j++)
+				players[j] = players[j + 1];
+			*nrOfPlayers = *nrOfPlayers - 1;
+			printf("Deleted player\n");
+		}
+	}
+}
