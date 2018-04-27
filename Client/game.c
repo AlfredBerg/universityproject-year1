@@ -254,12 +254,6 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 
 
-			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
-				//printf("COLLISION\n");
-				loseHealth(&players[0], 10);
-			}
-
-
 			for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
 				SDL_RenderDrawRect(game->renderer, &projectiles[0].rect[i]);
 			}

@@ -31,25 +31,30 @@ void updateClients(Network *server, Uint32 *lastTick) {
 	}
 }
 
-void updatePositions(Network *server, char data[][30]) {
+void updatePositions(Network *server, char data[][500]) {
 	printf("Positions update\n");
 	server->clients[server->whoSentThePacket].xPos = atoi(data[1]);
 	server->clients[server->whoSentThePacket].yPos = atoi(data[2]);
 }
 
 updateServerdata(Network *server, char indata[]) {
-	char data[DATAFIELDSINPACKET][30];
+	char data[DATAFIELDSINPACKET][500];
 
-	//puts(indata); //Debug see waht the server recives
+	puts(indata); //Debug see waht the server recives
 
 	decode(indata, data, MAX_PACKET, DATAFIELDSINPACKET);
 
+	server->clients[server->whoSentThePacket].xPos = atoi(data[1]);
+	server->clients[server->whoSentThePacket].yPos = atoi(data[2]);
+
+	/*
 	switch (atoi(data[0])) //What kind of data is in this packet?
 	{
 	case 0: updatePositions(server, data); break;
 	default:
 		break;
 	}
+	*/
 }
 
 
