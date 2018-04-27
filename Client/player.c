@@ -99,9 +99,9 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 	}
 }
 
-void deletePlayer(Player players[], char playerName[], int *nrOfPlayers) {
+void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 	for (int i = 0; i < *nrOfPlayers; i++) {
-		if (strcmp(playerName, players[i].name == 0)){
+		if (players[i].id == id){
 			for (int j = 0; j < *nrOfPlayers - 1; j++)
 				players[j] = players[j + 1];
 			*nrOfPlayers = *nrOfPlayers - 1;

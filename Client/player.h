@@ -16,6 +16,7 @@
 #define INVULNERABILITY_TIME 100
 
 struct player {
+	int id;
 	char name[NAME_LENGTH];
 	int life;
 	int x;
@@ -37,4 +38,4 @@ void walk(Player *player, int *key, int *enableWalk, int *prevKey);
 void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *detectGround, int *enableWalk);
-void deletePlayer(Player players[], char playerName[], int *nrOfPlayers);
+void deletePlayer(Player players[], int id, int *nrOfPlayers);

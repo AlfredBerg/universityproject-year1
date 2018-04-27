@@ -72,8 +72,8 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
-	players[1] = createPlayer(game, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
+	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "mansprite.png", 70, 120);
+	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "deathsprite.png", 52, 100);
 	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -266,7 +266,7 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//Draw players
-		drawPlayers(game, players, srcrect, dstrect);
+		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers);
 
 		playerHealthbar(players, game->renderer);
 
@@ -318,9 +318,10 @@ void createWindowIcon(Game *game) {
 	SDL_FreeSurface(icon);
 }
 
-Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
 	Player player;
 	strcpy(player.name, name);
+	player.id = id;
 	player.life = 100;
 	player.x = x;
 	player.y = y;
@@ -339,13 +340,18 @@ Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, co
 	return player;
 }
 
-void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[]) {
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
-		if (players[i].lastDirection == LEFT) {
-			SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+		if (players[i].life > 0) {
+			if (players[i].lastDirection == LEFT) {
+				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+			}
+			else if (players[i].lastDirection == RIGHT)
+				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
 		}
-		else if (players[i].lastDirection == RIGHT)
-			SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+
+		else
+			deletePlayer(players, players[i].name, nrOfPlayers);
 	}
 }
 
