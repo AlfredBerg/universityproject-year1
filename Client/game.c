@@ -79,9 +79,9 @@ int runGame(Game *game, Network *client) {
 	int nrOfWeapons = 1;
 	
 
-	Projectile projectiles[MAXPROJECTILES] = {
-		{ 0, 10, 12, 0, 30, 30, IMG_Load("assets/bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
-	};
+	Projectile projectiles[MAXPROJECTILES];
+	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
+	int nrOfProjectiles = 1;
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
 	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png", 32, 32);
@@ -149,9 +149,6 @@ int runGame(Game *game, Network *client) {
 
 		SDL_Rect srcrect[2] = { { sprite[0] * 16, 0, 16, 24 } ,{ sprite[1] * 16, 0, 16, 24 } };
 		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 } };
-
-
-		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
 
 
 		// Check for various events (keyboard, mouse, touch, close)
@@ -440,14 +437,3 @@ whynotwork = 2;
 running = 0;
 }
 */
-
-//*****************moved from runGame************************
-//Define where on the "screen" we want to draw the texture
-//SDL_Rect bild2 = { fighter.x, fighter.y, 140, 200 };
-//SDL_Rect bild3 = { enemy.x, enemy.y, 500, 500};
-//SDL_Rect bild4 = { 150, 100, 500, 325 };		//Death wins rect
-//SDL_Rect bild8 = { 530, 490, 15, 40 };		//Not used
-//SDL_Rect bild9 = { 150, 100, 550, 300 };		//Human wins rect
-//SDL_Rect sword1 = { players[client->playerID].x + 30, players[client->playerID].y + 10, 15, 40 };	//first word rect AKA bild5
-//SDL_Rect swordRect = { 100, 450, 15, 40 };															//empty sword rect AKA bild6
-//SDL_Rect sword2 = { players[enemyID].x + 20, players[enemyID].y + 40, 15, 40 };						//second sword rect AKA bild7

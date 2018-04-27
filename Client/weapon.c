@@ -104,3 +104,16 @@ Weapon createWeapon(Game *game, int id, int x, int y, int dmg, int fireRate, int
 	weapon.isPickedUp = 0;
 	return weapon;
 }
+
+Projectile createProjectile(Game *game, int id, int dmg, int speed, int w, int h, const char imageName[]) {
+	Projectile projectile;
+	projectile.id = id;
+	projectile.dmg = dmg;
+	projectile.speed = speed;
+	projectile.projectilesFired = 0;
+	projectile.w = w;
+	projectile.h = h;
+	projectile.Image = IMG_Load(imageName);
+	projectile.Texture = SDL_CreateTextureFromSurface(game->renderer, projectile.Image);
+	return projectile;
+}
