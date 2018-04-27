@@ -13,6 +13,7 @@
 #include "clientNetwork.h"
 #include "player.h"
 #include "sharedNetwork.h"
+#include "projectile.h"
 
 int compareString(char str1[], char str2[], int len);
 
@@ -70,7 +71,7 @@ void sendPositionToServer(Network *client, Player *fighter) {
 	}
 }
 
-void updateServer(Player *player, Network *client) {
+void updateServer(Player *player, Network *client, Projectile *projectiles) {
 	if (client->connectedToServer == 0) {
 		return;
 	}
@@ -79,7 +80,7 @@ void updateServer(Player *player, Network *client) {
 
 	int num_rdy = SDLNet_CheckSockets(client->socketSet, 0);
 	char data[MAX_PACKET];
-	if ((SDLNet_SocketReady(client->serverSocket))) {
+	while ((SDLNet_SocketReady(client->serverSocket))) {
 
 		int success = receivePacket(client->serverSocket, client->packet, data);
 
@@ -88,23 +89,37 @@ void updateServer(Player *player, Network *client) {
 		}
 
 		//printf("Incoming data: %s\n", data);
-		parseData(data, player, client);
+		parseData(data, player, client, projectiles);
 	}
 
 }
 
-void parseData(char serverdata[], Player *player, Network *client) {
-	char parsedData[30][30];
-
-	decode(serverdata, parsedData, 4, 30);
-
-
+void updatePlayerPositions(Network *client, Player *player, char data[][30]) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (client->playerID == i) {
 			continue;
 		}
-		player[i].x = atoi(parsedData[i * 2]);
-		player[i].y = atoi(parsedData[i * 2 + 1]);
+		player[i].x = atoi(data[i * 2 + 1]);
+		player[i].y = atoi(data[i * 2 + 2]);
+	}
+}
+
+void updateProjectiles(Projectile *projectiles, char data[][30]) {
+	fireProjectile(&projectiles[atoi(data[2])], atoi(data[5]), atoi(data[3]), atoi(data[4]));
+}
+
+void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles) {
+	char parsedData[110][30];
+
+	decode(serverdata, parsedData, 4, 30);
+
+	switch (atoi(parsedData[0])) //What kind of data is in this packet?
+	{
+	case 0: updatePlayerPositions(client, player, parsedData); break;
+	case 1: updateProjectiles(projectiles, parsedData); puts(serverdata); break;
+	default:
+		printf("Unknown data received\n");
+		break;
 	}
 }
 

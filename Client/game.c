@@ -77,6 +77,7 @@ int runGame(Game *game, Network *client) {
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 400, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
 	int nrOfWeapons = 1;
+	
 
 	Projectile projectiles[MAXPROJECTILES] = {
 		{ 0, 10, 12, 0, 30, 30, IMG_Load("assets/bullet.png"), SDL_CreateTextureFromSurface(game->renderer, projectiles[0].Image) }
@@ -129,7 +130,7 @@ int runGame(Game *game, Network *client) {
 		//---------------------------Game state------------------------------------
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
-			updateServer(players, client);
+			updateServer(players, client, projectiles);
 			continue;
 		}
 
@@ -234,8 +235,6 @@ int runGame(Game *game, Network *client) {
 		SDL_RenderClear(game->renderer);
 
 		displayBackground(game);
-
-		printf("%d\n", projectiles[0].w);
 
 		//Display map
 		int i, j = 0;

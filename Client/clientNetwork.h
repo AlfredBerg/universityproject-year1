@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_net.h>
 #include "player.h"
+#include "projectile.h"
 
 #define MAX_PACKET 1024
 #define TICK_RATE 30
@@ -23,6 +24,6 @@ struct network {
 typedef struct network Network;
 
 void initClient(Network *client);
-void updateServer(Player *player, Network *client);
-void parseData(char serverdata[], Player *player, Network *client);
+void updateServer(Player *player, Network *client, Projectile *projectiles);
+void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles);
 void connectToServer(Network *client);

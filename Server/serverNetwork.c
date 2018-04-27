@@ -14,6 +14,9 @@
 #include "sharedNetwork.h"
 #include "clients.h"
 
+void bulletsToString(Network *server, char string[MAX_PACKET], int projectileType);
+
+
 void updateClients(Network *server, Uint32 *lastTick) {
 
 	if (SDL_TICKS_PASSED(SDL_GetTicks(), *lastTick + TICK_RATE)) {
@@ -21,10 +24,16 @@ void updateClients(Network *server, Uint32 *lastTick) {
 		char data[MAX_PACKET];
 		gamestateToString(server, data);
 
+		char bulletData[MAX_PACKET];
+		bulletsToString(server, bulletData, BULLET);
 		//puts(data);
 
 		for (int i = 0; i < MAX_SOCKETS; i++) {
 			sendPacket(data, server->clients[i].ip, server->serverSocket);
+			if (server->projectileData[BULLET].nrProjectilesShot) {
+				sendPacket(bulletData, server->clients[i].ip, server->serverSocket);
+			}
+			
 		}
 
 		*lastTick = SDL_GetTicks();
@@ -40,12 +49,11 @@ void updatePositions(Network *server, char data[][30]) {
 void createProjectiles(Network *server, char data[][30]) {
 	printf("Projectile created\n");
 	//projectile type, x, y, direction
-	if (server->projectileData[BULLET].nrProjectilesShot >= MAXPROJECTILEOBJECTS) {
-		server->projectileData[BULLET].nrProjectilesShot = 0;
-	}
-
 	int id = server->projectileData[BULLET].nrProjectilesShot;
 
+	if (id >= MAXPROJECTILEOBJECTS) {
+		id = id % MAXPROJECTILEOBJECTS;
+	}
 
 	server->projectileData[BULLET].Projectiles[id].id = id;
 	server->projectileData[BULLET].Projectiles[id].projectileType = atoi(data[1]);
@@ -53,11 +61,11 @@ void createProjectiles(Network *server, char data[][30]) {
 	server->projectileData[BULLET].Projectiles[id].y = atoi(data[3]);
 	server->projectileData[BULLET].Projectiles[id].direction = atoi(data[4]);
 
-
 	(server->projectileData[BULLET].nrProjectilesShot)++;
+
 }
 
-updateServerdata(Network *server, char indata[]) {
+void updateServerdata(Network *server, char indata[]) {
 	char data[DATAFIELDSINPACKET][30];
 
 	//puts(indata); //Debug see what the server recives
@@ -152,5 +160,19 @@ void closeSocket(Network *server, int index) {
 
 void gamestateToString(Network *server, char string[]) {
 	//x1;y1;x2;y2
-	sprintf(string, "%d;%d;%d;%d;", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
+	sprintf(string, "0;%d;%d;%d;%d;", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
+}
+
+void bulletsToString(Network *server, char string[MAX_PACKET], int projectileType) {
+	int length = 0;
+
+	length += sprintf(string + length, "1;");
+	//id, projectile type, x, y, direction
+	for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
+		if (i > server->projectileData[projectileType].nrProjectilesShot - 1) {
+			return;
+		}
+		length += sprintf(string + length, "%d;%d;%d;%d;%d;", server->projectileData[projectileType].Projectiles[i].id, server->projectileData[projectileType].Projectiles[i].projectileType, server->projectileData[projectileType].Projectiles[i].x, server->projectileData[projectileType].Projectiles[i].y, server->projectileData[projectileType].Projectiles[i].direction);
+	}
+	puts(string);
 }

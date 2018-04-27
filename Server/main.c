@@ -33,9 +33,7 @@ int main(int argc, char **argv)
 	int looptime;
 	int timerCount = 0;
 	while (server.running) {
-
 		looptime = SDL_GetTicks();
-
 
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
 
@@ -163,8 +161,8 @@ void init(Network *server) {
 	//Hardcoded stuff, remove me
 	server->clients[0].xPos = 50;
 	server->clients[0].yPos = 50;
-	server->clients[1].xPos = 400;
-	server->clients[1].yPos = 410;
+	server->clients[1].xPos = 550;
+	server->clients[1].yPos = 470;
 
 
 }
