@@ -72,8 +72,8 @@ int runGame(Game *game, Network *client) {
 	//Create two players
 
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "knightsprite.png", 75, 132);
-	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "bearsprite.png", 75, 132);
+	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "knightsprite.png", 64, 96);
+	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "bearsprite.png", 64, 96);
 	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS] = {
@@ -149,7 +149,7 @@ int runGame(Game *game, Network *client) {
 		//Uint32 sprite = (ticks / 100) % 4; (time based)
 
 		SDL_Rect srcrect[2] = { { sprite[0] * 16, 0, 16, 24 } ,{ sprite[1] * 16, 0, 16, 24 } };
-		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 75, 132 },{ players[1].rect.x, players[1].rect.y, 75, 132 } };
+		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 } };
 
 
 		//SDL_Rect dstTileRect[] = { 400, 200, 70, 70};
