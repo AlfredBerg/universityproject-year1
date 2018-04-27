@@ -266,13 +266,7 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//Draw players
-		for (int i = 0; i < MAXPLAYERS; i++) {
-			if (players[i].lastDirection == LEFT) {
-				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
-			}
-			else if (players[i].lastDirection == RIGHT)
-				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
-		}
+		drawPlayers(game, players, srcrect, dstrect);
 
 		playerHealthbar(players, game->renderer);
 
@@ -325,45 +319,35 @@ void createWindowIcon(Game *game) {
 }
 
 Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
-Player player;
-strcpy(player.name, name);
-player.life = 100;
-player.x = x;
-player.y = y;
-player.pickupID = -1;
-player.weaponID = -1;
-player.weaponFired = 0;
-player.tickThatWeaponFired = SDL_GetTicks();
-player.tickThatLostHealth = SDL_GetTicks();
-player.lastDirection = lastDirection;
-player.Image = IMG_Load(imageName);
-player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
-player.rect.x = x;
-player.rect.y = y;
-player.rect.w = rectW;
-player.rect.h = rectH;
-return player;
+	Player player;
+	strcpy(player.name, name);
+	player.life = 100;
+	player.x = x;
+	player.y = y;
+	player.pickupID = -1;
+	player.weaponID = -1;
+	player.weaponFired = 0;
+	player.tickThatWeaponFired = SDL_GetTicks();
+	player.tickThatLostHealth = SDL_GetTicks();
+	player.lastDirection = lastDirection;
+	player.Image = IMG_Load(imageName);
+	player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
+	player.rect.x = x;
+	player.rect.y = y;
+	player.rect.w = rectW;
+	player.rect.h = rectH;
+	return player;
 }
 
-
-//Last map:
-//static int map[MAP_HEIGHT][MAP_WIDTH] =
-//{ { 1,1,2,2,2,2,2,2,1,1,2,2,2,2,2,1 },
-//{ 1,1,1,1,2,1,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,1,2,2,2,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,2,2,1,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,4,1 },
-//{ 2,1,1,4,4,4,1,2,1,1,2,2,2,2,2,1 },
-//{ 2,1,1,4,4,4,2,2,1,1,2,2,4,2,2,1 },
-//{ 2,2,2,4,4,4,2,2,2,3,3,3,4,2,2,1 },
-//{ 1,1,2,2,2,2,2,3,4,3,3,3,4,2,2,2 },
-//{ 1,1,1,1,2,2,2,2,2,3,3,3,2,2,2,3 },
-//{ 2,1,1,1,2,2,2,2,2,2,2,2,2,2,2,1 },
-//{ 2,1,1,2,2,2,1,2,2,2,3,2,2,2,4,4 },
-//{ 2,1,1,4,2,2,1,2,2,2,3,2,2,2,2,4 },
-//{ 2,1,1,1,2,2,1,2,2,1,3,3,3,3,3,4 },
-//{ 2,1,1,1,1,1,1,2,2,1,2,2,2,2,4,4 },
-//{ 2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,1 } };
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[]) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (players[i].lastDirection == LEFT) {
+			SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+		}
+		else if (players[i].lastDirection == RIGHT)
+			SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+	}
+}
 
 //*****************restart() not yet implemented********************
 //int restart(Game* game) {
