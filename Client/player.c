@@ -1,6 +1,7 @@
 #pragma once
 #include "player.h"
 #include "game.h"
+#include "map.h"
 
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *detectGround) {
@@ -46,20 +47,20 @@ void loseHealth(Player *player, int damage) {
 	player->life -= damage;
 }
 
-void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *detectGround, int *enableWalk) {
+void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *groundDetected, int *enableWalk) {
 
 	if (*key == LEFT && *key == *prevKey) {
-		if ((tileX + 32 > player->x) && (tileY < (player->y + 93))) { // 32 = tile width
+		if ((tileX + TILE_WIDTH > player->x) && (tileY + TILE_HEIGHT < (player->y + player->rect.h))) {
 			*enableWalk = 0;
 		}
 	}
 	else if (*key == RIGHT && *key == *prevKey) {
-		if ((tileX < player->x + 75) && (tileY < (player->y + 93))) { // 75 = player width
+		if ((tileX < player->x + player->rect.w) && (tileY + TILE_HEIGHT < (player->y + player->rect.h))) {
 			*enableWalk = 0;
 		}
 	}
-	else if (tileY < player->y + 132) { // 132 = player height
-		*detectGround = 1;
+	else if (tileY < player->y + player->rect.h) {
+		*groundDetected = 1;
 	}
 	else *enableWalk = 1;
 
