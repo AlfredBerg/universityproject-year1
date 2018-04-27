@@ -6,9 +6,9 @@
 #include "weapon.h"
 #include "map.h"
 
-void gravity(Player *player, Weapon weapons[], int *detectGround) {
+void gravity(Player *player, Weapon weapons[], int *groundDetected) {
 
-	if (*detectGround == 0) {
+	if (*groundDetected == 0) {
 
 		player->y += 10;
 
@@ -30,7 +30,7 @@ void gravity(Player *player, Weapon weapons[], int *detectGround) {
 	}
 	else {
 		player->y = player->y;
-		*detectGround = 1;
+		*groundDetected = 1;
 	}
 }
 

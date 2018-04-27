@@ -4,9 +4,8 @@
 #include "map.h"
 
 
-void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *detectGround) {
-	if ((*doJump == 1))
-	{
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected) {
+	if (*doJump == 1) {
 		if (!*isJumping) {
 			*jumpTime = 10;
 		}
@@ -14,16 +13,17 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *detec
 			*isJumping = 1;
 			player->y -= 20;
 			--(*jumpTime);
-			*detectGround = 0;
+			*groundDetected = 0;
 		}
 		if (*jumpTime <= 0) {
-			if (*detectGround == 1) {
+			if (*groundDetected == 1) {
 				*doJump = 0;
 				*isJumping = 0;
 			}
 		}
 	}
 }
+
 
 
 void walk(Player *player, int *key, int *enableWalk, int *prevKey) {

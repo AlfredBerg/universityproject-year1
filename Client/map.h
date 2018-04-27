@@ -19,5 +19,5 @@ struct tile {
 };
 typedef struct tile Tile;
 
-void initTiles(Game *game, Tile *tile, int x, int y);
-void drawTiles(Game *game, Tile *tile, int x, int y);
+void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y);
+void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y);

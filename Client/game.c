@@ -21,7 +21,7 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0 },
@@ -112,7 +112,7 @@ int runGame(Game *game, Network *client) {
 	int doJump = 0;
 	int loopCount = 0;
 	int enableWalk = 1;
-	int detectGround = 0;
+	int groundDetected = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -122,7 +122,7 @@ int runGame(Game *game, Network *client) {
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
 			map[i][j].ID = lvl1[i][j];
-			initTiles(game, &map[i][j], j, i);
+			initTiles(game->renderer, &map[i][j], j, i);
 		}
 	}
 
@@ -192,26 +192,26 @@ int runGame(Game *game, Network *client) {
 		//Collision detection player <-> tile 
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
-				if (SDL_HasIntersection(&players[0].rect, &map[i][j].rect)) {
-					handleCollision(&players[0], map[i][j].x, map[i][j].y, &key, &prevKey, &detectGround, &enableWalk);
+				if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
+					handleCollision(&players[client->playerID], map[i][j].x, map[i][j].y, &key, &prevKey, &groundDetected, &enableWalk);
 				}
 			}
 		}
 
 		walk(&players[client->playerID], &key, &enableWalk, &prevKey);
-		detectGround = 0;
+		groundDetected = 0;
 
 		//Collision detection player <-> tile	
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
-				if (SDL_HasIntersection(&players[0].rect, &map[i][j].rect)) {
-					handleCollision(&players[0], map[i][j].x, map[i][j].y, &key, &prevKey, &detectGround, &enableWalk);
+				if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
+					handleCollision(&players[client->playerID], map[i][j].x, map[i][j].y, &key, &prevKey, &groundDetected, &enableWalk);
 				}
 			}
 		}
 
-		gravity(&players[client->playerID], weapons, &detectGround);
-		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &detectGround);
+		gravity(&players[client->playerID], weapons, &groundDetected);
+		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected);
 
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
@@ -243,7 +243,7 @@ int runGame(Game *game, Network *client) {
 		int i, j = 0;
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
-				drawTiles(game, &map[i][j], j, i);
+				drawTiles(game->renderer, &map[i][j], j, i);	
 			}
 		}
 
