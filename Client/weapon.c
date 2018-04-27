@@ -59,10 +59,10 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		printf("Shots fired!\n");
 
 		if (players[client->playerID].lastDirection == LEFT) {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 10, weapons[weaponId].y);
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 30, weapons[weaponId].y);
 		}
 		else {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 50, weapons[weaponId].y);
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 70, weapons[weaponId].y);
 		}
 
 

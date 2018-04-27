@@ -237,6 +237,8 @@ int runGame(Game *game, Network *client) {
 
 		displayBackground(game);
 
+		printf("%d\n", projectiles[0].w);
+
 		//Display map
 		int i, j = 0;
 		for (i = 0; i < MAP_HEIGHT; i++) {
@@ -253,7 +255,7 @@ int runGame(Game *game, Network *client) {
 
 
 			if (SDL_HasIntersection(&players[1].rect, &players[0].rect)) {
-				printf("COLLISION\n");
+				//printf("COLLISION\n");
 				loseHealth(&players[0], 10);
 			}
 

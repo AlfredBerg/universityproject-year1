@@ -59,7 +59,7 @@ void sendPositionToServer(Network *client, Player *fighter) {
 	if (SDL_TICKS_PASSED(SDL_GetTicks(), client->lastTick + TICK_RATE)) {
 		char data[MAX_PACKET];
 		positionToString(fighter, data);
-		puts(data);
+		//puts(data);
 		sendPacket(data, client->serverIP, client->serverSocket);
 		client->lastTick = SDL_GetTicks();
 
@@ -95,7 +95,7 @@ void parseData(char serverdata[], Player *player, Network *client) {
 	decode(serverdata, parsedData, 4, 30);
 
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (client->playerID == i) {
 			continue;
 		}
