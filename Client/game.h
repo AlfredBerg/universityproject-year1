@@ -39,5 +39,5 @@ int runGame(Game *game, Network *client);
 void quitGame(Game *game);
 void playBackgroundMusic();
 void createWindowIcon(Game *game);
-Player createPlayer(Game *game, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH);
-void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[]);
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH);
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers);
