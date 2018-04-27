@@ -31,13 +31,25 @@ void updateClients(Network *server, Uint32 *lastTick) {
 	}
 }
 
-updatePositions(Network *server, char indata[]) {
-	char data[5][30];
+void updatePositions(Network *server, char data[][30]) {
+	printf("Positions update\n");
+	server->clients[server->whoSentThePacket].xPos = atoi(data[1]);
+	server->clients[server->whoSentThePacket].yPos = atoi(data[2]);
+}
 
-	decode(indata, data, MAX_PACKET, 2);
-	//printf("Who sen packet: %d\n", server->whoSentThePacket);
-	server->clients[server->whoSentThePacket].xPos = atoi(data[0]);
-	server->clients[server->whoSentThePacket].yPos = atoi(data[1]);
+updateServerdata(Network *server, char indata[]) {
+	char data[DATAFIELDSINPACKET][30];
+
+	//puts(indata); //Debug see waht the server recives
+
+	decode(indata, data, MAX_PACKET, DATAFIELDSINPACKET);
+
+	switch (atoi(data[0])) //What kind of data is in this packet?
+	{
+	case 0: updatePositions(server, data); break;
+	default:
+		break;
+	}
 }
 
 
@@ -87,7 +99,7 @@ int AcceptSocket(Network *server) {
 		return 1;
 	}
 	else if (isClient(server)){
-		updatePositions(server, packetdata);
+		updateServerdata(server, packetdata);
 	}
 	else {
 		puts("Unknown packet recived");
@@ -110,4 +122,10 @@ void closeSocket(Network *server, int index) {
 	memset(&server->clients[index], 0x00, sizeof(Client));
 	SDLNet_UDP_Close(server->sockets[index]);
 	server->sockets[index] = NULL;
+}
+
+
+void gamestateToString(Network *server, char string[]) {
+	//x1;y1;x2;y2
+	sprintf(string, "%d;%d;%d;%d;", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
 }

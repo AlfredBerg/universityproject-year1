@@ -11,7 +11,9 @@
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 10
-#define TICK_RATE 10
+#define TICK_RATE 30
+
+#define DATAFIELDSINPACKET 10
 
 struct network {
 	int next_player;
@@ -33,3 +35,5 @@ void updateClients(Network *server, Uint32 *lastTick);
 
 
 void sendPacket(char data[], IPaddress ip, UDPsocket socket);
+
+void gamestateToString(Network *server, char string[]);
