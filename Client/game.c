@@ -345,7 +345,7 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 		}
 
 		else
-			deletePlayer(players, players[i].name, nrOfPlayers);
+			deletePlayer(players, players[i].id, nrOfPlayers);
 	}
 }
 
