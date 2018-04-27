@@ -94,6 +94,7 @@ Weapon createWeapon(Game *game, int id, int x, int y, int dmg, int fireRate, int
 	weapon.y = y;
 	weapon.dmg = dmg;
 	weapon.fireRate = fireRate;
+	weapon.projectileType = projectileType;
 	weapon.Image = IMG_Load(imageName);
 	weapon.Texture = SDL_CreateTextureFromSurface(game->renderer, weapon.Image);
 	weapon.rect.x = x;
