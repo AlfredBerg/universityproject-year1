@@ -51,15 +51,19 @@ int compareString(char str1[], char str2[], int len) {
 }
 
 void positionToString(Player *player, char string[]) {
-	//x1;y1
-	sprintf(string, "%d;%d;", player->rect.x, player->rect.y);
+	//x1;y1;
+	sprintf(string, "%d;%d; ; ; ; ; ; ; ; ;", player->rect.x, player->rect.y);
+}
+
+void sendBulletToServer() {
+
 }
 
 void sendPositionToServer(Network *client, Player *fighter) {
 	if (SDL_TICKS_PASSED(SDL_GetTicks(), client->lastTick + TICK_RATE)) {
 		char data[MAX_PACKET];
 		positionToString(fighter, data);
-		//puts(data);
+		puts(data);
 		sendPacket(data, client->serverIP, client->serverSocket);
 		client->lastTick = SDL_GetTicks();
 

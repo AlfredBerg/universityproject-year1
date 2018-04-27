@@ -17,7 +17,6 @@
 void init(Network *server);
 void quit(Network *server);
 void updateClients(Network *server, Uint32 *lastTick);
-void gamestateToString(Network *server, char string[]);
 
 
 int main(int argc, char **argv)
@@ -69,11 +68,6 @@ int main(int argc, char **argv)
 	return(0);
 }
 
-
-void gamestateToString(Network *server, char string[]) {
-	//x1;y1;x2;y2
-	sprintf(string, "%d;%d;%d;%d;", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
-}
 
 void quit(Network *server) {
 	if (SDLNet_UDP_DelSocket(server->socketSet, server->serverSocket) == -1) {
