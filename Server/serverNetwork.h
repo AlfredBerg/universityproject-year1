@@ -12,7 +12,7 @@
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 10
 
-#define TICK_RATE 30
+#define TICK_RATE 20
 #define RENDER_TICK 20
 
 #define DATAFIELDSINPACKET 10

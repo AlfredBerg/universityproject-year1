@@ -125,3 +125,27 @@ Projectile createProjectile(Game *game, int id, int dmg, int speed, int w, int h
 	projectile.Texture = SDL_CreateTextureFromSurface(game->renderer, projectile.Image);
 	return projectile;
 }
+
+void drawWeapons(Game *game, Player players[], Weapon weapons[]) {
+	for (int j = 0; j < MAXNRWEAPONS; j++) {
+		if (weapons[j].isPickedUp == 1) {
+			for (int i = 0; i < MAXPLAYERS; i++) {
+				if (weapons[j].id == players[i].weaponID) {
+					if (players[i].lastDirection == LEFT) {
+						SDL_RenderCopyEx(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
+					}
+					else {
+						SDL_RenderCopy(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect);
+					}
+				}
+
+			}
+			
+		}
+		else {
+			SDL_RenderCopy(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect);
+		}
+	}
+
+
+}

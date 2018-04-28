@@ -68,8 +68,6 @@ void initGame(Game *game) {
 
 
 int runGame(Game *game, Network *client) {
-	SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL;
-
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
 	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
@@ -77,7 +75,8 @@ int runGame(Game *game, Network *client) {
 
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 400, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
-	int nrOfWeapons = 1;
+	weapons[1] = createWeapon(game, 1, 20, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
+	int nrOfWeapons = 2;
 	
 
 	Projectile projectiles[MAXPROJECTILES];
@@ -232,6 +231,7 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &players[1].rect);
 			SDL_RenderDrawRect(game->renderer, &players[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
+			SDL_RenderDrawRect(game->renderer, &weapons[1].rect);
 
 
 			for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
@@ -247,13 +247,7 @@ int runGame(Game *game, Network *client) {
 		playerHealthbar(players, game->renderer);
 
 		//Draw weapon
-		if (players[client->playerID].lastDirection == LEFT && weapons[0].isPickedUp == 1) {
-			SDL_RenderCopyEx(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
-		}
-		else {
-			SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
-		}
-
+		drawWeapons(game, players, weapons);
 
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
