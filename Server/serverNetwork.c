@@ -63,7 +63,10 @@ void createProjectiles(Network *server, char data[][30]) {
 	server->projectileData[BULLET].Projectiles[id].direction = atoi(data[4]);
 
 	(server->projectileData[BULLET].nrProjectilesShot)++;
+}
 
+void objectPickup(server, data) {
+	printf("Object pickup\n");
 }
 
 void updateServerdata(Network *server, char indata[]) {
@@ -79,13 +82,13 @@ void updateServerdata(Network *server, char indata[]) {
 	{
 	case 0: updatePositions(server, data); break;
 	case 1: createProjectiles(server, data); break;
+	case 2: objectPickup(server, data); break;
 	default:
 		printf("Packet from known host but unknown data\n");
 		break;
 	}
 	
 }
-
 
 int isClient(Network *server) {
 	for (int i = 0; i < MAX_CLIENTS; i++) {

@@ -19,6 +19,14 @@
 
 int compareString(char str1[], char str2[], int len);
 
+void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
+	char data[MAX_PACKET];
+	sprintf(data, "2;%d;%d;", typeOfPickup, idOfPickup);
+
+	sendPacket(data, client->serverIP, client->serverSocket);
+	client->lastTick = SDL_GetTicks();
+}
+
 void connectToServer(Network *client) {
 	char data[MAX_PACKET] = "HELLO\n";
 	char decoded[2][30];
