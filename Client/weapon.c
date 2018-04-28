@@ -61,10 +61,10 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		//Offline code
 		/*
 		if (players[client->playerID].lastDirection == LEFT) {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 30, weapons[weaponId].y, 1);
+		fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 30, weapons[weaponId].y, 1);
 		}
 		else {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 70, weapons[weaponId].y, 1);
+		fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 70, weapons[weaponId].y, 1);
 		}
 		*/
 		if (players[client->playerID].lastDirection == LEFT) {
@@ -140,7 +140,7 @@ void drawWeapons(Game *game, Player players[], Weapon weapons[]) {
 				}
 
 			}
-			
+
 		}
 		else {
 			SDL_RenderCopy(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect);
@@ -148,4 +148,19 @@ void drawWeapons(Game *game, Player players[], Weapon weapons[]) {
 	}
 
 
+}
+
+
+void drawProjectiles(Game *game, Projectile projectiles[]) {
+	for (int i = 0; i < MAXPROJECTILES; i++) {
+		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
+			if (projectiles[i].direction[j] == LEFT) {
+				SDL_RenderCopyEx(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+			}
+			else {
+				SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
+			}
+
+		}
+	}
 }

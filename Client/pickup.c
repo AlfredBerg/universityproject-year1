@@ -7,7 +7,6 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 			continue;
 		}
 
-
 		//OBS : Found a bug here ! Prints out 1 extra time
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (SDL_HasIntersection(&players[j].rect, &pickups[i].rect)) {
@@ -49,9 +48,9 @@ void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups) {
 	}
 }
 
-void drawPickup(Game *game, Pickup pickups[], int *nrOfPickups) {
+void drawPickups(Game *game, Pickup pickups[], int *nrOfPickups) {
 	for (int i = 0; i < *nrOfPickups; i++) {
-		if(!pickups[i].isPickedUp)
+		if (!pickups[i].isPickedUp)
 			SDL_RenderCopy(game->renderer, pickups[i].texture, NULL, &pickups[i].rect);
 		else
 			deletePickup(pickups, pickups[i].id, nrOfPickups);

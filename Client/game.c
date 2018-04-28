@@ -9,6 +9,7 @@
 #include "map.h"
 #include "pickup.h"
 
+
 static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 { 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
@@ -19,9 +20,9 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
+{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0 },
@@ -77,7 +78,6 @@ int runGame(Game *game, Network *client) {
 	weapons[0] = createWeapon(game, 0, 400, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
 	weapons[1] = createWeapon(game, 1, 20, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
 	int nrOfWeapons = 2;
-	
 
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
@@ -87,15 +87,6 @@ int runGame(Game *game, Network *client) {
 	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png", 32, 32);
 	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png", 32, 32);
 	int nrOfPickups = 2;
-
-	//Fulkod för att avgöra enemyID
-	int enemyID;
-	if (client->playerID == 1) {
-		enemyID = 0;
-	}
-	else {
-		enemyID = 1;
-	}
 
 	int running = 1;
 	int again = 0;
@@ -134,8 +125,8 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
 
-		SDL_Rect srcrect[2] = { { players[0].currentSprite * 16, 0, 16, 24 } ,{ players[1].currentSprite * 16, 0, 16, 24 } };
-		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 } };
+		SDL_Rect srcrect[2] = { { players[0].currentSprite * 16, 0, 16, 24 }, { players[1].currentSprite * 16, 0, 16, 24 } };
+		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 }, { players[1].rect.x, players[1].rect.y, 64, 96 } };
 
 
 		// Check for various events (keyboard, mouse, touch, close)
@@ -238,33 +229,20 @@ int runGame(Game *game, Network *client) {
 				SDL_RenderDrawRect(game->renderer, &projectiles[0].rect[i]);
 			}
 		}
+		//--------------------------------------------------------------------------
 
 		updatePlayerStates(players, game->loopCount);
 
-		//Draw players
 		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers);
-
-		playerHealthbar(players, game->renderer);
-
-		//Draw weapon
 		drawWeapons(game, players, weapons);
 
-		for (int i = 0; i < MAXPROJECTILES; i++) {
-			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
-				if (projectiles[i].direction[j] == LEFT) {
-					SDL_RenderCopyEx(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, SDL_FLIP_HORIZONTAL);
-				}
-				else {
-					SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
-				}
+		drawProjectiles(game, projectiles);
 
-			}
-		}
+		drawPickups(game, pickups, &nrOfPickups);
+		playerHealthbar(players, game->renderer);
 
-		drawPickup(game, pickups, &nrOfPickups);
-
-		//show what was drawn
-		SDL_RenderPresent(game->renderer); 
+		//Show what was drawn
+		SDL_RenderPresent(game->renderer);
 	}
 	running = 1;
 	return running;
@@ -424,4 +402,17 @@ whynotwork = 2;
 //again = 1;
 running = 0;
 }
+*/
+
+/* From game.c
+
+//Fulkod för att avgöra enemyID
+int enemyID;
+if (client->playerID == 1) {
+enemyID = 0;
+}
+else {
+enemyID = 1;
+}
+
 */

@@ -1,53 +1,58 @@
 #pragma once
-#include <stdio.h>
-#include <stdbool.h>
-#include <SDL.h>
-#include "game.h"
-
+#include "menu.h"
 
 int menu(Game *game) {
 
-	TTF_Font *font = TTF_OpenFont("fintext.ttf", 20);
+	//Init text
+	TTF_Font *font = TTF_OpenFont("assets/Capture_it.ttf", 20);
 	SDL_Color color = { 255, 255, 255, 255 };
-
 	SDL_Surface *textImage = TTF_RenderText_Solid(font, "START", color);
-	SDL_Surface *menuImage = IMG_Load("startscreen.jpg");
-
 	SDL_Texture *text = SDL_CreateTextureFromSurface(game->renderer, textImage);
 	SDL_FreeSurface(textImage);
+	SDL_Rect textRect = { 100, 260, 150, 80 };
+
+	//Init menu image
+	SDL_Surface *menuImage = IMG_Load("assets/meny.png");
 	SDL_Texture *background = SDL_CreateTextureFromSurface(game->renderer, menuImage);
 	SDL_FreeSurface(menuImage);
 
-	SDL_Rect textRect;
-	textRect.x = 100;
-	textRect.y = 260;
-	textRect.w = 150;
-	textRect.h = 80;
+	int startGame = 1;
+	int menuLoop = 1;
 
-	SDL_Rect backRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+	//Draw
+	while (menuLoop) {
+		SDL_RenderCopy(game->renderer, background, NULL, NULL);
+		SDL_RenderCopy(game->renderer, text, NULL, &textRect);
+		SDL_RenderPresent(game->renderer);
 
-	bool startGame = true;
-	bool menuLoop = true;
+		startGame = menuOptions(&menuLoop);
+	}
 
 	SDL_DestroyTexture(text);
 	SDL_DestroyTexture(background);
 	return startGame;
 }
 
-int menuOptions(SDL_Event event, bool *menuLoop) {
-	bool running = true;
-	if (event.type == SDL_QUIT) {
-		running = false;
-		*menuLoop = false;
-	}
+int menuOptions(int *menuLoop) {
+	int running = 1;
+	SDL_Event event;
 
-	else if (event.type == SDL_MOUSEBUTTONDOWN) {
-		if (event.button.button == SDL_BUTTON_LEFT) {
-			if (event.button.x > 100 && event.button.x < 250 && event.button.y>280 && event.button.y < 340) {
-				running = true;
-				*menuLoop = false;
+	while (SDL_PollEvent(&event))
+	{
+		if (event.type == SDL_QUIT) {
+			running = 0;
+			*menuLoop = 0;
+		}
+
+		else if (event.type == SDL_MOUSEBUTTONDOWN) {
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				if (event.button.x > 100 && event.button.x < 250 && event.button.y>280 && event.button.y < 340) {
+					running = 1;
+					*menuLoop = 0;
+				}
 			}
 		}
+
 	}
 
 	return running;
