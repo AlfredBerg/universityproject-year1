@@ -20,6 +20,7 @@
 struct game {
 
 	int running;
+	int loopCount;
 	int livingPlayers[MAX_PLAYERS];
 	int connectedPlayers[MAX_PLAYERS];
 	SDL_Window* window;

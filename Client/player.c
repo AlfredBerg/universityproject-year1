@@ -24,8 +24,6 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 	}
 }
 
-
-
 void walk(Player *player, int *key, int *enableWalk, int *prevKey) {
 	if (*key == RIGHT && player->x < 980 && *enableWalk) {
 		player->x += 10;
@@ -65,8 +63,6 @@ void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKe
 	else *enableWalk = 1;
 
 }
-
-
 
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 
@@ -108,5 +104,41 @@ void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 			*nrOfPlayers = *nrOfPlayers - 1;
 			printf("Deleted player\n");
 		}
+	}
+}
+
+void updatePlayerStates(Player players[], int loopCount) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+
+		//Update States
+		if (players[i].x != players[i].previousX) {
+			players[i].isMoving = 1;
+
+			if (players[i].x > players[i].previousX) {
+				players[i].lastDirection = RIGHT;
+			}
+			else {
+				players[i].lastDirection = LEFT;
+			}
+
+		}
+		else {
+			players[i].isMoving = 0;
+		}
+
+		players[i].previousX = players[i].x;
+		players[i].previousY = players[i].y;
+
+
+		//update sprites
+
+		if (players[i].isMoving && loopCount % SPRITESPEED == 0) {
+			(players[i].currentSprite)++;
+		}
+
+		if (players[i].currentSprite >= 5)
+			players[i].currentSprite = 1;
+		else if (players[i].currentSprite <= 0)
+			players[i].currentSprite = 4;
 	}
 }

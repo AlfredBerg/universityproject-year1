@@ -6,7 +6,7 @@
 #include <SDL_image.h>
 
 
-#define TWONUMBERS 2
+#define SPRITESPEED 3
 
 #define NAME_LENGTH 50
 #define LEFT 2
@@ -27,6 +27,10 @@ struct player {
 	int tickThatWeaponFired;
 	int tickThatLostHealth;
 	int lastDirection;
+	int isMoving;
+	int previousX;
+	int previousY;
+	int currentSprite;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
 	SDL_Rect rect;
@@ -39,3 +43,4 @@ void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *groundDetected, int *enableWalk);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
+void updatePlayerStates(Player players[], int loopCount);

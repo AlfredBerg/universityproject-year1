@@ -56,6 +56,7 @@ void initGame(Game *game) {
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	game->debug = 1;
 	game->running = 1;
+	game->loopCount = 0;
 
 	game->cloudsBack = loadTexture("assets/CloudsBack.png", game);
 	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
@@ -102,14 +103,11 @@ int runGame(Game *game, Network *client) {
 
 	SDL_Event event;
 
-	int sprite[2] = { 1, 1 };
-
 	int prevKey = 0;
 	int key = 0;
 	int isJumping = 0;
 	int jumpTime = 0;
 	int doJump = 0;
-	int loopCount = 0;
 	int enableWalk = 1;
 	int groundDetected = 0;
 
@@ -135,19 +133,9 @@ int runGame(Game *game, Network *client) {
 		}
 
 		renderTick = SDL_GetTicks();
-		loopCount++;
+		game->loopCount++;
 
-		if (sprite[client->playerID] >= 5)
-			sprite[client->playerID] = 1;
-		else if (sprite[client->playerID] <= 0)
-			sprite[client->playerID] = 4;
-
-
-		//for sprite
-		//Uint32 ticks = SDL_GetTicks(); (time based)
-		//Uint32 sprite = (ticks / 100) % 4; (time based)
-
-		SDL_Rect srcrect[2] = { { sprite[0] * 16, 0, 16, 24 } ,{ sprite[1] * 16, 0, 16, 24 } };
+		SDL_Rect srcrect[2] = { { players[0].currentSprite * 16, 0, 16, 24 } ,{ players[1].currentSprite * 16, 0, 16, 24 } };
 		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 } };
 
 
@@ -166,17 +154,15 @@ int runGame(Game *game, Network *client) {
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
 		if (KeyState[SDL_SCANCODE_D]) {
-			if (!(loopCount % 3))
-				sprite[client->playerID] += 1;
+			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
+				players[client->playerID].currentSprite += 1;
 			key = RIGHT;
-			players[client->playerID].lastDirection = RIGHT;
 
 		}
 		else if (KeyState[SDL_SCANCODE_A]) {
-			if (!(loopCount % 3))
-				sprite[client->playerID] -= 1;
+			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
+				players[client->playerID].currentSprite -= 1;
 			key = LEFT;
-			players[client->playerID].lastDirection = LEFT;
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
@@ -253,6 +239,8 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
+		updatePlayerStates(players, game->loopCount);
+
 		//Draw players
 		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers);
 
@@ -265,6 +253,7 @@ int runGame(Game *game, Network *client) {
 		else {
 			SDL_RenderCopy(game->renderer, weapons[0].Texture, NULL, &weapons[0].rect);
 		}
+
 
 		for (int i = 0; i < MAXPROJECTILES; i++) {
 			for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
@@ -280,7 +269,8 @@ int runGame(Game *game, Network *client) {
 
 		drawPickup(game, pickups, &nrOfPickups);
 
-		SDL_RenderPresent(game->renderer); //show what was drawn
+		//show what was drawn
+		SDL_RenderPresent(game->renderer); 
 	}
 	running = 1;
 	return running;
@@ -313,6 +303,8 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.life = 100;
 	player.x = x;
 	player.y = y;
+	player.previousX = x;
+	player.previousY = y;
 	player.pickupID = -1;
 	player.weaponID = -1;
 	player.weaponFired = 0;
@@ -321,10 +313,12 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.lastDirection = lastDirection;
 	player.Image = IMG_Load(imageName);
 	player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
+	player.currentSprite = 0;
 	player.rect.x = x;
 	player.rect.y = y;
 	player.rect.w = rectW;
 	player.rect.h = rectH;
+	player.isMoving = 0;
 	return player;
 }
 
