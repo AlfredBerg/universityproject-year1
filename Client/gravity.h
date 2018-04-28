@@ -8,14 +8,14 @@
 
 #define GRAVITYSPEED 10
 
-void gravity(Player *player, Weapon weapons[], int *groundDetected) {
+void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected) {
 
-	if (*groundDetected == 0) {
-		player->y += GRAVITYSPEED;
+	if (!*groundDetected) {
+		player->y += GRAVITYSPEED;;
 	}
 	else {
-		player->y = player->y;
 		*groundDetected = 1;
+		*roofDetected = 0;
 	}
 
 	for (int i = 0; i < MAXNRWEAPONS; i++) {

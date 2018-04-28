@@ -37,10 +37,11 @@ struct player {
 };
 typedef struct player Player;
 
-void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected);
-void walk(Player *player, int *key, int *enableWalk, int *prevKey);
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected);
+void walk(Player *player, int *key, int *enableWalk, int *prevKey, int *groundDetected);
 void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *groundDetected, int *enableWalk);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
 void updatePlayerStates(Player players[], int loopCount);
+void handleJumpCollision(Player *player, int tileX, int tileY, int *jumpTime, int *roofDetected);

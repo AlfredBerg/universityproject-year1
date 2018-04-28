@@ -4,27 +4,30 @@
 #include "map.h"
 
 
-void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected) {
-	if (*doJump == 1) {
-		if (!*isJumping) {
-			*jumpTime = 10;
-		}
-		if (*jumpTime > 0) {
-			*isJumping = 1;
-			player->y -= 20;
-			--(*jumpTime);
-			*groundDetected = 0;
-		}
-		if (*jumpTime <= 0) {
-			if (*groundDetected == 1) {
-				*doJump = 0;
-				*isJumping = 0;
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
+	if (!*roofDetected) {
+		if (*doJump == 1) {
+			if (!*isJumping) {
+				*jumpTime = 10;
+			}
+			if (*jumpTime > 0) {
+				*isJumping = 1;
+				player->y -= 20;
+				--(*jumpTime);
+				*groundDetected = 0;
+			}
+			if (*jumpTime <= 0) {
+				if (*groundDetected == 1) {
+					*doJump = 0;
+					*isJumping = 0;
+					*roofDetected = 0;
+				}
 			}
 		}
 	}
 }
 
-void walk(Player *player, int *key, int *enableWalk, int *prevKey) {
+void walk(Player *player, int *key, int *enableWalk, int *prevKey, int *groundDetected) {
 	if (*key == RIGHT && player->x < 980 && *enableWalk) {
 		player->x += 10;
 	}
@@ -34,6 +37,7 @@ void walk(Player *player, int *key, int *enableWalk, int *prevKey) {
 	*prevKey = *key;
 	*key = 0;
 	*enableWalk = 1;
+	*groundDetected = 0;
 }
 
 void loseHealth(Player *player, int damage) {
@@ -45,23 +49,35 @@ void loseHealth(Player *player, int damage) {
 	player->life -= damage;
 }
 
+
 void handleCollision(Player *player, int tileX, int tileY, int *key, int *prevKey, int *groundDetected, int *enableWalk) {
 
-	if (*key == LEFT && *key == *prevKey) {
-		if ((tileX + TILE_WIDTH > player->x) && (tileY + TILE_HEIGHT < (player->y + player->rect.h))) {
-			*enableWalk = 0;
+	if ((tileY + TILE_HEIGHT < (player->y + player->rect.h))) {
+
+		if (*key == LEFT && *key == *prevKey) {
+			if ((tileX + TILE_WIDTH > player->x)) {
+				*enableWalk = 0;
+			}
 		}
-	}
-	else if (*key == RIGHT && *key == *prevKey) {
-		if ((tileX < player->x + player->rect.w) && (tileY + TILE_HEIGHT < (player->y + player->rect.h))) {
-			*enableWalk = 0;
+		else if (*key == RIGHT && *key == *prevKey) {
+			if ((tileX < player->x + player->rect.w)) {
+				*enableWalk = 0;
+			}
 		}
 	}
 	else if (tileY < player->y + player->rect.h) {
 		*groundDetected = 1;
 	}
 	else *enableWalk = 1;
+}
 
+void handleJumpCollision(Player *player, int tileX, int tileY, int *jumpTime, int *roofDetected) {
+	if (tileY + TILE_HEIGHT < player->y + player->rect.h) {
+		if (*jumpTime > 0) {
+			*roofDetected = 1;
+			*jumpTime = 0;
+		}
+	}
 }
 
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {

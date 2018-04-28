@@ -100,6 +100,7 @@ int runGame(Game *game, Network *client) {
 	int doJump = 0;
 	int enableWalk = 1;
 	int groundDetected = 0;
+	int roofDetected = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -161,7 +162,7 @@ int runGame(Game *game, Network *client) {
 			players[client->playerID].weaponFired = 1;
 		}
 
-		//Collision detection player <-> tile 
+		//Collision detection wall/ground
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
 				if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
@@ -170,10 +171,9 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		walk(&players[client->playerID], &key, &enableWalk, &prevKey);
-		groundDetected = 0;
+		walk(&players[client->playerID], &key, &enableWalk, &prevKey, &groundDetected);
 
-		//Collision detection player <-> tile	
+		//Collision detection wall/ground
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
 				if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
@@ -182,8 +182,19 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-		gravity(&players[client->playerID], weapons, &groundDetected);
-		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected);
+		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected);
+		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+
+		//Collision detection roof
+		if (groundDetected == 0) {
+			for (i = 0; i < MAP_HEIGHT; i++) {
+				for (j = 0; j < MAP_WIDTH; j++) {
+					if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
+						handleJumpCollision(&players[client->playerID], map[i][j].x, map[i][j].y, &jumpTime, &roofDetected);
+					}
+				}
+			}
+		}
 
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
