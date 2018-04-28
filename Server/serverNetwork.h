@@ -6,15 +6,20 @@
 
 #include "clients.h"
 
-#define MAX_PACKET 0xFF
+#define MAX_PACKET 1400
 #define MAX_SOCKETS 0x4
 
 #define PORTNR 12346
 #define SOCKET_TIMEOUT 10
+
 #define TICK_RATE 30
+#define RENDER_TICK 20
 
 #define DATAFIELDSINPACKET 10
 #define NRPROJECTILES 1
+
+#define LEFT 2
+#define RIGHT 3
 
 struct network {
 	int next_player;

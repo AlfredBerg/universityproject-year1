@@ -18,6 +18,7 @@
 void init(Network *server);
 void quit(Network *server);
 void updateClients(Network *server, Uint32 *lastTick);
+void updateGamestate(Network *server, Uint32 *lastGamestateTick);
 
 
 int main(int argc, char **argv)
@@ -27,7 +28,8 @@ int main(int argc, char **argv)
 	init(&server);
 
 
-	Uint32 lastTick = SDL_GetTicks();
+	Uint32 lastNetworkTick = SDL_GetTicks();
+	Uint32 lastGamestateTick = SDL_GetTicks();
 
 	int nrReady = 0;
 	int looptime;
@@ -37,7 +39,8 @@ int main(int argc, char **argv)
 
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
 
-		updateClients(&server, &lastTick);
+		updateClients(&server, &lastNetworkTick);
+		updateGamestate(&server, &lastGamestateTick);
 
 		if (nrReady == -1) {
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
@@ -168,3 +171,24 @@ void init(Network *server) {
 }
 
 
+void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
+	if (!SDL_TICKS_PASSED(SDL_GetTicks(), *lastGamestateTick + RENDER_TICK)) {
+		return;
+	}
+
+	for (int i = 0; i < NRPROJECTILES; i++) {
+
+		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
+			if (server->projectileData[i].Projectiles[j].direction == RIGHT) {
+				server->projectileData[i].Projectiles[j].x += server->projectileData[i].speed;
+			}
+			else {
+				server->projectileData[i].Projectiles[j].x -= server->projectileData[i].speed;
+			}
+			
+		}
+
+	}
+
+	*lastGamestateTick = SDL_GetTicks();
+}

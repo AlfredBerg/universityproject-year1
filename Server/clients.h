@@ -7,7 +7,7 @@
 #include "serverNetwork.h"
 
 #define MAX_CLIENTS 4 
-#define MAXPROJECTILEOBJECTS 100
+#define MAXPROJECTILEOBJECTS 50
 
 #define BULLET 0
 struct projectiles {

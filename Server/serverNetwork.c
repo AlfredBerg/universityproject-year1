@@ -30,6 +30,7 @@ void updateClients(Network *server, Uint32 *lastTick) {
 
 		for (int i = 0; i < MAX_SOCKETS; i++) {
 			sendPacket(data, server->clients[i].ip, server->serverSocket);
+
 			if (server->projectileData[BULLET].nrProjectilesShot) {
 				sendPacket(bulletData, server->clients[i].ip, server->serverSocket);
 			}
@@ -174,5 +175,4 @@ void bulletsToString(Network *server, char string[MAX_PACKET], int projectileTyp
 		}
 		length += sprintf(string + length, "%d;%d;%d;%d;%d;", server->projectileData[projectileType].Projectiles[i].id, server->projectileData[projectileType].Projectiles[i].projectileType, server->projectileData[projectileType].Projectiles[i].x, server->projectileData[projectileType].Projectiles[i].y, server->projectileData[projectileType].Projectiles[i].direction);
 	}
-	puts(string);
 }

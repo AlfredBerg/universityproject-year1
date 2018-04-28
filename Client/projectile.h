@@ -5,7 +5,7 @@
 #include <SDL_image.h>
 
 #define MAXPROJECTILES 1
-#define MAXPROJECTILEOBJECTS 100
+#define MAXPROJECTILEOBJECTS 50
 
 struct objects {
 	int whoShot;

@@ -15,6 +15,8 @@
 #include "sharedNetwork.h"
 #include "projectile.h"
 
+#define PROJECTILEFIELDSINPACKET 5
+
 int compareString(char str1[], char str2[], int len);
 
 void connectToServer(Network *client) {
@@ -109,14 +111,14 @@ void updatePlayerPositions(Network *client, Player *player, char data[][30]) {
 }
 
 void updateProjectiles(Projectile *projectiles, char data[][30], int nrFields) {
-	for (int i = 0; i < nrFields / 5; i++) {
+	for (int i = 0; i < nrFields / PROJECTILEFIELDSINPACKET; i++) {
 		int id = atoi(data[5*i + 1]), projectileType = atoi(data[5 * i + 2]), x = atoi(data[5 * i + 3]), y = atoi(data[5 * i + 4]), direction = atoi(data[5 * i + 5]);
 		fireProjectile(&projectiles[projectileType], direction, x, y, id);
 	}
 }
 
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles) {
-	char parsedData[110][30];
+	char parsedData[110 * PROJECTILEFIELDSINPACKET][30];
 	for (int i = 0; i < 110; i++) {
 		parsedData[i][0] = '\0';
 	}
@@ -124,6 +126,8 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	puts(serverdata);
 
 	int nrFields = decode(serverdata, parsedData, 4, 30);
+
+	printf("%d", nrFields / 5);
 
 	switch (atoi(parsedData[0])) //What kind of data is in this packet?
 	{

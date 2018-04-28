@@ -71,7 +71,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, LEFT);
 		}
 		else {
-			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, RIGHT);
+			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 70, weapons[weaponId].y, RIGHT);
 		}
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
