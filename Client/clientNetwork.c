@@ -56,15 +56,19 @@ void positionToString(Player *player, char string[]) {
 	sprintf(string, "0;%d;%d;", player->rect.x, player->rect.y);
 }
 
-void sendBulletToServer() {
-
+void sendBulletToServer(Network *client, int projectileType, int x, int y, int direction) {
+	char data[MAX_PACKET];
+	sprintf(data, "1;%d;%d;%d;%d;", projectileType, x, y, direction);
+	//puts(data);
+	sendPacket(data, client->serverIP, client->serverSocket);
+	client->lastTick = SDL_GetTicks();
 }
 
 void sendPositionToServer(Network *client, Player *fighter) {
 	if (SDL_TICKS_PASSED(SDL_GetTicks(), client->lastTick + TICK_RATE)) {
 		char data[MAX_PACKET];
 		positionToString(fighter, data);
-		puts(data);
+		//puts(data);
 		sendPacket(data, client->serverIP, client->serverSocket);
 		client->lastTick = SDL_GetTicks();
 
@@ -104,19 +108,27 @@ void updatePlayerPositions(Network *client, Player *player, char data[][30]) {
 	}
 }
 
-void updateProjectiles(Projectile *projectiles, char data[][30]) {
-	fireProjectile(&projectiles[atoi(data[2])], atoi(data[5]), atoi(data[3]), atoi(data[4]));
+void updateProjectiles(Projectile *projectiles, char data[][30], int nrFields) {
+	for (int i = 0; i < nrFields / 5; i++) {
+		int id = atoi(data[5*i + 1]), projectileType = atoi(data[5 * i + 2]), x = atoi(data[5 * i + 3]), y = atoi(data[5 * i + 4]), direction = atoi(data[5 * i + 5]);
+		fireProjectile(&projectiles[projectileType], direction, x, y, id);
+	}
 }
 
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles) {
 	char parsedData[110][30];
+	for (int i = 0; i < 110; i++) {
+		parsedData[i][0] = '\0';
+	}
 
-	decode(serverdata, parsedData, 4, 30);
+	puts(serverdata);
+
+	int nrFields = decode(serverdata, parsedData, 4, 30);
 
 	switch (atoi(parsedData[0])) //What kind of data is in this packet?
 	{
 	case 0: updatePlayerPositions(client, player, parsedData); break;
-	case 1: updateProjectiles(projectiles, parsedData); puts(serverdata); break;
+	case 1: updateProjectiles(projectiles, parsedData, nrFields); break;
 	default:
 		printf("Unknown data received\n");
 		break;

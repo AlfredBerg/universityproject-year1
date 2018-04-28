@@ -58,13 +58,21 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 
 		printf("Shots fired!\n");
 
+		//Offline code
+		/*
 		if (players[client->playerID].lastDirection == LEFT) {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 30, weapons[weaponId].y);
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 30, weapons[weaponId].y, 1);
 		}
 		else {
-			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 70, weapons[weaponId].y);
+			fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 70, weapons[weaponId].y, 1);
 		}
-
+		*/
+		if (players[client->playerID].lastDirection == LEFT) {
+			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, LEFT);
+		}
+		else {
+			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, RIGHT);
+		}
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 	}

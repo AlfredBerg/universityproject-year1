@@ -4,18 +4,20 @@
 #include "projectile.h"
 
 
-void fireProjectile(Projectile *projectile, int direction, int x, int y) {
+void fireProjectile(Projectile *projectile, int direction, int x, int y, int id) {
+	/*
 	if (projectile->projectilesFired >= MAXPROJECTILEOBJECTS) {
 		projectile->projectilesFired = 0;
 	}
-	
-	projectile->rect[projectile->projectilesFired].w = projectile->w;
-	projectile->rect[projectile->projectilesFired].h = projectile->h;
-	projectile->rect[projectile->projectilesFired].x = x;
-	projectile->rect[projectile->projectilesFired].y = y;
-	projectile->direction[projectile->projectilesFired] = direction;
+	*/
 
-	projectile->projectilesFired++;
+	projectile->rect[id].w = projectile->w;
+	projectile->rect[id].h = projectile->h;
+	projectile->rect[id].x = x;
+	projectile->rect[id].y = y;
+	projectile->direction[id] = direction;
+
+	//projectile->projectilesFired++;
 }
 
 void moveProjectiles(Projectile projectiles[]) {

@@ -28,6 +28,7 @@ struct projectile {
 typedef struct projectile Projectile;
 
 void moveProjectiles(Projectile projectiles[]);
-void fireProjectile(Projectile *projectile, int direction, int x, int y);
+void fireProjectile(Projectile *projectile, int direction, int x, int y, int id);
 void detectProjectileColision(Projectile *projectile, Player players[]);
+
 

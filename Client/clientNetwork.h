@@ -27,3 +27,4 @@ void initClient(Network *client);
 void updateServer(Player *player, Network *client, Projectile *projectiles);
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles);
 void connectToServer(Network *client);
+void sendBulletToServer(Network *client, int projectileType, int x, int y, int direction);

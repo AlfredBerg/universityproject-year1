@@ -45,7 +45,7 @@ int receivePacket(UDPsocket socket, UDPpacket *packet, char string[]) {
 
 }
 
-void decode(char indata[], char data[][30], int dataLength, int stringlength){
+int decode(char indata[], char data[][30], int dataLength, int stringlength){
   char * part;
   int count = 0;
   
@@ -60,4 +60,5 @@ void decode(char indata[], char data[][30], int dataLength, int stringlength){
     part = strtok (NULL, SEPARATOR);
 	count++;
   }
+  return count;
 }
