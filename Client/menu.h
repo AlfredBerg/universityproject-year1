@@ -6,10 +6,9 @@
 #include <string.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
-#include <SDL_net.h>
+#include "game.h"
 
 struct menu {
-
 	IPaddress ip;
 	int nrOfPlayers;
 	int play;
@@ -20,4 +19,4 @@ struct menu {
 typedef struct menu Menu;
 
 int menu(Game *game);
-int menuOptions(SDL_Event event, bool *menuLoop);
+int menuOptions(int *menuLoop);
