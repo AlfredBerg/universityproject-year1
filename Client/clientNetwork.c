@@ -1,21 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#ifndef _MSC_VER
-#include <unistd.h> 
-#endif
-
-#include "SDL.h"
-#include "SDL_net.h"
 #include "clientNetwork.h"
-#include "player.h"
-#include "sharedNetwork.h"
-#include "projectile.h"
-
-#define PROJECTILEFIELDSINPACKET 5
 
 int compareString(char str1[], char str2[], int len);
 
@@ -120,7 +103,7 @@ void updatePlayerPositions(Network *client, Player *player, char data[][30]) {
 
 void updateProjectiles(Projectile *projectiles, char data[][30], int nrFields) {
 	for (int i = 0; i < nrFields / PROJECTILEFIELDSINPACKET; i++) {
-		int id = atoi(data[5*i + 1]), projectileType = atoi(data[5 * i + 2]), x = atoi(data[5 * i + 3]), y = atoi(data[5 * i + 4]), direction = atoi(data[5 * i + 5]);
+		int id = atoi(data[5 * i + 1]), projectileType = atoi(data[5 * i + 2]), x = atoi(data[5 * i + 3]), y = atoi(data[5 * i + 4]), direction = atoi(data[5 * i + 5]);
 		fireProjectile(&projectiles[projectileType], direction, x, y, id);
 	}
 }
