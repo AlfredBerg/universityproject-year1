@@ -11,7 +11,7 @@
 
 
 static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
-	{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
+{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 { 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
@@ -126,8 +126,8 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
 
-		SDL_Rect srcrect[2] = { { players[0].currentSprite * 16, 0, 16, 24 }, { players[1].currentSprite * 16, 0, 16, 24 } };
-		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 }, { players[1].rect.x, players[1].rect.y, 64, 96 } };
+		SDL_Rect srcrect[2] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 } };
+		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 } };
 
 
 		// Check for various events (keyboard, mouse, touch, close)
@@ -244,12 +244,12 @@ int runGame(Game *game, Network *client) {
 
 		updatePlayerStates(players, game->loopCount);
 
+		//Draw players, weapons, projectiles & pickups
 		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers);
 		drawWeapons(game, players, weapons);
-
 		drawProjectiles(game, projectiles);
-
 		drawPickups(game, pickups, &nrOfPickups);
+
 		playerHealthbar(players, game->renderer);
 
 		//Show what was drawn
@@ -260,8 +260,12 @@ int runGame(Game *game, Network *client) {
 }
 
 void quitGame(Game *game) {
+	//SDL_DestroyTexture !!!
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
+	TTF_Quit();
+	Mix_Quit();
+	IMG_Quit();
 	SDL_Quit();
 }
 
@@ -413,17 +417,4 @@ whynotwork = 2;
 //again = 1;
 running = 0;
 }
-*/
-
-/* From game.c
-
-//Fulkod för att avgöra enemyID
-int enemyID;
-if (client->playerID == 1) {
-enemyID = 0;
-}
-else {
-enemyID = 1;
-}
-
 */
