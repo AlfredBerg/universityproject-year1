@@ -1,6 +1,5 @@
 #include "clientNetwork.h"
 
-int compareString(char str1[], char str2[], int len);
 
 void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
 	char data[MAX_PACKET];
