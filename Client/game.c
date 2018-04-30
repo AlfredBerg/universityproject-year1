@@ -116,6 +116,9 @@ int runGame(Game *game, Network *client) {
 		}
 	}
 
+	//Sound effects
+	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
+	footsteps->volume = 50;
 
 	while (running)
 	{
@@ -151,12 +154,16 @@ int runGame(Game *game, Network *client) {
 			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
 				players[client->playerID].currentSprite += 1;
 			key = RIGHT;
+			if (!Mix_Playing(0) && groundDetected)
+				Mix_PlayChannel(0, footsteps, 0);
 
 		}
 		else if (KeyState[SDL_SCANCODE_A]) {
 			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
 				players[client->playerID].currentSprite -= 1;
 			key = LEFT;
+			if (!Mix_Playing(0) && groundDetected)
+				Mix_PlayChannel(0, footsteps, 0);
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
