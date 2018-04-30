@@ -119,6 +119,8 @@ int runGame(Game *game, Network *client) {
 	//Sound effects
 	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
 	footsteps->volume = 50;
+	Mix_Chunk *jumpsound = Mix_LoadWAV("assets/jumpsound.wav");
+	jumpsound->volume = 50;
 
 	while (running)
 	{
@@ -167,6 +169,8 @@ int runGame(Game *game, Network *client) {
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
+			if (groundDetected)
+				Mix_PlayChannel(1, jumpsound, 0);
 		}
 		if (KeyState[SDL_SCANCODE_SPACE]) {
 			players[client->playerID].weaponFired = 1;
@@ -264,6 +268,7 @@ void quitGame(Game *game) {
 
 void playBackgroundMusic() {
 	Mix_Music *backgroundMusic = Mix_LoadMUS("hello.mp3");
+	Mix_VolumeMusic(50);
 
 	if (!backgroundMusic)
 		printf("Background music is not working\n");
