@@ -60,7 +60,7 @@ int checkOnlyGround(Tile map[][MAP_WIDTH], SDL_Rect *object) {
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
 			if (SDL_HasIntersection(object, &map[i][j].rect)) {
-				if (map[i][j].y - TILE_HEIGHT < object->y + object->h) {
+				if (map[i][j].y - 10 < object->y + object->h && map[i][j].y > object->y) { // - 10 för säkerhets skull (om seg dator / server)
 					return 1;
 				}
 			}

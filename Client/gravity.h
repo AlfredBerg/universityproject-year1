@@ -10,8 +10,8 @@
 
 void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected, Tile map[][MAP_WIDTH]) {
 
-	if (!*groundDetected) {
-		player->y += GRAVITYSPEED;;
+	if (!checkOnlyGround(map, &player->rect)) {
+		player->y += GRAVITYSPEED;
 	}
 	else {
 		*groundDetected = 1;
