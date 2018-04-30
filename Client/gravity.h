@@ -8,7 +8,7 @@
 
 #define GRAVITYSPEED 10
 
-void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected) {
+void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected, Tile map[][MAP_WIDTH]) {
 
 	if (!*groundDetected) {
 		player->y += GRAVITYSPEED;;
@@ -23,15 +23,8 @@ void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDet
 			continue;
 		}
 
-		if (weapons[i].y < 500 && weapons[i].y > 0) {
+		if (!checkOnlyGround(map, &weapons[i].rect) && weapons[i].y > -20 && weapons[i].y < 600) {
 			weapons[i].y += GRAVITYSPEED;
-		}
-		else if (weapons[i].y >= 500) {
-			weapons[i].y = 500;
-		}
-		else {
-			weapons[i].y += 20;
 		}
 	}
 }
-

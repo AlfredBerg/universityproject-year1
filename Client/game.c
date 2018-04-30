@@ -76,8 +76,8 @@ int runGame(Game *game, Network *client) {
 	int nrOfPlayers = 2;
 
 	Weapon weapons[MAXNRWEAPONS];
-	weapons[0] = createWeapon(game, 0, 400, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
-	weapons[1] = createWeapon(game, 1, 20, 40, 10, 200, 0, "assets/pistol.png", 60, 60);
+	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
+	weapons[1] = createWeapon(game, 1, 100, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
 	int nrOfWeapons = 2;
 
 	Projectile projectiles[MAXPROJECTILES];
@@ -174,7 +174,7 @@ int runGame(Game *game, Network *client) {
 		//Collision detection wall/ground
 		checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
 
-		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected);
+		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 
 		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 
@@ -182,8 +182,6 @@ int runGame(Game *game, Network *client) {
 		if (groundDetected == 0) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
-
-		
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {

@@ -53,3 +53,18 @@ void checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *
 		}
 	}
 }
+
+int checkOnlyGround(Tile map[][MAP_WIDTH], SDL_Rect *object) {
+	int i, j;
+
+	for (i = 0; i < MAP_HEIGHT; i++) {
+		for (j = 0; j < MAP_WIDTH; j++) {
+			if (SDL_HasIntersection(object, &map[i][j].rect)) {
+				if (map[i][j].y - TILE_HEIGHT < object->y + object->h) {
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
