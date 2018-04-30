@@ -7,6 +7,7 @@
 
 
 #define SPRITESPEED 3
+#define WALKSPEED 10
 
 #define NAME_LENGTH 50
 #define LEFT 2
@@ -38,7 +39,8 @@ struct player {
 typedef struct player Player;
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected);
-void walk(Player *player, int *key, int *enableWalk, int *prevKey, int *groundDetected);
+void walkRight(Player *player, int *key, int *prevKey);
+void walkLeft(Player *player, int *key, int *prevKey);
 void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);

@@ -99,10 +99,8 @@ int runGame(Game *game, Network *client) {
 	int isJumping = 0;
 	int jumpTime = 0;
 	int doJump = 0;
-	int enableWalk = 1;
 	int groundDetected = 0;
 	int roofDetected = 0;
-	int flag = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -158,7 +156,9 @@ int runGame(Game *game, Network *client) {
 			key = RIGHT;
 			if (!Mix_Playing(0) && groundDetected)
 				Mix_PlayChannel(0, footsteps, 0);
-
+			if (!checkForWall(map, &players[client->playerID]) || key != prevKey) {
+				walkRight(&players[client->playerID], &key, &prevKey);
+			}
 		}
 		else if (KeyState[SDL_SCANCODE_A]) {
 			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
@@ -166,6 +166,9 @@ int runGame(Game *game, Network *client) {
 			key = LEFT;
 			if (!Mix_Playing(0) && groundDetected)
 				Mix_PlayChannel(0, footsteps, 0);
+			if (!checkForWall(map, &players[client->playerID]) || key != prevKey) {
+				walkLeft(&players[client->playerID], &key, &prevKey);
+			}
 		}
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
@@ -176,23 +179,31 @@ int runGame(Game *game, Network *client) {
 			players[client->playerID].weaponFired = 1;
 		}
 
-
-		//Collision detection wall/ground
-		checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
-
-		walk(&players[client->playerID], &key, &enableWalk, &prevKey, &groundDetected);
-
-		//Collision detection wall/ground
-		checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
-
 		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 
 		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 
-		//Collision detection ceiling
 		if (groundDetected == 0) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
+
+
+		////Collision detection wall/ground
+		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
+
+		//walk(&players[client->playerID], &key, &enableWalk, &prevKey, &groundDetected);
+
+		////Collision detection wall/ground
+		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
+
+		//gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
+
+		//jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+
+		////Collision detection ceiling
+		//if (groundDetected == 0) {
+		//	checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
+		//}
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {

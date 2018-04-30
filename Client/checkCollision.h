@@ -5,35 +5,20 @@
 #include "player.h"
 #include "map.h"
 
-void checkForGround(Tile map[][MAP_WIDTH], Player *player, int *key, int *prevKey, int *groundDetected, int *enableWalk) {
-	int i, j, flag = 0;
-
+int checkForWall(Tile map[][MAP_WIDTH], Player *player) {
+	int i, j, wallDetected = 0;
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
-			if (SDL_HasIntersection(&player->rect, &map[i][j].rect)) {	
-			
-				if ((map[i][j].y + TILE_HEIGHT < (player->y + player->rect.h))) {	//wall	
-
-					if (*key == LEFT && *key == *prevKey) {
-						if ((map[i][j].x + TILE_WIDTH > player->x)) {
-							*enableWalk = 0;
-						}
-					}
-					else if (*key == RIGHT && *key == *prevKey) {
-						if ((map[i][j].x < player->x + player->rect.w)) {
-							*enableWalk = 0;
-						}
-					}
+			if (SDL_HasIntersection(&player->rect, &map[i][j].rect)) {
+				if ((map[i][j].y + TILE_HEIGHT < (player->y + player->rect.h))) {
+					wallDetected = 1;
 				}
-				else if (map[i][j].y < player->y + player->rect.h) {				//wall/ground	
-					*groundDetected = 1;
-				}
-				else {
-					*enableWalk = 1; 
-				}
+				break;
 			}
 		}
+		if (wallDetected) break;
 	}
+	return wallDetected;
 }
 
 void checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *roofDetected, int *groundDetected) {

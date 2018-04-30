@@ -1,7 +1,7 @@
 #pragma once
 #include "player.h"
-#include "game.h"
-#include "map.h"
+//#include "game.h"
+//#include "map.h"
 
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
@@ -27,17 +27,18 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 	}
 }
 
-void walk(Player *player, int *key, int *enableWalk, int *prevKey, int *groundDetected) {
-	if (*key == RIGHT && player->x < 980 && *enableWalk) { 
-		player->x += 10;
-	}
-	else if (*key == LEFT && player->x > -10 && *enableWalk) {
-		player->x -= 10;
+void walkRight(Player *player, int *key, int *prevKey) {
+	if (player->x < 980) {
+		player->x += WALKSPEED;
 	}
 	*prevKey = *key;
-	*key = 0;	
-	*enableWalk = 1;
-	*groundDetected = 0;
+}
+
+void walkLeft(Player *player, int *key, int *prevKey) {
+	if (player->x > -10) {
+		player->x -= WALKSPEED;
+	}
+	*prevKey = *key;
 }
 
 void loseHealth(Player *player, int damage) {
