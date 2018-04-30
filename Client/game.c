@@ -8,6 +8,7 @@
 #include "textureManager.h"
 #include "map.h"
 #include "pickup.h"
+#include "checkCollision.h"
 
 
 static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
@@ -23,12 +24,12 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 { 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0 },
+{ 2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0 },
 { 2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0 },
-{ 2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0 },
+{ 2,2,2,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0 },
 { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
 { 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
 };
@@ -101,6 +102,7 @@ int runGame(Game *game, Network *client) {
 	int enableWalk = 1;
 	int groundDetected = 0;
 	int roofDetected = 0;
+	int flag = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -113,6 +115,7 @@ int runGame(Game *game, Network *client) {
 			initTiles(game->renderer, &map[i][j], j, i);
 		}
 	}
+
 
 	while (running)
 	{
@@ -162,40 +165,25 @@ int runGame(Game *game, Network *client) {
 			players[client->playerID].weaponFired = 1;
 		}
 
+
 		//Collision detection wall/ground
-		for (i = 0; i < MAP_HEIGHT; i++) {
-			for (j = 0; j < MAP_WIDTH; j++) {
-				if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
-					handleCollision(&players[client->playerID], map[i][j].x, map[i][j].y, &key, &prevKey, &groundDetected, &enableWalk);
-				}
-			}
-		}
+		checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
 
 		walk(&players[client->playerID], &key, &enableWalk, &prevKey, &groundDetected);
 
 		//Collision detection wall/ground
-		for (i = 0; i < MAP_HEIGHT; i++) {
-			for (j = 0; j < MAP_WIDTH; j++) {
-				if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
-					handleCollision(&players[client->playerID], map[i][j].x, map[i][j].y, &key, &prevKey, &groundDetected, &enableWalk);
-				}
-			}
-		}
+		checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
 
 		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected);
+
 		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 
-		//Collision detection roof
+		//Collision detection ceiling
 		if (groundDetected == 0) {
-			for (i = 0; i < MAP_HEIGHT; i++) {
-				for (j = 0; j < MAP_WIDTH; j++) {
-					if (SDL_HasIntersection(&players[client->playerID].rect, &map[i][j].rect)) {
-						handleJumpCollision(&players[client->playerID], map[i][j].x, map[i][j].y, &jumpTime, &roofDetected);
-					}
-				}
-			}
+			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
 
+		
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
