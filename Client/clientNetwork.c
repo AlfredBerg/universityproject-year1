@@ -90,13 +90,16 @@ void updateServer(Player *player, Network *client, Projectile *projectiles) {
 
 }
 
-void updatePlayerPositions(Network *client, Player *player, char data[][30]) {
+void updateGamestate(Network *client, Player *player, char data[][30]) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
-		if (client->playerID == i) {
-			continue;
+		player[i].weaponID = atoi(data[i * FIELDS_IN_GAMESTATE + 3]);
+		player[i].pickupID = atoi(data[i * FIELDS_IN_GAMESTATE + 4]);
+		
+
+		if (client->playerID != i) {
+			player[i].x = atoi(data[i * FIELDS_IN_GAMESTATE + 1]);
+			player[i].y = atoi(data[i * FIELDS_IN_GAMESTATE + 2]);
 		}
-		player[i].x = atoi(data[i * 2 + 1]);
-		player[i].y = atoi(data[i * 2 + 2]);
 	}
 }
 
@@ -106,6 +109,7 @@ void updateProjectiles(Projectile *projectiles, char data[][30], int nrFields) {
 		fireProjectile(&projectiles[projectileType], direction, x, y, id);
 	}
 }
+
 
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles) {
 	char parsedData[110 * PROJECTILEFIELDSINPACKET][30];
@@ -117,11 +121,11 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 
 	int nrFields = decode(serverdata, parsedData, 4, 30);
 
-	printf("%d", nrFields / 5);
+	//printf("%d", nrFields / 5);
 
 	switch (atoi(parsedData[0])) //What kind of data is in this packet?
 	{
-	case 0: updatePlayerPositions(client, player, parsedData); break;
+	case 0: updateGamestate(client, player, parsedData); break;
 	case 1: updateProjectiles(projectiles, parsedData, nrFields); break;
 	default:
 		printf("Unknown data received\n");

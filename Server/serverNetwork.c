@@ -26,6 +26,8 @@ void updateClients(Network *server, Uint32 *lastTick) {
 
 		char bulletData[MAX_PACKET];
 		bulletsToString(server, bulletData, BULLET);
+
+
 		//puts(data);
 
 		for (int i = 0; i < MAX_SOCKETS; i++) {
@@ -42,13 +44,13 @@ void updateClients(Network *server, Uint32 *lastTick) {
 }
 
 void updatePositions(Network *server, char data[][30]) {
-	printf("Positions update\n");
+	//printf("Positions update\n");
 	server->clients[server->whoSentThePacket].xPos = atoi(data[1]);
 	server->clients[server->whoSentThePacket].yPos = atoi(data[2]);
 }
 
 void createProjectiles(Network *server, char data[][30]) {
-	printf("Projectile created\n");
+	//printf("Projectile created\n");
 	//projectile type, x, y, direction
 	int id = server->projectileData[BULLET].nrProjectilesShot;
 
@@ -65,8 +67,27 @@ void createProjectiles(Network *server, char data[][30]) {
 	(server->projectileData[BULLET].nrProjectilesShot)++;
 }
 
-void objectPickup(server, data) {
+void objectPickup(Network *server, char data[][30]) {
+	//typeofpickup;IdOfPickedUpItem
 	printf("Object pickup\n");
+	int typeOfPickup = atoi(data[1]), idOfPickup = atoi(data[2]);
+	if (typeOfPickup == 0) {
+		//Weapon
+		if (server->items.weapons[idOfPickup].isPickedUp == 0) {
+			server->items.weapons[idOfPickup].isPickedUp = 1;
+			server->items.weapons[idOfPickup].owner = server->whoSentThePacket;
+			server->clients[server->whoSentThePacket].weaponId = idOfPickup;
+		}
+	}
+	else if (typeOfPickup == 1){
+		//Pickup
+		if (server->items.pickups[idOfPickup].isPickedUp == 0) {
+			server->items.pickups[idOfPickup].isPickedUp = 1;
+			server->items.pickups[idOfPickup].owner = server->whoSentThePacket;
+			server->clients[server->whoSentThePacket].pickupId = idOfPickup;
+		}
+	}
+	
 }
 
 void updateServerdata(Network *server, char indata[]) {
@@ -163,8 +184,14 @@ void closeSocket(Network *server, int index) {
 
 
 void gamestateToString(Network *server, char string[]) {
-	//x1;y1;x2;y2
-	sprintf(string, "0;%d;%d;%d;%d;", server->clients[0].xPos, server->clients[0].yPos, server->clients[1].xPos, server->clients[1].yPos);
+	//x1;y1;weaponId;PickupId
+	int length = 0;
+	length += sprintf(string + length, "0;");
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		length += sprintf(string + length, "%d;%d;%d;%d;", server->clients[i].xPos, server->clients[i].yPos,
+			server->clients[i].weaponId, server->clients[i].pickupId);
+	}
+	
 }
 
 void bulletsToString(Network *server, char string[MAX_PACKET], int projectileType) {

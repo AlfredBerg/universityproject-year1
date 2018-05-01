@@ -21,8 +21,10 @@
 #define TICK_RATE 20
 #define SERVERPORT 12346
 #define CLIENTPORT 53132
-#define SERVERIP "192.168.56.1"
+#define SERVERIP "192.168.0.4"
 #define PROJECTILEFIELDSINPACKET 5
+
+#define FIELDS_IN_GAMESTATE 4
 
 struct network {
 	int playerID;
@@ -41,3 +43,4 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 void connectToServer(Network *client);
 void sendBulletToServer(Network *client, int projectileType, int x, int y, int direction);
 int compareString(char str1[], char str2[], int len);
+void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup);

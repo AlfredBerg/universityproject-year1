@@ -19,14 +19,15 @@ void init(Network *server);
 void quit(Network *server);
 void updateClients(Network *server, Uint32 *lastTick);
 void updateGamestate(Network *server, Uint32 *lastGamestateTick);
-
+Items createItems(int nrWeapons, int nrPickups);
 
 int main(int argc, char **argv)
 {
 	Network server;
 
-	init(&server);
+	server.items = createItems(MAXNRWEAPONS, MAX_NR_OF_PICKUPS);
 
+	init(&server);
 
 	Uint32 lastNetworkTick = SDL_GetTicks();
 	Uint32 lastGamestateTick = SDL_GetTicks();
@@ -35,6 +36,8 @@ int main(int argc, char **argv)
 	int looptime;
 	int timerCount = 0;
 	while (server.running) {
+		(server.nrGameloops)++;
+
 		looptime = SDL_GetTicks();
 
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
@@ -58,8 +61,7 @@ int main(int argc, char **argv)
 		}
 	
 		//Used to see responsiveness of the server
-		timerCount++;
-		if (timerCount == 100) {
+		if (server.nrGameloops % 100 == 0) {
 			printf("Loop time: %d\n", SDL_GetTicks() - looptime);
 			timerCount = 0;
 		}
@@ -159,13 +161,18 @@ void init(Network *server) {
 	server->projectileData[BULLET].h = 30;
 	server->projectileData[BULLET].nrProjectilesShot = 0;
 
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		server->clients[i].health = 100;
+		server->clients[i].pickupId = -1;
+		server->clients[i].weaponId = -1;
+	}
 
 
 	//Hardcoded stuff, remove me
 	server->clients[0].xPos = 50;
 	server->clients[0].yPos = 50;
-	server->clients[1].xPos = 550;
-	server->clients[1].yPos = 470;
+	server->clients[1].xPos = 650;
+	server->clients[1].yPos = 370;
 
 
 }
@@ -191,4 +198,22 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
 	}
 
 	*lastGamestateTick = SDL_GetTicks();
+}
+
+Items createItems(int nrWeapons, int nrPickups) {
+	Items items;
+
+	for (int i = 0; i < nrWeapons; i++) {
+		items.weapons[i].id = i;
+		items.weapons[i].isPickedUp = 0;
+		items.weapons[i].owner = -1;
+	}
+
+	for (int i = 0; i < nrPickups; i++) {
+		items.pickups[i].id = i;
+		items.pickups[i].isPickedUp = 0;
+		items.pickups[i].owner = -1;
+	}
+
+	return items;
 }

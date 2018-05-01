@@ -1,14 +1,22 @@
 #pragma once
 #include "weapon.h"
+#include "clientNetwork.h"
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
 	fireWeapon(weapons, players, client, projectiles);
 
-	pickUpWeapon(weapons, players);
+	pickUpWeapon(client, weapons, players);
 
 	for (int i = 0; i < MAXPROJECTILES; i++) {
 		detectProjectileColision(&projectiles[i], players);
 	}
+
+	int id;
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		id = players[i].weaponID;
+		weapons[id].isPickedUp = 1;
+	}
+
 
 	//Move with player if picked up
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
@@ -29,6 +37,9 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 				}
 
 			}
+
+		}
+		else {
 
 		}
 
@@ -78,7 +89,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 	}
 }
 
-void pickUpWeapon(Weapon weapons[], Player players[]) {
+void pickUpWeapon(Network *client, Weapon weapons[], Player players[]) {
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
 		if (weapons[i].isPickedUp == 1) {
 			continue;
@@ -87,7 +98,7 @@ void pickUpWeapon(Weapon weapons[], Player players[]) {
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (SDL_HasIntersection(&players[j].rect, &weapons[i].rect)) {
 				printf("Pickup weapon\n");
-				players[j].weaponID = weapons[i].id;
+				sendPickupToServer(client, 0, weapons[i].id);
 				weapons[i].isPickedUp = 1;
 			}
 		}

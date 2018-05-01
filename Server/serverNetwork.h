@@ -15,6 +15,8 @@
 #define TICK_RATE 20
 #define RENDER_TICK 20
 
+#define FIELDS_IN_GAMESTATE 4
+
 #define DATAFIELDSINPACKET 10
 #define NRPROJECTILES 1
 
@@ -31,7 +33,9 @@ struct network {
 	int whoSentThePacket;
 	SDLNet_SocketSet socketSet;
 	UDPsocket sockets[MAX_SOCKETS];
+	int nrGameloops;
 	int running;
+	Items items;
 };
 typedef struct network Network;
 

@@ -6,8 +6,11 @@
 
 #include "serverNetwork.h"
 
-#define MAX_CLIENTS 4 
+#define MAX_CLIENTS 2
 #define MAXPROJECTILEOBJECTS 50
+
+#define MAXNRWEAPONS 2
+#define MAX_NR_OF_PICKUPS 2
 
 #define BULLET 0
 struct projectiles {
@@ -30,12 +33,33 @@ struct projectileData {
 };
 typedef struct projectileData ProjectileData;
 
+struct weapons {
+	int id;
+	int isPickedUp;
+	int owner;
+};
+typedef struct weapons Weapons;
+
+struct pickups {
+	int id;
+	int isPickedUp;
+	int owner;
+};
+typedef struct pickups Pickups;
+
+struct items {
+	Weapons weapons[MAXNRWEAPONS];
+	Pickups pickups[MAX_NR_OF_PICKUPS];
+};
+typedef struct items Items;
 
 struct client {
 	IPaddress ip;
 	int inUse;
 	int xPos;
 	int yPos;
+	int weaponId;
+	int pickupId;
 	int health;
 };
 typedef struct client Client;
