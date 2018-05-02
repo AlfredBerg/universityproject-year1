@@ -9,7 +9,7 @@
 #include "player.h"
 #include "game.h"
 
-#define MAXNRWEAPONS 2
+#define MAXNRWEAPONS 4
 #define MAXBULLETS 100
 
 struct weapon {

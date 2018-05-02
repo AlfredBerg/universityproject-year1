@@ -13,7 +13,7 @@
 #define LEFT 2
 #define RIGHT 3
 
-#define MAXPLAYERS 2
+#define MAXPLAYERS 3
 #define INVULNERABILITY_TIME 100
 
 struct player {
