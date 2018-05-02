@@ -24,5 +24,5 @@ int correctPosX(int x) {
 }
 
 int correctPosY(int y) {
-	return y - camera.x;
+	return y - camera.y;
 }

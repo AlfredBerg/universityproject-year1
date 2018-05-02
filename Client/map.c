@@ -38,6 +38,8 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 	SDL_Rect rect = { tile->x, tile->y, TILE_WIDTH, TILE_HEIGHT };
 
+	
+
 	switch (tile->ID) {
 	case 2:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);

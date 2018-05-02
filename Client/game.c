@@ -122,6 +122,9 @@ int runGame(Game *game, Network *client) {
 	Mix_Chunk *jumpsound = Mix_LoadWAV("assets/jumpsound.wav");
 	jumpsound->volume = 50;
 
+
+
+
 	while (running)
 	{
 		//---------------------------Game state------------------------------------
@@ -187,6 +190,7 @@ int runGame(Game *game, Network *client) {
 		if (groundDetected == 0) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
+
 
 		updateCameraPosition(&players[client->playerID]);
 
