@@ -3,6 +3,7 @@
 
 int menu(Game *game) {
 
+	/*
 	//Init text
 	TTF_Font *font = TTF_OpenFont("assets/Capture_it.ttf", 20);
 	SDL_Color color = { 255, 255, 255, 255 };
@@ -10,6 +11,7 @@ int menu(Game *game) {
 	SDL_Texture *text = SDL_CreateTextureFromSurface(game->renderer, textImage);
 	SDL_FreeSurface(textImage);
 	SDL_Rect textRect = { 100, 260, 150, 80 };
+	*/
 
 	//Init menu image
 	SDL_Surface *menuImage = IMG_Load("assets/meny.png");
@@ -22,13 +24,13 @@ int menu(Game *game) {
 	//Draw
 	while (menuLoop) {
 		SDL_RenderCopy(game->renderer, background, NULL, NULL);
-		SDL_RenderCopy(game->renderer, text, NULL, &textRect);
+	//	SDL_RenderCopy(game->renderer, text, NULL, &textRect);
 		SDL_RenderPresent(game->renderer);
 
 		startGame = menuOptions(&menuLoop);
 	}
 
-	SDL_DestroyTexture(text);
+	//  SDL_DestroyTexture(text);
 	SDL_DestroyTexture(background);
 	return startGame;
 }
@@ -46,7 +48,7 @@ int menuOptions(int *menuLoop) {
 
 		else if (event.type == SDL_MOUSEBUTTONDOWN) {
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				if (event.button.x > 100 && event.button.x < 250 && event.button.y>280 && event.button.y < 340) {
+				if (event.button.x > 220 && event.button.x < 800 && event.button.y > 210 && event.button.y < 420) {
 					running = 1;
 					*menuLoop = 0;
 				}
