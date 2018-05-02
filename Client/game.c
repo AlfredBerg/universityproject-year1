@@ -223,6 +223,8 @@ int runGame(Game *game, Network *client) {
 		weaponActions(weapons, players, client, projectiles);
 		moveProjectiles(projectiles);
 
+		
+
 		//---------------------------Render------------------------------------
 
 		//Clear screen with black
