@@ -143,10 +143,10 @@ void drawWeapons(Game *game, Player players[], Weapon weapons[]) {
 			for (int i = 0; i < MAXPLAYERS; i++) {
 				if (weapons[j].id == players[i].weaponID) {
 					if (players[i].lastDirection == LEFT) {
-						SDL_RenderCopyEx(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
+						renderCopyMoveWithCamera(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
 					}
 					else {
-						SDL_RenderCopy(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect);
+						renderCopyMoveWithCamera(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect, 0.0, NULL, NULL);
 					}
 				}
 
@@ -154,7 +154,7 @@ void drawWeapons(Game *game, Player players[], Weapon weapons[]) {
 
 		}
 		else {
-			SDL_RenderCopy(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect);
+			renderCopyMoveWithCamera(game->renderer, weapons[j].Texture, NULL, &weapons[j].rect, 0.0, NULL, NULL);
 		}
 	}
 
@@ -166,10 +166,10 @@ void drawProjectiles(Game *game, Projectile projectiles[]) {
 	for (int i = 0; i < MAXPROJECTILES; i++) {
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
 			if (projectiles[i].direction[j] == LEFT) {
-				SDL_RenderCopyEx(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+				renderCopyMoveWithCamera(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
 			else {
-				SDL_RenderCopy(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j]);
+				renderCopyMoveWithCamera(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, NULL);
 			}
 
 		}

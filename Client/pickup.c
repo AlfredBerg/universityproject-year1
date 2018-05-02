@@ -51,7 +51,7 @@ void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups) {
 void drawPickups(Game *game, Pickup pickups[], int *nrOfPickups) {
 	for (int i = 0; i < *nrOfPickups; i++) {
 		if (!pickups[i].isPickedUp)
-			SDL_RenderCopy(game->renderer, pickups[i].texture, NULL, &pickups[i].rect);
+			renderCopyMoveWithCamera(game->renderer, pickups[i].texture, NULL, &pickups[i].rect, 0.0, NULL, 0);
 		else
 			deletePickup(pickups, pickups[i].id, nrOfPickups);
 	}

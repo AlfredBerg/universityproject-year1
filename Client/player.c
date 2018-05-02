@@ -1,5 +1,6 @@
 #pragma once
 #include "player.h"
+#include "camera.h"
 //#include "game.h"
 //#include "map.h"
 
@@ -78,8 +79,7 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 		healthbar[i].y = players[i].y - 10;
 		healthbar[i].h = height;
 		healthbar[i].w = players[i].life / 2;
-
-		SDL_RenderCopy(renderer, greenTexture, NULL, &healthbar[i]);
+		renderCopyMoveWithCamera(renderer, greenTexture, NULL, &healthbar[i], 0.0, NULL, 0);
 	}
 }
 

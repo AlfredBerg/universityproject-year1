@@ -1,4 +1,5 @@
 #include "map.h"
+#include "camera.h"
 
 void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 
@@ -39,15 +40,15 @@ void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 
 	switch (tile->ID) {
 	case 2:
-		SDL_RenderCopy(renderer, tile->texture, NULL, &rect);
+		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	case 10:
-		SDL_RenderCopy(renderer, tile->texture, NULL, &rect);
+		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	case 19:
-		SDL_RenderCopy(renderer, tile->texture, NULL, &rect);
+		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
 		break;
 	}
 

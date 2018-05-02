@@ -322,10 +322,10 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].life > 0) {
 			if (players[i].lastDirection == LEFT) {
-				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
 			else if (players[i].lastDirection == RIGHT)
-				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, NULL);
 		}
 
 		else
