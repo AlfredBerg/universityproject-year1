@@ -9,7 +9,9 @@
 #include "map.h"
 #include "pickup.h"
 #include "checkCollision.h"
+#include "camera.h"
 
+extern SDL_Rect camera;
 
 static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 { 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
@@ -146,7 +148,6 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-
 		//Move fighter
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
@@ -187,6 +188,7 @@ int runGame(Game *game, Network *client) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
 
+		updateCameraPosition(&players[client->playerID]);
 
 		////Collision detection wall/ground
 		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
@@ -325,7 +327,7 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
 			else if (players[i].lastDirection == RIGHT)
-				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, NULL);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, 0);
 		}
 
 		else

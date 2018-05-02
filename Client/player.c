@@ -4,6 +4,7 @@
 //#include "game.h"
 //#include "map.h"
 
+extern SDL_Rect camera;
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
 	if (!*roofDetected) {
@@ -31,6 +32,7 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 void walkRight(Player *player, int *key, int *prevKey) {
 	if (player->x < 980) {
 		player->x += WALKSPEED;
+		//camera.x -= WALKSPEED;
 	}
 	*prevKey = *key;
 }
@@ -38,6 +40,7 @@ void walkRight(Player *player, int *key, int *prevKey) {
 void walkLeft(Player *player, int *key, int *prevKey) {
 	if (player->x > -10) {
 		player->x -= WALKSPEED;
+		//camera.x += WALKSPEED;
 	}
 	*prevKey = *key;
 }
