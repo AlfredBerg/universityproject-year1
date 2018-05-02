@@ -22,12 +22,15 @@ int main(int argc, char** argv)
 {
 	Game game;
 	Network client;
+	char serverIP [16] = "192.168.0.2";
 
 	initGame(&game); 
-	initClient(&client);
+	//initClient(&client);
 
 	while (game.running) {
-		game.running = menu(&game);
+		game.running = menu(&game, serverIP);
+		initClient(&client, serverIP);
+		printf("CLIENT INITIATED");
 		while (game.running) {
 			game.running = runGame(&game, &client);
 		}

@@ -133,7 +133,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	}
 }
 
-void initClient(Network *client) {
+void initClient(Network *client, char serverIP[]) {
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
@@ -146,7 +146,7 @@ void initClient(Network *client) {
 	}
 
 	//Listen on all interfaces
-	if (SDLNet_ResolveHost(&client->serverIP, SERVERIP, SERVERPORT)) {
+	if (SDLNet_ResolveHost(&client->serverIP, serverIP, SERVERPORT)) {
 		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}

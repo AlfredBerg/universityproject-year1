@@ -18,5 +18,5 @@ struct menu {
 };
 typedef struct menu Menu;
 
-int menu(Game *game);
-int menuOptions(int *menuLoop);
+int menu(Game *game, char serverIP[]);
+int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]);
