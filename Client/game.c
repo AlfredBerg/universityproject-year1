@@ -17,12 +17,12 @@ static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
+{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
 { 2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
 { 2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
 { 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
@@ -143,8 +143,8 @@ int runGame(Game *game, Network *client) {
 		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 },{ players[2].rect.x, players[2].rect.y, 64, 96 } };
 
 		//för fågeln
-		if( game->loopCount % SPRITESPEED == 0)
-		players[2].currentSprite += 1;
+		if (game->loopCount % SPRITESPEED == 0)
+			players[2].currentSprite += 1;
 
 		// Check for various events (keyboard, mouse, touch, close)
 		while (SDL_PollEvent(&event))
@@ -191,29 +191,22 @@ int runGame(Game *game, Network *client) {
 
 		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 
-		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-
 		if (groundDetected == 0) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
 
+		if (!checkForWall(map, &players[client->playerID])) {
+			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+		}
 
-		////Collision detection wall/ground
-		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
+		else if (checkForWall(map, &players[client->playerID])) { //test för hopp vid vägg: checkForWall = 2 eller 3
+			//checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
+			//jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+			//gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
+		}
 
-		//walk(&players[client->playerID], &key, &enableWalk, &prevKey, &groundDetected);
+		
 
-		////Collision detection wall/ground
-		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
-
-		//gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
-
-		//jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-
-		////Collision detection ceiling
-		//if (groundDetected == 0) {
-		//	checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
-		//}
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {

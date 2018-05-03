@@ -1,7 +1,5 @@
 #pragma once
 #include "player.h"
-//#include "game.h"
-//#include "map.h"
 
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
@@ -26,6 +24,30 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 		}
 	}
 }
+
+void jump2(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
+	if (!*roofDetected) {
+		if (*doJump == 1) {
+			if (!*isJumping) {
+				*jumpTime = 2;
+			}
+			if (*jumpTime > 0) {
+				*isJumping = 1;
+				player->y -= 5;
+				--(*jumpTime);
+				*groundDetected = 0;
+			}
+			if (*jumpTime <= 0) {
+				if (*groundDetected == 1) {
+					*doJump = 0;
+					*isJumping = 0;
+					*roofDetected = 0;
+				}
+			}
+		}
+	}
+}
+
 
 void walkRight(Player *player, int *key, int *prevKey) {
 	if (player->x < 980) {
