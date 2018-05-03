@@ -93,6 +93,7 @@ void updateGamestate(Network *client, Player *player, char data[][30]) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		player[i].weaponID = atoi(data[i * FIELDS_IN_GAMESTATE + 3]);
 		player[i].pickupID = atoi(data[i * FIELDS_IN_GAMESTATE + 4]);
+		player[i].life = atoi(data[i * FIELDS_IN_GAMESTATE + 5]);
 		
 
 		if (client->playerID != i) {

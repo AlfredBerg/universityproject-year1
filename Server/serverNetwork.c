@@ -188,8 +188,8 @@ void gamestateToString(Network *server, char string[]) {
 	int length = 0;
 	length += sprintf(string + length, "0;");
 	for (int i = 0; i < MAX_CLIENTS; i++) {
-		length += sprintf(string + length, "%d;%d;%d;%d;", server->clients[i].xPos, server->clients[i].yPos,
-			server->clients[i].weaponId, server->clients[i].pickupId);
+		length += sprintf(string + length, "%d;%d;%d;%d;%d;", server->clients[i].xPos, server->clients[i].yPos,
+			server->clients[i].weaponId, server->clients[i].pickupId, server->clients[i].health);
 	}
 	
 }

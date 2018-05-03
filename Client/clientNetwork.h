@@ -24,7 +24,7 @@
 #define SERVERIP "130.229.177.89"
 #define PROJECTILEFIELDSINPACKET 5
 
-#define FIELDS_IN_GAMESTATE 4
+#define FIELDS_IN_GAMESTATE 5
 
 struct network {
 	int playerID;

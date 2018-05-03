@@ -162,7 +162,7 @@ void init(Network *server) {
 	server->projectileData[BULLET].nrProjectilesShot = 0;
 
 	for (int i = 0; i < MAX_CLIENTS; i++) {
-		server->clients[i].health = 100;
+		server->clients[i].health = 50;
 		server->clients[i].pickupId = -1;
 		server->clients[i].weaponId = -1;
 	}
@@ -173,6 +173,8 @@ void init(Network *server) {
 	server->clients[0].yPos = 50;
 	server->clients[1].xPos = 650;
 	server->clients[1].yPos = 370;
+	server->clients[2].xPos = 300;
+	server->clients[2].yPos = 370;
 
 
 }

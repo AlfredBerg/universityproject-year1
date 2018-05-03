@@ -56,7 +56,6 @@ int runGame(Game *game, Network *client) {
 	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
 	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 64, 96);
 
-
 	int nrOfPlayers = 3;
 
 	Weapon weapons[MAXNRWEAPONS];
