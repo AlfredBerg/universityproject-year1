@@ -50,7 +50,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 	Sint32 cursor;
 	Sint32 selection_len;
 	
-	TTF_Font *font = TTF_OpenFont("assets/Capture_it.ttf", 40);
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 40);
 	SDL_Color color = { 65, 33, 52, 255 };
 	SDL_Rect textRect;
 
@@ -89,18 +89,25 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 						break;
 					case SDL_TEXTINPUT:
 						//Add new text onto the end of our text
-						if (strlen(serverIP) < 16)
-							strcat(serverIP, event.text.text);
+						if (strlen(serverIP) < 15)
+							if (isAllowed(event.text.text))
+								strcat(serverIP, event.text.text);
 						printf("%s \n", serverIP);
 						break;
 					case SDL_KEYDOWN:
-							//Handle backspace
-							if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(serverIP) > 0)
-							{
-								printf("SIZE OF: %d\n", strlen(serverIP));
-								serverIP[strlen(serverIP)-1] = '\0';
-							}
-							break;
+						//Handle backspace
+						if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(serverIP) > 0)
+						{
+							printf("SIZE OF: %d\n", strlen(serverIP));
+							serverIP[strlen(serverIP)-1] = '\0';
+						}
+						//Handle return
+						else if (event.key.keysym.sym == SDLK_RETURN && strlen(serverIP) >= 7) {
+							running = 1;
+							*menuLoop = 0;
+							done = SDL_TRUE;
+						}
+						break;
 					case SDL_TEXTEDITING:
 						/*
 						Update the composition text.
@@ -112,7 +119,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 						selection_len = event.edit.length;
 						break;
 					case SDL_MOUSEBUTTONDOWN:
-						if (event.button.button == SDL_BUTTON_LEFT) {
+						if (event.button.button == SDL_BUTTON_LEFT && strlen(serverIP) >= 7) {
 							if (event.button.x > 450 && event.button.x < 570 && event.button.y > 360 && event.button.y < 420) {
 								running = 1;
 								*menuLoop = 0;
@@ -123,10 +130,10 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 					}
 				}
 				SDL_RenderCopy(game->renderer, background2, NULL, NULL);
-				render_text(game->renderer, 340, 290, serverIP, font, &textRect, &color);
+				render_text(game->renderer, 336, 292, serverIP, font, &textRect, &color);
 				SDL_RenderPresent(game->renderer);
 			}
-			
+			SDL_DestroyTexture(background2);
 			SDL_StopTextInput();
 			break;
 		}
@@ -157,4 +164,20 @@ void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Fon
 	SDL_FreeSurface(surface);
 	SDL_RenderCopy(renderer, texture, NULL, rect);
 	SDL_DestroyTexture(texture);
+}
+
+int isAllowed(char* ch) {
+	if (!strcmp(ch, ".")) return 1;
+	else if (!strcmp(ch, "0")) return 1;
+	else if (!strcmp(ch, "1")) return 1;
+	else if (!strcmp(ch, "2")) return 1;
+	else if (!strcmp(ch, "3")) return 1;
+	else if (!strcmp(ch, "4")) return 1;
+	else if (!strcmp(ch, "5")) return 1;
+	else if (!strcmp(ch, "6")) return 1;
+	else if (!strcmp(ch, "7")) return 1;
+	else if (!strcmp(ch, "8")) return 1;
+	else if (!strcmp(ch, "9")) return 1;
+
+	return 0;
 }
