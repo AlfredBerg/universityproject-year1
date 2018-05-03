@@ -11,30 +11,6 @@
 #include "checkCollision.h"
 
 
-static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
-{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-{ 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2 },
-{ 2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
-{ 2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0 },
-{ 2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0 },
-{ 2,2,2,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0 },
-{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
-{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-};
-
-
 void initGame(Game *game) {
 
 	// Initialize SDL and audio system
@@ -70,16 +46,17 @@ void initGame(Game *game) {
 
 
 int runGame(Game *game, Network *client) {
+
 	char player0Name[] = "Knight";
 	char player1Name[] = "Bear";
 	char player2Name[] = "Bird";
-
 
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
 	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
 	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 64, 96);
-	
+
+
 	int nrOfPlayers = 3;
 
 	Weapon weapons[MAXNRWEAPONS];
@@ -87,8 +64,8 @@ int runGame(Game *game, Network *client) {
 	weapons[1] = createWeapon(game, 1, 100, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
 	weapons[2] = createWeapon(game, 2, 200, 100, 10, 200, 0, "assets/hand.png", 60, 60);
 	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png", 60, 60);
-	
-	
+
+
 	int nrOfWeapons = 4;
 
 	Projectile projectiles[MAXPROJECTILES];
@@ -114,6 +91,9 @@ int runGame(Game *game, Network *client) {
 	int roofDetected = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
+
+	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
+	loadMap("assets/map.map", lvl1);
 
 	//Init map
 	Tile map[MAP_HEIGHT][MAP_WIDTH];
@@ -143,7 +123,7 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
 
-		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 }, {players[2].currentSprite * 40, 0, 40, 40 } };
+		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 },{ players[2].currentSprite * 40, 0, 40, 40 } };
 		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 },{ players[2].rect.x, players[2].rect.y, 64, 96 } };
 
 		//för fågeln
@@ -204,12 +184,12 @@ int runGame(Game *game, Network *client) {
 		}
 
 		else if (checkForWall(map, &players[client->playerID])) { //test för hopp vid vägg: checkForWall = 2 eller 3
-			//checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
-			//jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-			//gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
+																  //checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
+																  //jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+																  //gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 		}
 
-		
+
 
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
