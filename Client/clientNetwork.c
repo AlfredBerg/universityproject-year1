@@ -25,12 +25,11 @@ void connectToServer(Network *client) {
 		client->connectedToServer = 1;
 		printf("PLAYER ID: %d \n", client->playerID);
 	}
-	/*
+	
 	else {
-	puts("I could not connect to the server, quiting");
-	exit(0);
+	puts("I could not connect to the server!");
 	}
-	*/
+	
 
 }
 

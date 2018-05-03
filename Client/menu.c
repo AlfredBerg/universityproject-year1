@@ -1,8 +1,6 @@
 #pragma once
 #include "menu.h"
 
-void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Font *font, SDL_Rect *rect, SDL_Color *color);
-
 int menu(Game *game, char serverIP[]) {
 
 	//Init menu images
@@ -10,7 +8,6 @@ int menu(Game *game, char serverIP[]) {
 	SDL_Texture *background1 = SDL_CreateTextureFromSurface(game->renderer, menuImage1);
 	SDL_FreeSurface(menuImage1);
 	
-
 	int startGame = 1;
 	int menuLoop = 1;
 	int menuPage = 1;
@@ -66,12 +63,13 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 
 		switch (*menuPage) {
 		case 1:
-			if (event.type == SDL_MOUSEBUTTONDOWN) {
-				if (event.button.button == SDL_BUTTON_LEFT) {
-					if (event.button.x > 220 && event.button.x < 800 && event.button.y > 210 && event.button.y < 420) {
-						*menuPage = 2;
-					}
+			if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+				if (event.button.x > 220 && event.button.x < 800 && event.button.y > 210 && event.button.y < 420) {
+					*menuPage = 2;
 				}
+			}
+			else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE)){
+				*menuPage = 2;
 			}
 			break;
 		case 2:
