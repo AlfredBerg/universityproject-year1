@@ -47,3 +47,4 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
 void updatePlayerStates(Player players[], int loopCount);
+void jump2(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected);
