@@ -23,8 +23,7 @@ int menu(Game *game, char serverIP[]) {
 			SDL_RenderPresent(game->renderer);
 			break;
 		case 2:
-		//	SDL_RenderCopy(game->renderer, background2, NULL, NULL);
-		//	SDL_RenderPresent(game->renderer);
+
 			break;
 		}
 
@@ -42,14 +41,10 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 	SDL_Event event;
 
 	//Init text
-	//char ip[16] = "192.186.0.2";
+	char playerName[16] = "Player";
 	int done = SDL_FALSE;
-
-	//Används typ inte
-	char *composition;
-	Sint32 cursor;
-	Sint32 selection_len;
 	
+	//Grafik
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 40);
 	SDL_Color color = { 65, 33, 52, 255 };
 	SDL_Rect textRect;
@@ -57,6 +52,10 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 	SDL_Surface *menuImage2 = IMG_Load("assets/meny2.png");
 	SDL_Texture *background2 = SDL_CreateTextureFromSurface(game->renderer, menuImage2);
 	SDL_FreeSurface(menuImage2);
+
+	SDL_Surface *menuImage3 = IMG_Load("assets/meny3.png");
+	SDL_Texture *background3 = SDL_CreateTextureFromSurface(game->renderer, menuImage3);
+	SDL_FreeSurface(menuImage3);
 
 	while (SDL_PollEvent(&event))
 	{
@@ -92,37 +91,21 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 						if (strlen(serverIP) < 15)
 							if (isAllowed(event.text.text))
 								strcat(serverIP, event.text.text);
-						printf("%s \n", serverIP);
 						break;
 					case SDL_KEYDOWN:
 						//Handle backspace
 						if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(serverIP) > 0)
-						{
-							printf("SIZE OF: %d\n", strlen(serverIP));
 							serverIP[strlen(serverIP)-1] = '\0';
-						}
 						//Handle return
 						else if (event.key.keysym.sym == SDLK_RETURN && strlen(serverIP) >= 7) {
-							running = 1;
-							*menuLoop = 0;
+							*menuPage = 3;
 							done = SDL_TRUE;
 						}
-						break;
-					case SDL_TEXTEDITING:
-						/*
-						Update the composition text.
-						Update the cursor position.
-						Update the selection length (if any).
-						*/
-						composition = event.edit.text;
-						cursor = event.edit.start;
-						selection_len = event.edit.length;
 						break;
 					case SDL_MOUSEBUTTONDOWN:
 						if (event.button.button == SDL_BUTTON_LEFT && strlen(serverIP) >= 7) {
 							if (event.button.x > 450 && event.button.x < 570 && event.button.y > 360 && event.button.y < 420) {
-								running = 1;
-								*menuLoop = 0;
+								*menuPage = 3;
 								done = SDL_TRUE;
 							}
 						}
@@ -134,6 +117,53 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 				SDL_RenderPresent(game->renderer);
 			}
 			SDL_DestroyTexture(background2);
+			SDL_RenderClear(game->renderer);
+			SDL_StopTextInput();
+			break;
+		case 3:
+			SDL_StartTextInput();
+
+			while (!done) {
+				SDL_Event event;
+				if (SDL_PollEvent(&event)) {
+					switch (event.type) {
+					case SDL_QUIT:
+						done = SDL_TRUE;
+						running = 0;
+						*menuLoop = 0;
+						break;
+					case SDL_TEXTINPUT:
+						//Add new text onto the end of our text
+						if (strlen(playerName) < 15)
+							strcat(playerName, event.text.text);
+						break;
+					case SDL_KEYDOWN:
+						//Handle backspace
+						if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(playerName) > 0)
+							playerName[strlen(playerName) - 1] = '\0';
+						//Handle return
+						else if (event.key.keysym.sym == SDLK_RETURN && strlen(playerName) > 0) {
+							running = 1;
+							*menuLoop = 0;
+							done = SDL_TRUE;
+						}
+						break;
+					case SDL_MOUSEBUTTONDOWN:
+						if (event.button.button == SDL_BUTTON_LEFT && strlen(playerName) > 0) {
+							if (event.button.x > 450 && event.button.x < 570 && event.button.y > 360 && event.button.y < 420) {
+								running = 1;
+								*menuLoop = 0;
+								done = SDL_TRUE;
+							}
+						}
+						break;
+					}
+				}
+				SDL_RenderCopy(game->renderer, background3, NULL, NULL);
+				render_text(game->renderer, 336, 292, playerName, font, &textRect, &color);
+				SDL_RenderPresent(game->renderer);
+			}
+			SDL_DestroyTexture(background3);
 			SDL_StopTextInput();
 			break;
 		}
@@ -158,9 +188,7 @@ void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Fon
 	rect->y = y;
 	rect->w = surface->w;
 	rect->h = surface->h;
-	/* This is wasteful for textures that stay the same.
-	* But makes things less stateful and easier to use.
-	* Not going to code an atlas solution here... are we? */
+
 	SDL_FreeSurface(surface);
 	SDL_RenderCopy(renderer, texture, NULL, rect);
 	SDL_DestroyTexture(texture);
