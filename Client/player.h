@@ -4,6 +4,7 @@
 #include <string.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 
 #define SPRITESPEED 3
@@ -43,5 +44,6 @@ void walkRight(Player *player, int *key, int *prevKey);
 void walkLeft(Player *player, int *key, int *prevKey);
 void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
+void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
 void updatePlayerStates(Player players[], int loopCount);

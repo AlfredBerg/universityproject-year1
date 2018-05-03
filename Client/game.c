@@ -70,11 +70,15 @@ void initGame(Game *game) {
 
 
 int runGame(Game *game, Network *client) {
-	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
-	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
-	players[2] = createPlayer(game, 2, "bird", 400, 400, LEFT, "assets/bird.png", 64, 96);
+	char player0Name[] = "Knight";
+	char player1Name[] = "Bear";
+	char player2Name[] = "Bird";
 
+
+	Player players[MAXPLAYERS];
+	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
+	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
+	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 64, 96);
 	
 	int nrOfPlayers = 3;
 
@@ -269,6 +273,7 @@ int runGame(Game *game, Network *client) {
 		drawPickups(game, pickups, &nrOfPickups);
 
 		playerHealthbar(players, game->renderer);
+		playerNameTag(players, game->renderer);
 
 		//Show what was drawn
 		SDL_RenderPresent(game->renderer);
