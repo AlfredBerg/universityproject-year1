@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 {
 	Game game;
 	Network client;
-	char serverIP [16] = "192.168.0.2";
+	char serverIP [16] = "127.0.0.1";
 
 	initGame(&game); 
 	//initClient(&client);
@@ -30,7 +30,6 @@ int main(int argc, char** argv)
 	while (game.running) {
 		game.running = menu(&game, serverIP);
 		initClient(&client, serverIP);
-		printf("CLIENT INITIATED");
 		while (game.running) {
 			game.running = runGame(&game, &client);
 		}
