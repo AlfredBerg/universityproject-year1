@@ -118,13 +118,15 @@ int runGame(Game *game, Network *client) {
 
 	while (running)
 	{
-		updateCameraPosition(&players[client->playerID]);
+		
 		//---------------------------Game state------------------------------------
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
 			updateServer(players, client, projectiles);
 			continue;
 		}
+
+		updateCameraPosition(&players[client->playerID]);
 
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
@@ -317,13 +319,23 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.rect.h = PLAYER_HEIGHT;
 	player.isMoving = 0;
 
-
+	//Player name
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 20);
 	SDL_Color color = { 65, 33, 52, 255 };
 
 	player.nameText = TTF_RenderText_Solid(font, player.name, color);
 
 	player.nameTexture = SDL_CreateTextureFromSurface(game->renderer, player.nameText);
+
+	//Hp bar
+	int hpBarwidth = 100, hpBarheight = 5;
+
+	player.hpBarSurface = SDL_CreateRGBSurface(0, hpBarwidth, hpBarheight, 32, 0, 0, 0, 0);
+
+	SDL_Rect rect = { 0, 0, hpBarwidth, hpBarheight };
+
+	SDL_FillRect(player.hpBarSurface, &rect, SDL_MapRGB(player.hpBarSurface->format, 61, 229, 77));
+	player.hpBarTexture = SDL_CreateTextureFromSurface(game->renderer, player.hpBarSurface);
 
 
 	return player;

@@ -57,30 +57,13 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 
 	int width = 100, height = 5;
 
-	SDL_Surface *red, *green;
-	red = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-	green = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
-
-	SDL_Rect rect = { 0, 0, width, height };
-
-	SDL_FillRect(red, &rect, SDL_MapRGB(red->format, 255, 0, 0));
-
-	SDL_FillRect(green, &rect, SDL_MapRGB(green->format, 61, 229, 77));
-
-	SDL_Texture *greenTexture = SDL_CreateTextureFromSurface(renderer, green);
-	SDL_Texture *redTexture = SDL_CreateTextureFromSurface(renderer, red);
-
-
 	SDL_Rect healthbar[MAXPLAYERS];
-	SDL_Rect healt[] = { 0, 0, width, height };
-
-
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		healthbar[i].x = players[i].x + 5;
 		healthbar[i].y = players[i].y - 10;
 		healthbar[i].h = height;
 		healthbar[i].w = players[i].life / 2;
-		renderCopyMoveWithCamera(renderer, greenTexture, NULL, &healthbar[i], 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, players[i].hpBarTexture, NULL, &healthbar[i], 0.0, NULL, 0);
 	}
 }
 
@@ -97,8 +80,12 @@ void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 }
 
 void destroyPlayerObject(Player *player) {
+	//Text
 	SDL_DestroyTexture(player->nameTexture);
 	SDL_FreeSurface(player->nameText);
+	//Healthbar
+	SDL_DestroyTexture(player->hpBarTexture);
+	SDL_FreeSurface(player->hpBarSurface);
 }
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {
