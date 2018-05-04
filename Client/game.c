@@ -85,6 +85,8 @@ int runGame(Game *game, Network *client) {
 	int doJump = 0;
 	int groundDetected = 0;
 	int roofDetected = 0;
+	int leftWall = 0;
+	int rightWall = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
@@ -140,7 +142,42 @@ int runGame(Game *game, Network *client) {
 		//Move fighter
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
+
 		if (KeyState[SDL_SCANCODE_D]) {
+			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
+				players[client->playerID].currentSprite += 1;
+			key = RIGHT;
+			if (!Mix_Playing(0) && groundDetected)
+				Mix_PlayChannel(0, footsteps, 0);
+			if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !rightWall) {
+				walkRight(&players[client->playerID], &key, &prevKey);
+				leftWall = 0;
+			}
+			else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
+				players[client->playerID].x -= 10;
+				rightWall = 1;
+			}
+		}
+
+		else if (KeyState[SDL_SCANCODE_A]) {
+			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
+				players[client->playerID].currentSprite -= 1;
+			key = LEFT;
+			if (!Mix_Playing(0) && groundDetected)
+				Mix_PlayChannel(0, footsteps, 0);
+			if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !leftWall) {
+				walkLeft(&players[client->playerID], &key, &prevKey);
+				rightWall = 0;
+			}
+			else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
+				players[client->playerID].x += 10;
+				leftWall = 1;
+			}
+		}
+
+
+
+		/*if (KeyState[SDL_SCANCODE_D]) {
 			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
 				players[client->playerID].currentSprite += 1;
 			key = RIGHT;
@@ -159,7 +196,10 @@ int runGame(Game *game, Network *client) {
 			if (!checkForWall(map, &players[client->playerID]) || key != prevKey) {
 				walkLeft(&players[client->playerID], &key, &prevKey);
 			}
-		}
+		}*/
+
+
+
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
 			if (groundDetected)
@@ -175,15 +215,15 @@ int runGame(Game *game, Network *client) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
 
-		if (!checkForWall(map, &players[client->playerID])) {
+		if (!checkForWall(map, &players[client->playerID], &key)) {
 			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 		}
 
-		else if (checkForWall(map, &players[client->playerID])) { //test för hopp vid vägg: checkForWall = 2 eller 3
-																  //checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
-																  //jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-																  //gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
-		}
+		//else if (checkForWall(map, &players[client->playerID])) { //test för hopp vid vägg: checkForWall = 2 eller 3
+		//														  //checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
+		//														  //jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+		//														  //gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
+		//}
 
 
 
