@@ -1,11 +1,13 @@
 #include "clientNetwork.h"
 
-void sendHitToServer(Network *client, int damage, int player) {
+extern Network client;
+
+void sendHitToServer(int damage, int player) {
 	char data[MAX_PACKET];
 	sprintf(data, "3;%d;%d;", damage, player);
 
-	sendPacket(data, client->serverIP, client->serverSocket);
-	client->lastTick = SDL_GetTicks();
+	sendPacket(data, client.serverIP, client.serverSocket);
+	client.lastTick = SDL_GetTicks();
 }
 
 

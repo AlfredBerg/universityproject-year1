@@ -10,6 +10,7 @@
 #include "pickup.h"
 #include "checkCollision.h"
 
+extern Network client;
 
 void initGame(Game *game) {
 

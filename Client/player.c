@@ -1,5 +1,6 @@
 #pragma once
 #include "player.h"
+#include "clientNetwork.h"
 
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
@@ -70,6 +71,8 @@ void loseHealth(Player *player, int damage) {
 	printf("LOST HEALTH\n");
 	player->tickThatLostHealth = SDL_GetTicks();
 	player->life -= damage;
+	sendHitToServer(damage, player->id);
+	
 }
 
 
