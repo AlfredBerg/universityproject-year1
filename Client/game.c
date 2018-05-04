@@ -160,7 +160,7 @@ int runGame(Game *game, Network *client) {
 				leftWall = 0;
 			}
 			else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
-				players[client->playerID].x -= 10;
+				players[client->playerID].x -= 5;
 				rightWall = 1;
 			}
 		}
@@ -176,33 +176,10 @@ int runGame(Game *game, Network *client) {
 				rightWall = 0;
 			}
 			else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
-				players[client->playerID].x += 10;
+				players[client->playerID].x += 5;
 				leftWall = 1;
 			}
 		}
-
-
-
-		/*if (KeyState[SDL_SCANCODE_D]) {
-			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
-				players[client->playerID].currentSprite += 1;
-			key = RIGHT;
-			if (!Mix_Playing(0) && groundDetected)
-				Mix_PlayChannel(0, footsteps, 0);
-			if (!checkForWall(map, &players[client->playerID]) || key != prevKey) {
-				walkRight(&players[client->playerID], &key, &prevKey);
-			}
-		}
-		else if (KeyState[SDL_SCANCODE_A]) {
-			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
-				players[client->playerID].currentSprite -= 1;
-			key = LEFT;
-			if (!Mix_Playing(0) && groundDetected)
-				Mix_PlayChannel(0, footsteps, 0);
-			if (!checkForWall(map, &players[client->playerID]) || key != prevKey) {
-				walkLeft(&players[client->playerID], &key, &prevKey);
-			}
-		}*/
 
 
 
@@ -225,12 +202,7 @@ int runGame(Game *game, Network *client) {
 			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 		}
 
-		//else if (checkForWall(map, &players[client->playerID])) { //test för hopp vid vägg: checkForWall = 2 eller 3
-		//														  //checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
-		//														  //jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-		//														  //gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
-		//}
-
+		
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
 				players[client->playerID].rect.x = players[client->playerID].x;
@@ -283,7 +255,7 @@ int runGame(Game *game, Network *client) {
 		updatePlayerStates(players, game->loopCount);
 
 		//Draw players, weapons, projectiles & pickups
-		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers);
+		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers, &leftWall, &rightWall);
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
 		drawPickups(game, pickups, &nrOfPickups);
@@ -346,23 +318,56 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	return player;
 }
 
-void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers) {
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].life > 0) {
 			playerNameTag(players, game->renderer);
 			playerHealthbar(players, game->renderer);
 			
-			if (players[i].lastDirection == LEFT) {
+			if ((players[i].lastDirection == RIGHT) && (*leftWall == 1)) {
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
-			else if (players[i].lastDirection == RIGHT)
+			else if ((players[i].lastDirection == RIGHT) && (*leftWall == 0)) {
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, 0);
+			}
+			else if ((players[i].lastDirection == LEFT) && (*rightWall == 0)) {
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+			}
+			else if ((players[i].lastDirection == LEFT) && (*leftWall == 0)) {
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, 0);
+			}
 		}
 
 		//else
 			//deletePlayer(players, players[i].id, nrOfPlayers);
 	}
 }
+
+
+
+//void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
+//
+//	for (int i = 0; i < MAXPLAYERS; i++) {
+//		if (players[i].life > 0) {
+//
+//			if ((players[i].lastDirection == RIGHT) && (*leftWall == 1)) {
+//				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+//			}
+//			else if ((players[i].lastDirection == RIGHT) && (*leftWall == 0)) {
+//				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+//			}
+//			else if ((players[i].lastDirection == LEFT) && (*rightWall == 0)) {
+//				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+//			}
+//			else if ((players[i].lastDirection == LEFT) && (*leftWall == 0)) {
+//				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
+//			}
+//		}
+//		else
+//			deletePlayer(players, players[i].id, nrOfPlayers);
+//	}
+//}
+
 
 //*****************restart() not yet implemented********************
 //int restart(Game* game) {
