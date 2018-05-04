@@ -110,6 +110,7 @@ void updateServerdata(Network *server, char indata[]) {
 	case 1: createProjectiles(server, data); break;
 	case 2: objectPickup(server, data); break;
 	case 3: registerHit(server, data); break;
+	case 4: receiveLobby(server, data); break;
 	default:
 		printf("Packet from known host but unknown data\n");
 		break;
@@ -210,5 +211,36 @@ void bulletsToString(Network *server, char string[MAX_PACKET], int projectileTyp
 			return;
 		}
 		length += sprintf(string + length, "%d;%d;%d;%d;%d;", server->projectileData[projectileType].Projectiles[i].id, server->projectileData[projectileType].Projectiles[i].projectileType, server->projectileData[projectileType].Projectiles[i].x, server->projectileData[projectileType].Projectiles[i].y, server->projectileData[projectileType].Projectiles[i].direction);
+	}
+}
+
+void receiveLobby(Network *server, char data[][30]) {
+	int c = 2;
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		strcpy(server->clients[i].name, data[c]);
+		c += 3;
+	}
+}
+
+void updateLobby(Network *server) {
+	char data[MAX_PACKET];
+
+	if (server->nrGameloops % 100 == 0 && server->next_player > 2) {
+		(server->timer)--;
+	}
+
+	lobbyToString(&server, data);
+
+	for (int i = 0; i < MAX_SOCKETS; i++) {
+		sendPacket(data, server->clients[i].ip, server->serverSocket);
+	}
+}
+
+void lobbyToString(Network *server, char string[MAX_PACKET]) {
+	//nrOfPlayers;p0Name;p1Name;timer;
+	int length = 0;
+	length += sprintf(string + length, "4;");
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		length += sprintf(string + length, "%d;%s;%d;", server->next_player-1, server->clients[i].name, server->timer);
 	}
 }

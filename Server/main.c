@@ -32,9 +32,11 @@ int main(int argc, char **argv)
 	Uint32 lastNetworkTick = SDL_GetTicks();
 	Uint32 lastGamestateTick = SDL_GetTicks();
 
+	int lobby = SDL_TRUE;
 	int nrReady = 0;
 	int looptime;
 	int timerCount = 0;
+
 	while (server.running) {
 		(server.nrGameloops)++;
 
@@ -42,8 +44,16 @@ int main(int argc, char **argv)
 
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
 
-		updateClients(&server, &lastNetworkTick);
-		updateGamestate(&server, &lastGamestateTick);
+		if (lobby) {
+			if (server.timer == 0 || server.next_player > 4)
+				lobby = SDL_FALSE;
+			else
+				updateLobby(&server);
+		}
+		else {
+			updateClients(&server, &lastNetworkTick);
+			updateGamestate(&server, &lastGamestateTick);
+		}
 
 		if (nrReady == -1) {
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
@@ -148,7 +158,7 @@ void init(Network *server) {
 
 	server->running = 1;
 	server->next_player = 0;
-
+	server->timer = 16;
 
 	//id, dmg, speed, w, h
 	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
@@ -175,8 +185,9 @@ void init(Network *server) {
 	server->clients[1].yPos = 370;
 	server->clients[2].xPos = 300;
 	server->clients[2].yPos = 370;
-
-
+	strcpy(server->clients[0].name, "spelare1");
+	strcpy(server->clients[1].name, "spelare2");
+	
 }
 
 

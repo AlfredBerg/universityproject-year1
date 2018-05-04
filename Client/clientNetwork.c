@@ -19,7 +19,7 @@ void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
 	client->lastTick = SDL_GetTicks();
 }
 
-void connectToServer(Network *client) {
+int connectToServer(Network *client) {
 	char data[MAX_PACKET] = "HELLO\n";
 	char decoded[2][30];
 
@@ -34,13 +34,14 @@ void connectToServer(Network *client) {
 		client->playerID = atoi(decoded[1]);
 		client->connectedToServer = 1;
 		printf("PLAYER ID: %d \n", client->playerID);
+		return 1;
 	}
 	
 	else {
 	puts("I could not connect to the server!");
 	}
 	
-
+	return 0;
 }
 
 int compareString(char str1[], char str2[], int len) {
@@ -143,7 +144,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	}
 }
 
-void initClient(Network *client, char serverIP[]) {
+int initClient(Network *client, char serverIP[]) {
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
@@ -185,5 +186,5 @@ void initClient(Network *client, char serverIP[]) {
 		exit(-1);
 	}
 
-	connectToServer(client);
+	return connectToServer(client);
 }

@@ -206,3 +206,20 @@ int isAllowed(char* ch) {
 
 	return 0;
 }
+
+int lobby() {
+	int timer = 60;
+	int connectedPlayers = 1;
+//	char lobbyData[50];
+	
+
+	printf("\n Welcome to the lobby! \n");
+	while (SDL_TRUE) {
+//		recvLobbyData(lobbyData);
+		printf("\n%d players are connected. \n", connectedPlayers);
+		if (connectedPlayers > 1)
+			printf("\n Timer: %d \n", timer);
+		if (timer == 0 || connectedPlayers == 4)
+			return 1;
+	}
+}

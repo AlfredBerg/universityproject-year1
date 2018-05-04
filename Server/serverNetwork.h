@@ -36,6 +36,7 @@ struct network {
 	int nrGameloops;
 	int running;
 	Items items;
+	int timer;
 };
 typedef struct network Network;
 
@@ -48,3 +49,7 @@ void updateClients(Network *server, Uint32 *lastTick);
 void sendPacket(char data[], IPaddress ip, UDPsocket socket);
 
 void gamestateToString(Network *server, char string[]);
+
+void updateLobby(Network *server);
+void receiveLobby(Network *server, char data[][30]);
+void lobbyToString(Network *server, char string[MAX_PACKET]);
