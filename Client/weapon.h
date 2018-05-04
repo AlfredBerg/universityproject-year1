@@ -10,7 +10,6 @@
 #include "game.h"
 
 #define MAXNRWEAPONS 4
-#define MAXBULLETS 100
 
 #define WEAPON_HEIGHT 60
 #define WEAPON_WIDTH 60

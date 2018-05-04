@@ -235,7 +235,7 @@ int runGame(Game *game, Network *client) {
 		pickUpPickup(pickups, players);
 
 		weaponActions(weapons, players, client, projectiles);
-		moveProjectiles(projectiles);
+		//moveProjectiles(projectiles);
 
 
 

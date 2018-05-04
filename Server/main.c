@@ -31,8 +31,8 @@ int main(int argc, char **argv)
 
 	Uint32 lastNetworkTick = SDL_GetTicks();
 	Uint32 lastGamestateTick = SDL_GetTicks();
-
-	int lobby = SDL_TRUE;
+	
+	int lobby = SDL_FALSE; //Changed from true to false
 	int nrReady = 0;
 	int looptime;
 	int timerCount = 0;

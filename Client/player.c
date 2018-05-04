@@ -3,7 +3,6 @@
 #include "camera.h"
 #include "clientNetwork.h"
 
-extern SDL_Rect camera;
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
 	if (!*roofDetected) {
@@ -31,13 +30,11 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 
 void walkRight(Player *player, int *key, int *prevKey) {
 	player->x += WALKSPEED;
-	//camera.x -= WALKSPEED;
 	*prevKey = *key;
 }
 
 void walkLeft(Player *player, int *key, int *prevKey) {
 	player->x -= WALKSPEED;
-	//camera.x += WALKSPEED;
 	*prevKey = *key;
 }
 
