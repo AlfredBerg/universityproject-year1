@@ -52,10 +52,9 @@ int runGame(Game *game, Network *client) {
 	char player2Name[] = "Bird";
 
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png");
+	players[0] = createPlayer(game, 0, player0Name, 60, 250, RIGHT, "assets/knightsprite.png");
 	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png");
 	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png");
-
 	int nrOfPlayers = 3;
 
 	Weapon weapons[MAXNRWEAPONS];
@@ -63,8 +62,6 @@ int runGame(Game *game, Network *client) {
 	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
 	weapons[2] = createWeapon(game, 2, 200, 100, 2, 1000, 1, "assets/hand.png");
 	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png");
-
-
 	int nrOfWeapons = 4;
 
 	Projectile projectiles[MAXPROJECTILES];
@@ -132,8 +129,8 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
 
-		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 },{ players[2].currentSprite * 40, 0, 40, 40 } };
-		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT },{ players[1].rect.x, players[1].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT },{ players[2].rect.x, players[2].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT } };
+		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 }, { players[2].currentSprite * 40, 0, 40, 40 } };
+		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT }, { players[1].rect.x, players[1].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT }, { players[2].rect.x, players[2].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT } };
 
 		//för fågeln
 		if (game->loopCount % SPRITESPEED == 0)
