@@ -60,7 +60,7 @@ int runGame(Game *game, Network *client) {
 
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
-	weapons[1] = createWeapon(game, 1, 100, 300, 10, 200, 0, "assets/pistol.png", 60, 60);
+	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png", 60, 60);
 	weapons[2] = createWeapon(game, 2, 200, 100, 10, 200, 0, "assets/hand.png", 60, 60);
 	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png", 60, 60);
 
@@ -117,6 +117,7 @@ int runGame(Game *game, Network *client) {
 
 	while (running)
 	{
+		updateCameraPosition(&players[client->playerID]);
 		//---------------------------Game state------------------------------------
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
@@ -290,8 +291,6 @@ int runGame(Game *game, Network *client) {
 
 		//Show what was drawn
 		SDL_RenderPresent(game->renderer);
-
-		updateCameraPosition(&players[client->playerID]);
 	}
 	running = 1;
 	return running;

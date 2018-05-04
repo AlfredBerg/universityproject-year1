@@ -18,13 +18,15 @@ void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDet
 		*roofDetected = 0;
 	}
 
+	/*
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
 		if (weapons[i].isPickedUp == 1) {
 			continue;
 		}
 
-		if (!checkOnlyGround(map, &weapons[i].rect) && weapons[i].y > -20 && weapons[i].y < 600) {
+		if (!checkOnlyGround(map, &weapons[i].rect)) {
 			weapons[i].y += GRAVITYSPEED;
 		}
 	}
+	*/
 }
