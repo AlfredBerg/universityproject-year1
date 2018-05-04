@@ -61,7 +61,7 @@ int runGame(Game *game, Network *client) {
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
 	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png", 60, 60);
-	weapons[2] = createWeapon(game, 2, 200, 100, 10, 200, 0, "assets/hand.png", 60, 60);
+	weapons[2] = createWeapon(game, 2, 200, 100, 2, 1000, 1, "assets/hand.png", 60, 60);
 	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png", 60, 60);
 
 
@@ -69,7 +69,8 @@ int runGame(Game *game, Network *client) {
 
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
-	int nrOfProjectiles = 1;
+	projectiles[1] = createProjectile(game, 1, 2, 100, 800, 600, "assets/handProjectile.png");
+	int nrOfProjectiles = 2;
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
 	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png");
