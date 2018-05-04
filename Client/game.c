@@ -36,10 +36,7 @@ void initGame(Game *game) {
 	game->running = 1;
 	game->loopCount = 0;
 
-	game->cloudsBack = loadTexture("assets/CloudsBack.png", game);
-	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
-	game->bgBack = loadTexture("assets/BGBack.png", game);
-	game->bgFront = loadTexture("assets/BGFront.png", game);
+	initBackground(game);
 
 	createWindowIcon(game);
 }
