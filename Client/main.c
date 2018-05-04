@@ -18,10 +18,13 @@
 #include "clientNetwork.h"
 #include "map.h"
 
+
+
 int main(int argc, char** argv)
 {
 	Game game;
 	Network client;
+	
 	char serverIP [16] = "127.0.0.1";
 
 	initGame(&game); 

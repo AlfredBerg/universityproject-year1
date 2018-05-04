@@ -1,5 +1,13 @@
 #include "clientNetwork.h"
 
+void sendHitToServer(Network *client, int damage, int player) {
+	char data[MAX_PACKET];
+	sprintf(data, "3;%d;%d;", damage, player);
+
+	sendPacket(data, client->serverIP, client->serverSocket);
+	client->lastTick = SDL_GetTicks();
+}
+
 
 void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
 	char data[MAX_PACKET];
