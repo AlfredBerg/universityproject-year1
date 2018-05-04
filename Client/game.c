@@ -69,8 +69,8 @@ int runGame(Game *game, Network *client) {
 	int nrOfProjectiles = 1;
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png", 32, 32);
-	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png", 32, 32);
+	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png");
+	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
 	int nrOfPickups = 2;
 
 	int running = 1;
@@ -120,7 +120,7 @@ int runGame(Game *game, Network *client) {
 		game->loopCount++;
 
 		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 },{ players[2].currentSprite * 40, 0, 40, 40 } };
-		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 },{ players[2].rect.x, players[2].rect.y, 64, 96 } };
+		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT },{ players[1].rect.x, players[1].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT },{ players[2].rect.x, players[2].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT } };
 
 		//för fågeln
 		if (game->loopCount % SPRITESPEED == 0)
