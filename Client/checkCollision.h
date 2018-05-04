@@ -5,13 +5,13 @@
 #include "player.h"
 #include "map.h"
 
-int checkForWall(Tile map[][MAP_WIDTH], Player *player) {
+int checkForWall(Tile map[][MAP_WIDTH], Player *player, int *key) {
 	int i, j, wallDetected = 0;
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
 			if (SDL_HasIntersection(&player->rect, &map[i][j].rect)) {
 				if ((map[i][j].y + TILE_HEIGHT < (player->y + player->rect.h))) {
-					if (player->lastDirection == LEFT) wallDetected = LEFT;
+					if (*key == LEFT) wallDetected = LEFT;
 					else wallDetected = RIGHT;
 				}
 				break;
@@ -31,7 +31,7 @@ int checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *r
 			if (SDL_HasIntersection(&player->rect, &map[i][j].rect)) {
 				if (map[i][j].y + TILE_HEIGHT < player->y + player->rect.h) {
 					ceilingDetected = 1;
-					printf("\nCeiling detected!!!");
+					printf("\nCeiling detected");
 					if (*jumpTime > 0) {
 						*roofDetected = 1;
 						*jumpTime = 0;

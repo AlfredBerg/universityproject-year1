@@ -9,34 +9,11 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 	if (!*roofDetected) {
 		if (*doJump == 1) {
 			if (!*isJumping) {
-				*jumpTime = 10;
+				*jumpTime = 18;
 			}
 			if (*jumpTime > 0) {
 				*isJumping = 1;
 				player->y -= 20;
-				--(*jumpTime);
-				*groundDetected = 0;
-			}
-			if (*jumpTime <= 0) {
-				if (*groundDetected == 1) {
-					*doJump = 0;
-					*isJumping = 0;
-					*roofDetected = 0;
-				}
-			}
-		}
-	}
-}
-
-void jump2(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
-	if (!*roofDetected) {
-		if (*doJump == 1) {
-			if (!*isJumping) {
-				*jumpTime = 2;
-			}
-			if (*jumpTime > 0) {
-				*isJumping = 1;
-				player->y -= 5;
 				--(*jumpTime);
 				*groundDetected = 0;
 			}
