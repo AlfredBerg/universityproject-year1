@@ -1,5 +1,11 @@
-#pragma once
 #include "background.h"
+
+void initBackground(Game *game) {
+	game->cloudsBack = loadTexture("assets/CloudsBack.png", game);
+	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
+	game->bgBack = loadTexture("assets/BGBack.png", game);
+	game->bgFront = loadTexture("assets/BGFront.png", game);
+}
 
 void displayBackground(Game *game) {
 	SDL_RenderCopy(game->renderer, game->cloudsBack, NULL, NULL);
