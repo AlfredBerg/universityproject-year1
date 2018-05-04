@@ -95,7 +95,7 @@ int runGame(Game *game, Network *client) {
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map.map", lvl1);
+	loadMap("assets/map/map1.map", lvl1);
 
 	//Init map
 	Tile map[MAP_HEIGHT][MAP_WIDTH];
@@ -114,11 +114,11 @@ int runGame(Game *game, Network *client) {
 	jumpsound->volume = 50;
 
 
-	
+
 
 	while (running)
 	{
-		
+
 		//---------------------------Game state------------------------------------
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
@@ -205,7 +205,7 @@ int runGame(Game *game, Network *client) {
 			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 		}
 
-		
+
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
 				players[client->playerID].rect.x = players[client->playerID].x;
@@ -222,7 +222,7 @@ int runGame(Game *game, Network *client) {
 		weaponActions(weapons, players, client, projectiles);
 		moveProjectiles(projectiles);
 
-		
+
 
 		//---------------------------Render------------------------------------
 
@@ -346,7 +346,7 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 		if (players[i].life > 0) {
 			playerNameTag(players, game->renderer);
 			playerHealthbar(players, game->renderer);
-			
+
 			if ((players[i].lastDirection == RIGHT) && (*leftWall == 1)) {
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
@@ -362,7 +362,7 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 		}
 
 		//else
-			//deletePlayer(players, players[i].id, nrOfPlayers);
+		//deletePlayer(players, players[i].id, nrOfPlayers);
 	}
 }
 
