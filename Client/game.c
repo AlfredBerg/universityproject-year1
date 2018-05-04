@@ -5,7 +5,6 @@
 #include "gravity.h"
 #include "background.h"
 #include "projectile.h"
-#include "textureManager.h"
 #include "pickup.h"
 #include "checkCollision.h"
 #include "camera.h"
@@ -19,10 +18,10 @@ void initGame(Game *game) {
 	// Initialize SDL and audio system
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-	//initialize support for loading png and JPEG image
+	// Initialize support for loading png and JPEG image
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
-	//initialize the mixer
+	// Initialize the mixer
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 	playBackgroundMusic();
 
@@ -47,16 +46,36 @@ void initGame(Game *game) {
 
 int runGame(Game *game, Network *client) {
 
+	// Randomization
+	srand(time(NULL));
+
+	// Load map from file (.map)
+	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
+	loadMap("assets/map/map1.map", lvl1);
+
+	// Init map
+	Tile map[MAP_HEIGHT][MAP_WIDTH];
+	int i, j = 0;
+	for (i = 0; i < MAP_HEIGHT; i++) {
+		for (j = 0; j < MAP_WIDTH; j++) {
+			map[i][j].ID = lvl1[i][j];
+			initTiles(game->renderer, &map[i][j], j, i);
+		}
+	}
+
+	// Player names
 	char player0Name[] = "Knight";
 	char player1Name[] = "Bear";
 	char player2Name[] = "Bird";
 
+	// Create players
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, 0, player0Name, 60, 250, RIGHT, "assets/knightsprite.png");
 	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png");
 	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png");
 	int nrOfPlayers = 3;
 
+	// Create weapons
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png");
 	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
@@ -64,18 +83,30 @@ int runGame(Game *game, Network *client) {
 	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png");
 	int nrOfWeapons = 4;
 
+	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
 	projectiles[1] = createProjectile(game, 1, 2, 100, 800, 600, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
 
+	// Create pickups
 	Pickup pickups[MAX_NR_OF_PICKUPS];
 	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png");
 	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
 	int nrOfPickups = 2;
 
+	// For future use! Placing weapons & pickups by randomization & if there's no tile /Sara
+	// Place pickups in random spots where there's no tile
+	//for (i = 0; i < MAP_HEIGHT; i++) {
+	//	for (j = 0; j < MAP_WIDTH; j++) {
+	//		if (map[i][j].ID == 0) {
+	//			
+	//		}
+	//	}
+	//}
+
 	int running = 1;
-	int again = 0;
+	//int again = 0;
 
 	SDL_Event event;
 
@@ -91,21 +122,7 @@ int runGame(Game *game, Network *client) {
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
-	//Load map from file (.map)
-	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map1.map", lvl1);
-
-	//Init map
-	Tile map[MAP_HEIGHT][MAP_WIDTH];
-	int i, j = 0;
-	for (i = 0; i < MAP_HEIGHT; i++) {
-		for (j = 0; j < MAP_WIDTH; j++) {
-			map[i][j].ID = lvl1[i][j];
-			initTiles(game->renderer, &map[i][j], j, i);
-		}
-	}
-
-	//Sound effects
+	// Sound effects
 	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
 	footsteps->volume = 50;
 	Mix_Chunk *jumpsound = Mix_LoadWAV("assets/jumpsound.wav");
@@ -293,6 +310,9 @@ void createWindowIcon(Game *game) {
 	SDL_FreeSurface(icon);
 }
 
+
+//**************************************** Player functions **************************************************
+
 Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]) {
 	Player player;
 	strcpy(player.name, name);
@@ -440,47 +460,3 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 //	SDL_DestroyTexture(rematch_Texture);
 //	return running;
 //}
-
-
-//*****************moved from runGame*********************
-//int SourcePosition = 0;
-//int SourcePosition2 = 0;
-//int whynotwork = 1;
-
-//if (KeyState[SDL_SCANCODE_R]) {
-//	swordRect = sword1;
-//	SourcePosition = swordRect.x;
-//	swordRect.x += 10;
-//	rPressed = 1;
-//}
-//
-//if (SourcePosition != swordRect.x && swordRect.x <= 800 && rPressed == 1)
-//swordRect.x += 10; */
-
-
-//*****************moved from runGame************************
-/*Checking if sword hit player1
-if (bild6.x >= players[1].p1.x + 40 && bild6.x <= players[1].p1.x + 50) {
-if (bild6.y <= players[1].p1.y + 99 && bild6.y >= players[1].p1.y) {
-SDL_DestroyTexture(players[1].Texture);
-SDL_DestroyTexture(images_Texture[4]);
-SDL_DestroyTexture(images_Texture[5]);
-if (bild6.x >= enemy.p1.x + 40 && bild6.x <= enemy.p1.x + 50) {
-if (bild6.y <= enemy.p1.y + 99 && bild6.y >= enemy.p1.y) {
-SDL_DestroyTexture(enemy.Texture);
-whynotwork = 0;
-//again = 1;
-running = 0;
-}
-}
-//Checking if sword hit player2
-if (bild8.x <= players[0].p1.x + 40 && bild8.x >= players[0].p1.x - 50)
-if (bild8.y <= players[0].p1.y + 120 && bild8.y >= players[0].p1.y - 20) {
-SDL_DestroyTexture(players[0].Texture);
-SDL_DestroyTexture(images_Texture[2]);
-SDL_DestroyTexture(images_Texture[3]);
-whynotwork = 2;
-//again = 1;
-running = 0;
-}
-*/

@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -35,11 +36,12 @@ struct game {
 typedef struct game Game;
 
 void initGame(Game *game);
-int restart(Game *game);
+//int restart(Game *game);
 int runGame(Game *game, Network *client);
 void quitGame(Game *game);
 void playBackgroundMusic();
 void createWindowIcon(Game *game);
 
+// These functions could not be placed in player-module
 Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]);
 void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall);
