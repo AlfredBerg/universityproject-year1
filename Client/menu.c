@@ -1,4 +1,3 @@
-#pragma once
 #include "menu.h"
 
 int menu(Game *game, char serverIP[]) {
@@ -7,7 +6,7 @@ int menu(Game *game, char serverIP[]) {
 	SDL_Surface *menuImage1 = IMG_Load("assets/meny1.png");
 	SDL_Texture *background1 = SDL_CreateTextureFromSurface(game->renderer, menuImage1);
 	SDL_FreeSurface(menuImage1);
-	
+
 	int startGame = 1;
 	int menuLoop = 1;
 	int menuPage = 1;
@@ -40,7 +39,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 	//Init text
 	char playerName[16] = "Player";
 	int done = SDL_FALSE;
-	
+
 	//Grafik
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 40);
 	SDL_Color color = { 65, 33, 52, 255 };
@@ -68,7 +67,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 					*menuPage = 2;
 				}
 			}
-			else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE)){
+			else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE)) {
 				*menuPage = 2;
 			}
 			break;
@@ -93,7 +92,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 					case SDL_KEYDOWN:
 						//Handle backspace
 						if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(serverIP) > 0)
-							serverIP[strlen(serverIP)-1] = '\0';
+							serverIP[strlen(serverIP) - 1] = '\0';
 						//Handle return
 						else if (event.key.keysym.sym == SDLK_RETURN && strlen(serverIP) >= 7) {
 							*menuPage = 3;
