@@ -343,6 +343,16 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.rect.w = PLAYER_WIDTH;
 	player.rect.h = PLAYER_HEIGHT;
 	player.isMoving = 0;
+
+
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 20);
+	SDL_Color color = { 65, 33, 52, 255 };
+
+	player.nameText = TTF_RenderText_Solid(font, player.name, color);
+
+	player.nameTexture = SDL_CreateTextureFromSurface(game->renderer, player.nameText);
+
+
 	return player;
 }
 

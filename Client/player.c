@@ -85,38 +85,20 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 }
 
 void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
-
-	int width = 50, height = 20;
-	char text0[20]; char text1[20]; char text2[20];
-	strcpy(text0, players[0].name);
-	strcpy(text1, players[1].name);
-	strcpy(text2, players[2].name);
-
-	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 20);
-	SDL_Color color = { 65, 33, 52, 255 };
-
-	SDL_Surface *name[3];
-	name[0] = TTF_RenderText_Solid(font, text0, color);
-	name[1] = TTF_RenderText_Solid(font, text1, color);
-	name[2] = TTF_RenderText_Solid(font, text2, color);
-
-	SDL_Texture *texture[3];
-	texture[0] = SDL_CreateTextureFromSurface(renderer, name[0]);
-	texture[1] = SDL_CreateTextureFromSurface(renderer, name[1]);
-	texture[2] = SDL_CreateTextureFromSurface(renderer, name[2]);
-
 	SDL_Rect names[MAXPLAYERS];
-
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		names[i].x = players[i].x + 5;
 		names[i].y = players[i].y - 30;
-		names[i].h = name[i]->h;
-		names[i].w = name[i]->w;
+		names[i].h = players[i].nameText->h;
+		names[i].w = players[i].nameText->w;
 
-		renderCopyMoveWithCamera(renderer, texture[i], NULL, &names[i], 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, players[i].nameTexture, NULL, &names[i], 0.0, NULL, 0);
 	}
-	SDL_DestroyTexture(texture[0]); SDL_DestroyTexture(texture[1]); SDL_DestroyTexture(texture[2]);
-	SDL_FreeSurface(name[0]); SDL_FreeSurface(name[1]); SDL_FreeSurface(name[2]);
+}
+
+void destroyPlayerObject(Player *player) {
+	SDL_DestroyTexture(player->nameTexture);
+	SDL_FreeSurface(player->nameText);
 }
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {
@@ -126,10 +108,13 @@ void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 			for (int j = 0; j < *nrOfPlayers - 1; j++)
 				players[j] = players[j + 1];
 			*nrOfPlayers = *nrOfPlayers - 1;
+			destroyPlayerObject(&players[i]);
 			printf("Deleted player\n");
 		}
 	}
+
 	
+
 	
 }
 

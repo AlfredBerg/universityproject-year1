@@ -39,6 +39,8 @@ struct player {
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
 	SDL_Rect rect;
+	SDL_Surface *nameText;
+	SDL_Texture *nameTexture;
 };
 typedef struct player Player;
 
