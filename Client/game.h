@@ -42,4 +42,4 @@ void playBackgroundMusic();
 void createWindowIcon(Game *game);
 
 Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]);
-void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers);
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall);
