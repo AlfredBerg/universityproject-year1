@@ -52,9 +52,9 @@ int runGame(Game *game, Network *client) {
 	char player2Name[] = "Bird";
 
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
-	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
-	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 64, 96);
+	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png");
+	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png");
+	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png");
 
 	int nrOfPlayers = 3;
 
@@ -72,8 +72,8 @@ int runGame(Game *game, Network *client) {
 	int nrOfProjectiles = 1;
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png", 32, 32);
-	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png", 32, 32);
+	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png");
+	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
 	int nrOfPickups = 2;
 
 	int running = 1;
@@ -126,7 +126,7 @@ int runGame(Game *game, Network *client) {
 		game->loopCount++;
 
 		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 },{ players[2].currentSprite * 40, 0, 40, 40 } };
-		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 },{ players[2].rect.x, players[2].rect.y, 64, 96 } };
+		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT },{ players[1].rect.x, players[1].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT },{ players[2].rect.x, players[2].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT } };
 
 		//för fågeln
 		if (game->loopCount % SPRITESPEED == 0)
@@ -282,7 +282,7 @@ void createWindowIcon(Game *game) {
 	SDL_FreeSurface(icon);
 }
 
-Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]) {
 	Player player;
 	strcpy(player.name, name);
 	player.id = id;
@@ -302,8 +302,8 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.currentSprite = 0;
 	player.rect.x = x;
 	player.rect.y = y;
-	player.rect.w = rectW;
-	player.rect.h = rectH;
+	player.rect.w = PLAYER_WIDTH;
+	player.rect.h = PLAYER_HEIGHT;
 	player.isMoving = 0;
 	return player;
 }
