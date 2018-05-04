@@ -1,5 +1,15 @@
 #include "clientNetwork.h"
 
+extern Network client;
+
+void sendHitToServer(int damage, int player) {
+	char data[MAX_PACKET];
+	sprintf(data, "3;%d;%d;", damage, player);
+
+	sendPacket(data, client.serverIP, client.serverSocket);
+	client.lastTick = SDL_GetTicks();
+}
+
 
 void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
 	char data[MAX_PACKET];
@@ -25,12 +35,11 @@ void connectToServer(Network *client) {
 		client->connectedToServer = 1;
 		printf("PLAYER ID: %d \n", client->playerID);
 	}
-	/*
+	
 	else {
-	puts("I could not connect to the server, quiting");
-	exit(0);
+	puts("I could not connect to the server!");
 	}
-	*/
+	
 
 }
 
@@ -94,6 +103,7 @@ void updateGamestate(Network *client, Player *player, char data[][30]) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		player[i].weaponID = atoi(data[i * FIELDS_IN_GAMESTATE + 3]);
 		player[i].pickupID = atoi(data[i * FIELDS_IN_GAMESTATE + 4]);
+		player[i].life = atoi(data[i * FIELDS_IN_GAMESTATE + 5]);
 		
 
 		if (client->playerID != i) {
@@ -133,7 +143,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	}
 }
 
-void initClient(Network *client) {
+void initClient(Network *client, char serverIP[]) {
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
@@ -146,7 +156,7 @@ void initClient(Network *client) {
 	}
 
 	//Listen on all interfaces
-	if (SDLNet_ResolveHost(&client->serverIP, SERVERIP, SERVERPORT)) {
+	if (SDLNet_ResolveHost(&client->serverIP, serverIP, SERVERPORT)) {
 		fprintf(stderr, "SDLNet_UDP failed to open port: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}

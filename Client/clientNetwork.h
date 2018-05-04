@@ -24,7 +24,7 @@
 #define SERVERIP "130.229.177.89"
 #define PROJECTILEFIELDSINPACKET 5
 
-#define FIELDS_IN_GAMESTATE 4
+#define FIELDS_IN_GAMESTATE 5
 
 struct network {
 	int playerID;
@@ -37,10 +37,11 @@ struct network {
 };
 typedef struct network Network;
 
-void initClient(Network *client);
+void initClient(Network *client, char serverIP[]);
 void updateServer(Player *player, Network *client, Projectile *projectiles);
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles);
 void connectToServer(Network *client);
 void sendBulletToServer(Network *client, int projectileType, int x, int y, int direction);
 int compareString(char str1[], char str2[], int len);
 void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup);
+void sendHitToServer(int damage, int player);

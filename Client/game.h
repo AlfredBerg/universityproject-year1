@@ -1,12 +1,14 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
 #include "clientNetwork.h"
+#include "map.h"
 
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 640
@@ -18,7 +20,6 @@
 #define MAX_IMAGES 1000
 
 struct game {
-
 	int running;
 	int loopCount;
 	int livingPlayers[MAX_PLAYERS];
@@ -30,7 +31,6 @@ struct game {
 	SDL_Texture *cloudsFront;
 	SDL_Texture *bgBack;
 	SDL_Texture *bgFront;
-
 };
 typedef struct game Game;
 

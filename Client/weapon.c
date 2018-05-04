@@ -1,6 +1,4 @@
-#pragma once
 #include "weapon.h"
-#include "clientNetwork.h"
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
 	fireWeapon(weapons, players, client, projectiles);

@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+
 #define MAXPROJECTILES 1
 #define MAXPROJECTILEOBJECTS 50
 

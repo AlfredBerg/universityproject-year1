@@ -173,6 +173,8 @@ void init(Network *server) {
 	server->clients[0].yPos = 50;
 	server->clients[1].xPos = 650;
 	server->clients[1].yPos = 370;
+	server->clients[2].xPos = 300;
+	server->clients[2].yPos = 370;
 
 
 }

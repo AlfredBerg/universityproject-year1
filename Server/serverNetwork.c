@@ -90,6 +90,11 @@ void objectPickup(Network *server, char data[][30]) {
 	
 }
 
+void registerHit(Network *server, char data[][30]) {
+	int damage = atoi(data[1]), player = atoi(data[2]);
+	server->clients[player].health -= damage;
+}
+
 void updateServerdata(Network *server, char indata[]) {
 	char data[DATAFIELDSINPACKET][30];
 
@@ -104,6 +109,7 @@ void updateServerdata(Network *server, char indata[]) {
 	case 0: updatePositions(server, data); break;
 	case 1: createProjectiles(server, data); break;
 	case 2: objectPickup(server, data); break;
+	case 3: registerHit(server, data); break;
 	default:
 		printf("Packet from known host but unknown data\n");
 		break;
@@ -188,8 +194,8 @@ void gamestateToString(Network *server, char string[]) {
 	int length = 0;
 	length += sprintf(string + length, "0;");
 	for (int i = 0; i < MAX_CLIENTS; i++) {
-		length += sprintf(string + length, "%d;%d;%d;%d;", server->clients[i].xPos, server->clients[i].yPos,
-			server->clients[i].weaponId, server->clients[i].pickupId);
+		length += sprintf(string + length, "%d;%d;%d;%d;%d;", server->clients[i].xPos, server->clients[i].yPos,
+			server->clients[i].weaponId, server->clients[i].pickupId, server->clients[i].health);
 	}
 	
 }

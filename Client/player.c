@@ -1,8 +1,7 @@
 #pragma once
 #include "player.h"
 #include "camera.h"
-//#include "game.h"
-//#include "map.h"
+#include "clientNetwork.h"
 
 extern SDL_Rect camera;
 
@@ -29,19 +28,39 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 	}
 }
 
-void walkRight(Player *player, int *key, int *prevKey) {
-	if (player->x < 980) {
-		player->x += WALKSPEED;
-		//camera.x -= WALKSPEED;
+void jump2(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
+	if (!*roofDetected) {
+		if (*doJump == 1) {
+			if (!*isJumping) {
+				*jumpTime = 2;
+			}
+			if (*jumpTime > 0) {
+				*isJumping = 1;
+				player->y -= 5;
+				--(*jumpTime);
+				*groundDetected = 0;
+			}
+			if (*jumpTime <= 0) {
+				if (*groundDetected == 1) {
+					*doJump = 0;
+					*isJumping = 0;
+					*roofDetected = 0;
+				}
+			}
+		}
 	}
+}
+
+
+void walkRight(Player *player, int *key, int *prevKey) {
+	player->x += WALKSPEED;
+	//camera.x -= WALKSPEED;
 	*prevKey = *key;
 }
 
 void walkLeft(Player *player, int *key, int *prevKey) {
-	if (player->x > -10) {
-		player->x -= WALKSPEED;
-		//camera.x += WALKSPEED;
-	}
+	player->x -= WALKSPEED;
+	//camera.x += WALKSPEED;
 	*prevKey = *key;
 }
 
@@ -52,6 +71,8 @@ void loseHealth(Player *player, int damage) {
 	printf("LOST HEALTH\n");
 	player->tickThatLostHealth = SDL_GetTicks();
 	player->life -= damage;
+	sendHitToServer(damage, player->id);
+	
 }
 
 
@@ -84,6 +105,41 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 		healthbar[i].w = players[i].life / 2;
 		renderCopyMoveWithCamera(renderer, greenTexture, NULL, &healthbar[i], 0.0, NULL, 0);
 	}
+}
+
+void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
+
+	int width = 50, height = 20;
+	char text0[20]; char text1[20]; char text2[20];
+	strcpy(text0, players[0].name);
+	strcpy(text1, players[1].name);
+	strcpy(text2, players[2].name);
+
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 20);
+	SDL_Color color = { 65, 33, 52, 255 };
+
+	SDL_Surface *name[3];
+	name[0] = TTF_RenderText_Solid(font, text0, color);
+	name[1] = TTF_RenderText_Solid(font, text1, color);
+	name[2] = TTF_RenderText_Solid(font, text2, color);
+
+	SDL_Texture *texture[3];
+	texture[0] = SDL_CreateTextureFromSurface(renderer, name[0]);
+	texture[1] = SDL_CreateTextureFromSurface(renderer, name[1]);
+	texture[2] = SDL_CreateTextureFromSurface(renderer, name[2]);
+
+	SDL_Rect names[MAXPLAYERS];
+
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		names[i].x = players[i].x + 5;
+		names[i].y = players[i].y - 30;
+		names[i].h = name[i]->h;
+		names[i].w = name[i]->w;
+
+		renderCopyMoveWithCamera(renderer, texture[i], NULL, &names[i], 0.0, NULL, 0);
+	}
+	SDL_DestroyTexture(texture[0]); SDL_DestroyTexture(texture[1]); SDL_DestroyTexture(texture[2]);
+	SDL_FreeSurface(name[0]); SDL_FreeSurface(name[1]); SDL_FreeSurface(name[2]);
 }
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {

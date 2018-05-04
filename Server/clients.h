@@ -6,7 +6,7 @@
 
 #include "serverNetwork.h"
 
-#define MAX_CLIENTS 2
+#define MAX_CLIENTS 3
 #define MAXPROJECTILEOBJECTS 50
 
 #define MAXNRWEAPONS 2

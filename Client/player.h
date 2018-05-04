@@ -4,6 +4,7 @@
 #include <string.h>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 
 #define SPRITESPEED 3
@@ -13,7 +14,7 @@
 #define LEFT 2
 #define RIGHT 3
 
-#define MAXPLAYERS 2
+#define MAXPLAYERS 3
 #define INVULNERABILITY_TIME 100
 
 struct player {
@@ -43,5 +44,7 @@ void walkRight(Player *player, int *key, int *prevKey);
 void walkLeft(Player *player, int *key, int *prevKey);
 void loseHealth(Player *player, int damage);
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
+void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
 void updatePlayerStates(Player players[], int loopCount);
+void jump2(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected);

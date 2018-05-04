@@ -1,41 +1,18 @@
 #include "game.h"
-#include "clientNetwork.h"
+
 #include "player.h"
 #include "weapon.h"
 #include "gravity.h"
 #include "background.h"
 #include "projectile.h"
 #include "textureManager.h"
-#include "map.h"
 #include "pickup.h"
 #include "checkCollision.h"
 #include "camera.h"
 
+
+extern Network client;
 extern SDL_Rect camera;
-
-static int lvl1[MAP_HEIGHT][MAP_WIDTH] = {
-{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-{ 19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2 },
-{ 2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 },
-{ 2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0,0,0 },
-{ 2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,0,0,0 },
-{ 2,2,2,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0 },
-{ 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 },
-{ 10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10 },
-};
-
 
 void initGame(Game *game) {
 
@@ -58,29 +35,37 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 1;
+	game->debug = 0;
 	game->running = 1;
 	game->loopCount = 0;
 
-	game->cloudsBack = loadTexture("assets/CloudsBack.png", game);
-	game->cloudsFront = loadTexture("assets/CloudsFront.png", game);
-	game->bgBack = loadTexture("assets/BGBack.png", game);
-	game->bgFront = loadTexture("assets/BGFront.png", game);
+	initBackground(game);
 
 	createWindowIcon(game);
 }
 
 
 int runGame(Game *game, Network *client) {
+
+	char player0Name[] = "Knight";
+	char player1Name[] = "Bear";
+	char player2Name[] = "Bird";
+
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, "Erik", 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
-	players[1] = createPlayer(game, 1, "Skull", 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
-	int nrOfPlayers = 2;
+	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
+	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
+	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 64, 96);
+
+	int nrOfPlayers = 3;
 
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
-	weapons[1] = createWeapon(game, 1, 100, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
-	int nrOfWeapons = 2;
+	weapons[1] = createWeapon(game, 1, 100, 300, 10, 200, 0, "assets/pistol.png", 60, 60);
+	weapons[2] = createWeapon(game, 2, 200, 100, 10, 200, 0, "assets/hand.png", 60, 60);
+	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png", 60, 60);
+
+
+	int nrOfWeapons = 4;
 
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
@@ -105,6 +90,9 @@ int runGame(Game *game, Network *client) {
 	int roofDetected = 0;
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
+
+	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
+	loadMap("assets/map.map", lvl1);
 
 	//Init map
 	Tile map[MAP_HEIGHT][MAP_WIDTH];
@@ -137,9 +125,12 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
 
-		SDL_Rect srcrect[2] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 } };
-		SDL_Rect dstrect[2] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 } };
+		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 },{ players[2].currentSprite * 40, 0, 40, 40 } };
+		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, 64, 96 },{ players[1].rect.x, players[1].rect.y, 64, 96 },{ players[2].rect.x, players[2].rect.y, 64, 96 } };
 
+		//för fågeln
+		if (game->loopCount % SPRITESPEED == 0)
+			players[2].currentSprite += 1;
 
 		// Check for various events (keyboard, mouse, touch, close)
 		while (SDL_PollEvent(&event))
@@ -185,31 +176,21 @@ int runGame(Game *game, Network *client) {
 
 		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 
-		jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-
 		if (groundDetected == 0) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
 		}
 
+		if (!checkForWall(map, &players[client->playerID])) {
+			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+		}
+		else if (checkForWall(map, &players[client->playerID])) { //test för hopp vid vägg: checkForWall = 2 eller 3
+																  //checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
+																  //jump2(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+																  //gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
+		}
 
 		updateCameraPosition(&players[client->playerID]);
 
-		////Collision detection wall/ground
-		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
-
-		//walk(&players[client->playerID], &key, &enableWalk, &prevKey, &groundDetected);
-
-		////Collision detection wall/ground
-		//checkForGround(map, &players[client->playerID], &key, &prevKey, &groundDetected, &enableWalk);
-
-		//gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
-
-		//jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
-
-		////Collision detection ceiling
-		//if (groundDetected == 0) {
-		//	checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
-		//}
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
@@ -267,6 +248,7 @@ int runGame(Game *game, Network *client) {
 		drawPickups(game, pickups, &nrOfPickups);
 
 		playerHealthbar(players, game->renderer);
+		playerNameTag(players, game->renderer);
 
 		//Show what was drawn
 		SDL_RenderPresent(game->renderer);
