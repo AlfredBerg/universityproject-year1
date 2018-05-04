@@ -16,9 +16,9 @@ void loadMap(const char* fileName, int map[][MAP_WIDTH]) {
 					map[i][j] = tileNr;
 			}
 		}
-
+		fclose(fp);
 	}
-	fclose(fp);
+	
 }
 
 

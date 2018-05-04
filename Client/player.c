@@ -120,6 +120,7 @@ void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 }
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {
+	
 	for (int i = 0; i < *nrOfPlayers; i++) {
 		if (players[i].id == id){
 			for (int j = 0; j < *nrOfPlayers - 1; j++)
@@ -128,6 +129,8 @@ void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 			printf("Deleted player\n");
 		}
 	}
+	
+	
 }
 
 void updatePlayerStates(Player players[], int loopCount) {

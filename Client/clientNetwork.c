@@ -122,7 +122,7 @@ void updateProjectiles(Projectile *projectiles, char data[][30], int nrFields) {
 
 
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles) {
-	char parsedData[110 * PROJECTILEFIELDSINPACKET][30];
+	char parsedData[101 * PROJECTILEFIELDSINPACKET][30];
 	for (int i = 0; i < 110; i++) {
 		parsedData[i][0] = '\0';
 	}

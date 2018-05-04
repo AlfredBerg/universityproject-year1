@@ -54,7 +54,7 @@ int runGame(Game *game, Network *client) {
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png");
 	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png");
-	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png");
+	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png");
 
 	int nrOfPlayers = 3;
 
@@ -113,7 +113,7 @@ int runGame(Game *game, Network *client) {
 	jumpsound->volume = 50;
 
 
-
+	
 
 	while (running)
 	{
@@ -271,6 +271,8 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[1].rect);
 
+			players[1].life = 0;
+
 
 			for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
 				SDL_RenderDrawRect(game->renderer, &projectiles[0].rect[i]);
@@ -285,9 +287,6 @@ int runGame(Game *game, Network *client) {
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
 		drawPickups(game, pickups, &nrOfPickups);
-
-		playerHealthbar(players, game->renderer);
-		playerNameTag(players, game->renderer);
 
 		//Show what was drawn
 		SDL_RenderPresent(game->renderer);
@@ -350,6 +349,9 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].life > 0) {
+			playerNameTag(players, game->renderer);
+			playerHealthbar(players, game->renderer);
+			
 			if (players[i].lastDirection == LEFT) {
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
@@ -357,8 +359,8 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, 0);
 		}
 
-		else
-			deletePlayer(players, players[i].id, nrOfPlayers);
+		//else
+			//deletePlayer(players, players[i].id, nrOfPlayers);
 	}
 }
 
