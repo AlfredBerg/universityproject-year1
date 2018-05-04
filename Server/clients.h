@@ -61,6 +61,7 @@ struct client {
 	int weaponId;
 	int pickupId;
 	int health;
+	char name[16];
 };
 typedef struct client Client;
 

@@ -26,11 +26,12 @@ int main(int argc, char** argv)
 	char serverIP [16] = "127.0.0.1";
 
 	initGame(&game); 
-	//initClient(&client);
 
 	while (game.running) {
-		game.running = menu(&game, serverIP);
-		initClient(&client, serverIP);
+		menu(&game, serverIP);
+		if (initClient(&client, serverIP))
+			//	game.running = lobby();
+			1 == 1;
 		while (game.running) {
 			game.running = runGame(&game, &client);
 		}
