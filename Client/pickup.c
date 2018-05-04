@@ -21,7 +21,7 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 	}
 }
 
-Pickup createPickup(Game *game, int id, int x, int y, int healing, const char imageName[], int rectW, int rectH) {
+Pickup createPickup(Game *game, int id, int x, int y, int healing, const char imageName[]) {
 	Pickup pickup;
 	pickup.id = id;
 	pickup.x = x;
@@ -31,8 +31,8 @@ Pickup createPickup(Game *game, int id, int x, int y, int healing, const char im
 	pickup.texture = SDL_CreateTextureFromSurface(game->renderer, pickup.image);
 	pickup.rect.x = x;
 	pickup.rect.y = y;
-	pickup.rect.w = rectW;
-	pickup.rect.h = rectH;
+	pickup.rect.w = PICKUP_WIDTH;
+	pickup.rect.h = PICKUP_HEIGHT;
 	pickup.isPickedUp = 0;
 	return pickup;
 }
