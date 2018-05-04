@@ -49,9 +49,9 @@ int runGame(Game *game, Network *client) {
 	char player2Name[] = "Bird";
 
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png", 64, 96);
-	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png", 64, 96);
-	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 64, 96);
+	players[0] = createPlayer(game, 0, player0Name, 60, 400, RIGHT, "assets/knightsprite.png");
+	players[1] = createPlayer(game, 1, player1Name, 300, 400, LEFT, "assets/bearsprite.png");
+	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png");
 
 	int nrOfPlayers = 3;
 
@@ -276,7 +276,7 @@ void createWindowIcon(Game *game) {
 	SDL_FreeSurface(icon);
 }
 
-Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int rectW, int rectH) {
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]) {
 	Player player;
 	strcpy(player.name, name);
 	player.id = id;
@@ -296,8 +296,8 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.currentSprite = 0;
 	player.rect.x = x;
 	player.rect.y = y;
-	player.rect.w = rectW;
-	player.rect.h = rectH;
+	player.rect.w = PLAYER_WIDTH;
+	player.rect.h = PLAYER_HEIGHT;
 	player.isMoving = 0;
 	return player;
 }

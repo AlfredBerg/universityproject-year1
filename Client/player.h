@@ -17,6 +17,9 @@
 #define MAXPLAYERS 3
 #define INVULNERABILITY_TIME 100
 
+#define PLAYER_WIDTH 64
+#define PLAYER_HEIGHT 96
+
 struct player {
 	int id;
 	char name[NAME_LENGTH];
