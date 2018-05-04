@@ -1,12 +1,11 @@
 #include "game.h"
-#include "clientNetwork.h"
+
 #include "player.h"
 #include "weapon.h"
 #include "gravity.h"
 #include "background.h"
 #include "projectile.h"
 #include "textureManager.h"
-#include "map.h"
 #include "pickup.h"
 #include "checkCollision.h"
 
