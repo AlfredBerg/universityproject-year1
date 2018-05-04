@@ -35,7 +35,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 0;
+	game->debug = 1;
 	game->running = 1;
 	game->loopCount = 0;
 
@@ -189,9 +189,6 @@ int runGame(Game *game, Network *client) {
 																  //gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 		}
 
-		updateCameraPosition(&players[client->playerID]);
-
-
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
 				players[client->playerID].rect.x = players[client->playerID].x;
@@ -252,6 +249,8 @@ int runGame(Game *game, Network *client) {
 
 		//Show what was drawn
 		SDL_RenderPresent(game->renderer);
+
+		updateCameraPosition(&players[client->playerID]);
 	}
 	running = 1;
 	return running;
