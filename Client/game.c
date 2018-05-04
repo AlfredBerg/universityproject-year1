@@ -141,7 +141,13 @@ int runGame(Game *game, Network *client) {
 			continue;
 		}
 
+		SDL_RenderClear(game->renderer);
+		displayBackground(game);
+
 		updateCameraPosition(&players[client->playerID]);
+
+		playerNameTag(players, game->renderer);
+		playerHealthbar(players, game->renderer);
 
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
@@ -238,13 +244,7 @@ int runGame(Game *game, Network *client) {
 		//moveProjectiles(projectiles);
 
 
-
 		//---------------------------Render------------------------------------
-
-		//Clear screen with black
-		SDL_RenderClear(game->renderer);
-
-		displayBackground(game);
 
 		//Display map
 		int i, j = 0;
@@ -269,6 +269,7 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 		//--------------------------------------------------------------------------
+
 
 		updatePlayerStates(players, game->loopCount);
 
@@ -362,9 +363,6 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].life > 0) {
-			playerNameTag(players, game->renderer);
-			playerHealthbar(players, game->renderer);
-
 			if ((players[i].lastDirection == RIGHT) && (*leftWall == 1)) {
 				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
