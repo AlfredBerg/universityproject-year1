@@ -59,10 +59,10 @@ int runGame(Game *game, Network *client) {
 	int nrOfPlayers = 3;
 
 	Weapon weapons[MAXNRWEAPONS];
-	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png", 60, 60);
-	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png", 60, 60);
-	weapons[2] = createWeapon(game, 2, 200, 100, 2, 1000, 1, "assets/hand.png", 60, 60);
-	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png", 60, 60);
+	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png");
+	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
+	weapons[2] = createWeapon(game, 2, 200, 100, 2, 1000, 1, "assets/hand.png");
+	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png");
 
 
 	int nrOfWeapons = 4;
@@ -94,6 +94,7 @@ int runGame(Game *game, Network *client) {
 
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 
+	//Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
 	loadMap("assets/map/map1.map", lvl1);
 
