@@ -23,14 +23,14 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 				if (players[j].lastDirection == LEFT) {
 					if (weapons[i].id == players[j].weaponID) {
 						weapons[i].x = players[j].x - players[j].rect.w;
-						weapons[i].y = players[j].y + players[j].rect.h / 2;
+						weapons[i].y = players[j].y + players[j].rect.h / 3;
 					}
 
 				}
 				else {
 					if (weapons[i].id == players[j].weaponID) {
 						weapons[i].x = players[j].x + players[j].rect.w - 20;
-						weapons[i].y = players[j].y + players[j].rect.h / 2;
+						weapons[i].y = players[j].y + players[j].rect.h / 3;
 					}
 				}
 

@@ -210,8 +210,6 @@ int runGame(Game *game, Network *client) {
 			}
 		}
 
-
-
 		if (KeyState[SDL_SCANCODE_W]) {
 			doJump = 1;
 			if (groundDetected)
@@ -240,6 +238,20 @@ int runGame(Game *game, Network *client) {
 			else {
 				players[j].rect.x = players[j].x;
 				players[j].rect.y = players[j].y;
+			}
+		}
+
+
+		//Detect projectile collisions with walls
+		for (i = 0; i < MAP_HEIGHT; i++) {
+			for (j = 0; j < MAP_WIDTH; j++) {
+				if (map[i][j].ID != 0) {
+					for (int k = 0; k < MAXPROJECTILEOBJECTS; k++) {
+						if (SDL_HasIntersection(&projectiles[0].rect[k], &map[i][j].rect)) {
+							sendDeleteProjectileToServer(0, k);
+						}
+					}
+				}
 			}
 		}
 
