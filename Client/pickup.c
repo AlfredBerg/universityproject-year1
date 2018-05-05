@@ -1,4 +1,5 @@
 #include "pickup.h"
+#include "camera.h"
 
 
 void pickUpPickup(Pickup pickups[], Player players[]) {

@@ -2,6 +2,14 @@
 
 extern Network client;
 
+void sendDeleteProjectileToServer(int projectileType, int idOfProjectile) {
+	char data[MAX_PACKET];
+	sprintf(data, "5;%d;%d;", projectileType, idOfProjectile);
+
+	sendPacket(data, client.serverIP, client.serverSocket);
+	client.lastTick = SDL_GetTicks();
+}
+
 void sendHitToServer(int damage, int player) {
 	char data[MAX_PACKET];
 	sprintf(data, "3;%d;%d;", damage, player);

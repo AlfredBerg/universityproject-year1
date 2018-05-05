@@ -95,6 +95,17 @@ void registerHit(Network *server, char data[][30]) {
 	server->clients[player].health -= damage;
 }
 
+void deleteProjectile(Network *server, char data[][30]) {
+	//projectile type, id
+	int id = atoi(data[2]);
+	server->projectileData[BULLET].Projectiles[id].id = id;
+	server->projectileData[BULLET].Projectiles[id].projectileType = atoi(data[1]);
+	server->projectileData[BULLET].Projectiles[id].x = 30000;
+	server->projectileData[BULLET].Projectiles[id].y = 30000;
+	server->projectileData[BULLET].Projectiles[id].direction = 0;
+
+}
+
 void updateServerdata(Network *server, char indata[]) {
 	char data[DATAFIELDSINPACKET][30];
 
@@ -111,6 +122,7 @@ void updateServerdata(Network *server, char indata[]) {
 	case 2: objectPickup(server, data); break;
 	case 3: registerHit(server, data); break;
 	case 4: receiveLobby(server, data); break;
+	case 5: deleteProjectile(server, data); break;
 	default:
 		printf("Packet from known host but unknown data\n");
 		break;

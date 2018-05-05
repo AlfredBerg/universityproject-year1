@@ -1,4 +1,5 @@
 #include "background.h"
+#include "camera.h"
 
 void initBackground(Game *game) {
 	game->cloudsBack = loadTexture("assets/CloudsBack.png", game);

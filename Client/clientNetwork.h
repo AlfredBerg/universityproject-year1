@@ -45,3 +45,4 @@ void sendBulletToServer(Network *client, int projectileType, int x, int y, int d
 int compareString(char str1[], char str2[], int len);
 void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup);
 void sendHitToServer(int damage, int player);
+void sendDeleteProjectileToServer(int projectileType, int idOfProjectile);

@@ -6,7 +6,7 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 	pickUpWeapon(client, weapons, players);
 
 	for (int i = 0; i < MAXPROJECTILES; i++) {
-		detectProjectileColision(&projectiles[i], players);
+		detectProjectileColision(&projectiles[i], players, i);
 	}
 
 	int id;
@@ -22,15 +22,15 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 			for (int j = 0; j < MAXPLAYERS; j++) {
 				if (players[j].lastDirection == LEFT) {
 					if (weapons[i].id == players[j].weaponID) {
-						weapons[i].x = players[j].x - 20;
-						weapons[i].y = players[j].y + 50;
+						weapons[i].x = players[j].x - players[j].rect.w;
+						weapons[i].y = players[j].y + players[j].rect.h / 2;
 					}
 
 				}
 				else {
 					if (weapons[i].id == players[j].weaponID) {
-						weapons[i].x = players[j].x + 20;
-						weapons[i].y = players[j].y + 50;
+						weapons[i].x = players[j].x + players[j].rect.w - 20;
+						weapons[i].y = players[j].y + players[j].rect.h / 2;
 					}
 				}
 
@@ -80,7 +80,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, LEFT);
 		}
 		else {
-			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 20, weapons[weaponId].y, RIGHT);
+			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y, RIGHT);
 		}
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
