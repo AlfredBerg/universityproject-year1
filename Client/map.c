@@ -37,6 +37,11 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 		tile->image = IMG_Load("assets/map/t1.png");
 		tile->texture = SDL_CreateTextureFromSurface(renderer, tile->image);
 		SDL_FreeSurface(tile->image);
+
+		tile->image = IMG_Load("assets/map/g4.png");
+		tile->grassTexture = SDL_CreateTextureFromSurface(renderer, tile->image);
+		SDL_FreeSurface(tile->image);
+
 		tile->rect = rect;
 		break;
 
@@ -44,6 +49,11 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 		tile->image = IMG_Load("assets/map/t2.png");
 		tile->texture = SDL_CreateTextureFromSurface(renderer, tile->image);
 		SDL_FreeSurface(tile->image);
+
+		tile->image = IMG_Load("assets/map/g5.png");
+		tile->grassTexture = SDL_CreateTextureFromSurface(renderer, tile->image);
+		SDL_FreeSurface(tile->image);
+
 		tile->rect = rect;
 		break;
 
@@ -51,6 +61,11 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 		tile->image = IMG_Load("assets/map/t3.png");
 		tile->texture = SDL_CreateTextureFromSurface(renderer, tile->image);
 		SDL_FreeSurface(tile->image);
+
+		tile->image = IMG_Load("assets/map/g7.png");
+		tile->grassTexture = SDL_CreateTextureFromSurface(renderer, tile->image);
+		SDL_FreeSurface(tile->image);
+
 		tile->rect = rect;
 		break;
 
@@ -134,6 +149,10 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 		tile->texture = SDL_CreateTextureFromSurface(renderer, tile->image);
 		SDL_FreeSurface(tile->image);
 		tile->rect = rect;
+
+		tile->image = IMG_Load("assets/map/g4.png");
+		tile->grassTexture = SDL_CreateTextureFromSurface(renderer, tile->image);
+		SDL_FreeSurface(tile->image);
 		break;
 
 	case 16:
@@ -141,6 +160,10 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 		tile->texture = SDL_CreateTextureFromSurface(renderer, tile->image);
 		SDL_FreeSurface(tile->image);
 		tile->rect = rect;
+
+		tile->image = IMG_Load("assets/map/g7.png");
+		tile->grassTexture = SDL_CreateTextureFromSurface(renderer, tile->image);
+		SDL_FreeSurface(tile->image);
 		break;
 
 	case 18:
@@ -169,14 +192,17 @@ void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 	// up tiles
 	case 1:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, tile->grassTexture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	case 2:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, tile->grassTexture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	case 3:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, tile->grassTexture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	// middle tiles
@@ -226,10 +252,12 @@ void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 	//
 	case 15:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, tile->grassTexture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	case 16:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, tile->grassTexture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	//

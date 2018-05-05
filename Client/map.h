@@ -16,7 +16,7 @@ struct tile {
 	int x;
 	int y;
 	SDL_Surface *image;
-	SDL_Texture *texture;
+	SDL_Texture *texture, *grassTexture;
 	SDL_Rect rect;
 
 };
