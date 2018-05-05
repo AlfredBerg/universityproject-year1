@@ -22,6 +22,7 @@
 
 struct game {
 	int running;
+	int spectateMode;
 	int loopCount;
 	int livingPlayers[MAX_PLAYERS];
 	int connectedPlayers[MAX_PLAYERS];

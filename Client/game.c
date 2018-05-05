@@ -9,6 +9,7 @@
 #include "checkCollision.h"
 #include "camera.h"
 
+#define SPECTATESPEED 10
 
 extern Network client;
 extern SDL_Rect camera;
@@ -37,6 +38,7 @@ void initGame(Game *game) {
 	game->debug = 1;
 	game->running = 1;
 	game->loopCount = 0;
+	game->spectateMode = 0;
 
 	initBackground(game);
 
@@ -144,7 +146,8 @@ int runGame(Game *game, Network *client) {
 		SDL_RenderClear(game->renderer);
 		displayBackground(game);
 
-		updateCameraPosition(&players[client->playerID]);
+		if(game->spectateMode == 0)
+			updateCameraPosition(&players[client->playerID]);
 
 		playerNameTag(players, game->renderer);
 		playerHealthbar(players, game->renderer);
@@ -177,47 +180,67 @@ int runGame(Game *game, Network *client) {
 		//Move fighter
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
+		if (players[client->playerID].life > 0) {
+			if (KeyState[SDL_SCANCODE_D]) {
+				if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
+					players[client->playerID].currentSprite += 1;
+				key = RIGHT;
+				if (!Mix_Playing(0) && groundDetected)
+					Mix_PlayChannel(0, footsteps, 0);
+				if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !rightWall) {
+					walkRight(&players[client->playerID], &key, &prevKey);
+					leftWall = 0;
+				}
+				else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
+					players[client->playerID].x -= 5;
+					rightWall = 1;
+				}
+			}
 
-		if (KeyState[SDL_SCANCODE_D]) {
-			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
-				players[client->playerID].currentSprite += 1;
-			key = RIGHT;
-			if (!Mix_Playing(0) && groundDetected)
-				Mix_PlayChannel(0, footsteps, 0);
-			if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !rightWall) {
-				walkRight(&players[client->playerID], &key, &prevKey);
-				leftWall = 0;
+			else if (KeyState[SDL_SCANCODE_A]) {
+				if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
+					players[client->playerID].currentSprite -= 1;
+				key = LEFT;
+				if (!Mix_Playing(0) && groundDetected)
+					Mix_PlayChannel(0, footsteps, 0);
+				if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !leftWall) {
+					walkLeft(&players[client->playerID], &key, &prevKey);
+					rightWall = 0;
+				}
+				else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
+					players[client->playerID].x += 5;
+					leftWall = 1;
+				}
 			}
-			else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
-				players[client->playerID].x -= 5;
-				rightWall = 1;
+
+			if (KeyState[SDL_SCANCODE_W]) {
+				doJump = 1;
+				if (groundDetected)
+					Mix_PlayChannel(1, jumpsound, 0);
+			}
+			if (KeyState[SDL_SCANCODE_SPACE]) {
+				players[client->playerID].weaponFired = 1;
+			}
+		}
+		else {
+			game->spectateMode = 1;
+			if (KeyState[SDL_SCANCODE_D]) {
+				camera.x += SPECTATESPEED;
+			}
+
+			if (KeyState[SDL_SCANCODE_A]) {
+				camera.x -= SPECTATESPEED;
+			}
+
+			if (KeyState[SDL_SCANCODE_W]) {
+				camera.y -= SPECTATESPEED;
+			}
+
+			if (KeyState[SDL_SCANCODE_S]) {
+				camera.y += SPECTATESPEED;
 			}
 		}
 
-		else if (KeyState[SDL_SCANCODE_A]) {
-			if (players[client->playerID].isMoving == 0 && game->loopCount % SPRITESPEED == 0)
-				players[client->playerID].currentSprite -= 1;
-			key = LEFT;
-			if (!Mix_Playing(0) && groundDetected)
-				Mix_PlayChannel(0, footsteps, 0);
-			if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !leftWall) {
-				walkLeft(&players[client->playerID], &key, &prevKey);
-				rightWall = 0;
-			}
-			else if (checkForWall(map, &players[client->playerID], &key) || key != prevKey) {
-				players[client->playerID].x += 5;
-				leftWall = 1;
-			}
-		}
-
-		if (KeyState[SDL_SCANCODE_W]) {
-			doJump = 1;
-			if (groundDetected)
-				Mix_PlayChannel(1, jumpsound, 0);
-		}
-		if (KeyState[SDL_SCANCODE_SPACE]) {
-			players[client->playerID].weaponFired = 1;
-		}
 
 		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 
@@ -273,7 +296,6 @@ int runGame(Game *game, Network *client) {
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[1].rect);
 
-
 			for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
 				SDL_RenderDrawRect(game->renderer, &projectiles[0].rect[i]);
 			}
@@ -293,6 +315,7 @@ int runGame(Game *game, Network *client) {
 		SDL_RenderPresent(game->renderer);
 	}
 	running = 1;
+
 	return running;
 }
 
