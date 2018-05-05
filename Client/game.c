@@ -298,6 +298,7 @@ int runGame(Game *game, Network *client) {
 
 void quitGame(Game *game) {
 	//SDL_DestroyTexture !!!
+
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
 	TTF_Quit();
@@ -387,8 +388,8 @@ void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstr
 			}
 		}
 
-		//else
-		//deletePlayer(players, players[i].id, nrOfPlayers);
+		else
+			deletePlayer(players, players[i].id, nrOfPlayers);
 	}
 }
 

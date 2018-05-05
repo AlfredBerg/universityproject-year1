@@ -67,12 +67,14 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 	SDL_Rect names[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {
-		names[i].x = players[i].x + 5;
-		names[i].y = players[i].y - 30;
-		names[i].h = players[i].nameText->h;
-		names[i].w = players[i].nameText->w;
+		if (players[i].life > 0) {
+			names[i].x = players[i].x + 5;
+			names[i].y = players[i].y - 30;
+			names[i].h = players[i].nameText->h;
+			names[i].w = players[i].nameText->w;
 
-		renderCopyMoveWithCamera(renderer, players[i].nameTexture, NULL, &names[i], 0.0, NULL, 0);
+			renderCopyMoveWithCamera(renderer, players[i].nameTexture, NULL, &names[i], 0.0, NULL, 0);
+		}
 	}
 }
 
@@ -83,10 +85,17 @@ void destroyPlayerObject(Player *player) {
 	//Healthbar
 	SDL_DestroyTexture(player->hpBarTexture);
 	SDL_FreeSurface(player->hpBarSurface);
+	
 }
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {
-	
+	//destroyPlayerObject(&players[id]);
+	printf("Deleted player\n");
+
+	players[id].rect.h = 0;
+	players[id].rect.w = 0;
+
+	/*
 	for (int i = 0; i < *nrOfPlayers; i++) {
 		if (players[i].id == id){
 			for (int j = 0; j < *nrOfPlayers - 1; j++)
@@ -96,9 +105,7 @@ void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 			printf("Deleted player\n");
 		}
 	}
-
-	
-
+	*/
 	
 }
 
