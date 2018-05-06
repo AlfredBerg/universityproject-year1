@@ -93,7 +93,7 @@ int runGame(Game *game, Network *client) {
 
 	// Create pickups
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png");
+	pickups[0] = createPickup(game, 0, 0, 0, 20, "assets/p_red.png");
 	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
 	int nrOfPickups = 2;
 

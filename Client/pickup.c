@@ -15,7 +15,7 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 				pickups[i].isPickedUp = 1;
 				if (players[j].life + pickups[i].healing < 100 || players[j].life + pickups[i].healing == 100) {				//health only increases if needed
 					printf("Health = + %d\n", pickups[i].healing);
-					players[j].life += pickups[i].healing;
+					loseHealth(&players[j], -pickups[i].healing);
 				}
 			}
 		}
