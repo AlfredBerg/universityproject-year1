@@ -10,7 +10,7 @@
 
 void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected, Tile map[][MAP_WIDTH]) {
 
-	if (!checkOnlyGround(map, &player->rect)) {
+	if (!checkOnlyGround(map, &player->dstRect)) {
 		player->y += GRAVITYSPEED;
 	}
 	else {
@@ -20,13 +20,13 @@ void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDet
 
 	/*
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
-		if (weapons[i].isPickedUp == 1) {
-			continue;
-		}
+	if (weapons[i].isPickedUp == 1) {
+	continue;
+	}
 
-		if (!checkOnlyGround(map, &weapons[i].rect)) {
-			weapons[i].y += GRAVITYSPEED;
-		}
+	if (!checkOnlyGround(map, &weapons[i].rect)) {
+	weapons[i].y += GRAVITYSPEED;
+	}
 	}
 	*/
 }

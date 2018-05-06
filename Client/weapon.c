@@ -22,15 +22,15 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 			for (int j = 0; j < MAXPLAYERS; j++) {
 				if (players[j].lastDirection == LEFT) {
 					if (weapons[i].id == players[j].weaponID) {
-						weapons[i].x = players[j].x - players[j].rect.w;
-						weapons[i].y = players[j].y + players[j].rect.h / 3;
+						weapons[i].x = players[j].x - players[j].dstRect.w;
+						weapons[i].y = players[j].y + players[j].dstRect.h / 3;
 					}
 
 				}
 				else {
 					if (weapons[i].id == players[j].weaponID) {
-						weapons[i].x = players[j].x + players[j].rect.w - 20;
-						weapons[i].y = players[j].y + players[j].rect.h / 3;
+						weapons[i].x = players[j].x + players[j].dstRect.w - 20;
+						weapons[i].y = players[j].y + players[j].dstRect.h / 3;
 					}
 				}
 
@@ -94,7 +94,7 @@ void pickUpWeapon(Network *client, Weapon weapons[], Player players[]) {
 		}
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
-			if (SDL_HasIntersection(&players[j].rect, &weapons[i].rect)) {
+			if (SDL_HasIntersection(&players[j].dstRect, &weapons[i].rect)) {
 				printf("Pickup weapon\n");
 				sendPickupToServer(client, 0, weapons[i].id);
 				weapons[i].isPickedUp = 1;
