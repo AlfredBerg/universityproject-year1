@@ -29,12 +29,12 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 
 
 void walkRight(Player *player, int *key, int *prevKey) {
-	player->x += WALKSPEED;
+	player->x += player->movementSpeed;
 	*prevKey = *key;
 }
 
 void walkLeft(Player *player, int *key, int *prevKey) {
-	player->x -= WALKSPEED;
+	player->x -= player->movementSpeed;
 	*prevKey = *key;
 }
 

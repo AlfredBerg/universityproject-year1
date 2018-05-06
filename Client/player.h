@@ -33,6 +33,7 @@ struct player {
 	int tickThatLostHealth;
 	int lastDirection;
 	int isMoving;
+	int movementSpeed;
 	int previousX;
 	int previousY;
 	int currentSprite;
