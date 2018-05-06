@@ -44,11 +44,11 @@ int connectToServer(Network *client) {
 		printf("PLAYER ID: %d \n", client->playerID);
 		return 1;
 	}
-	
+
 	else {
-	puts("I could not connect to the server!");
+		puts("I could not connect to the server!");
 	}
-	
+
 	return 0;
 }
 
@@ -63,7 +63,7 @@ int compareString(char str1[], char str2[], int len) {
 
 void positionToString(Player *player, char string[]) {
 	//x1;y1;
-	sprintf(string, "0;%d;%d;", player->rect.x, player->rect.y);
+	sprintf(string, "0;%d;%d;", player->dstRect.x, player->dstRect.y);
 }
 
 void sendBulletToServer(Network *client, int projectileType, int x, int y, int direction) {
@@ -113,7 +113,7 @@ void updateGamestate(Network *client, Player *player, char data[][30]) {
 		player[i].weaponID = atoi(data[i * FIELDS_IN_GAMESTATE + 3]);
 		player[i].pickupID = atoi(data[i * FIELDS_IN_GAMESTATE + 4]);
 		player[i].life = atoi(data[i * FIELDS_IN_GAMESTATE + 5]);
-		
+
 
 		if (client->playerID != i) {
 			player[i].x = atoi(data[i * FIELDS_IN_GAMESTATE + 1]);
