@@ -46,7 +46,7 @@ void loseHealth(Player *player, int damage) {
 	player->tickThatLostHealth = SDL_GetTicks();
 	player->life -= damage;
 	sendHitToServer(damage, player->id);
-
+	
 }
 
 
@@ -85,28 +85,28 @@ void destroyPlayerObject(Player *player) {
 	//Healthbar
 	SDL_DestroyTexture(player->hpBarTexture);
 	SDL_FreeSurface(player->hpBarSurface);
-
+	
 }
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 	//destroyPlayerObject(&players[id]);
 	printf("Deleted player\n");
 
-	players[id].dstRect.h = 0;
-	players[id].dstRect.w = 0;
+	players[id].rect.h = 0;
+	players[id].rect.w = 0;
 
 	/*
 	for (int i = 0; i < *nrOfPlayers; i++) {
-	if (players[i].id == id){
-	for (int j = 0; j < *nrOfPlayers - 1; j++)
-	players[j] = players[j + 1];
-	*nrOfPlayers = *nrOfPlayers - 1;
-	destroyPlayerObject(&players[i]);
-	printf("Deleted player\n");
-	}
+		if (players[i].id == id){
+			for (int j = 0; j < *nrOfPlayers - 1; j++)
+				players[j] = players[j + 1];
+			*nrOfPlayers = *nrOfPlayers - 1;
+			destroyPlayerObject(&players[i]);
+			printf("Deleted player\n");
+		}
 	}
 	*/
-
+	
 }
 
 void updatePlayerStates(Player players[], int loopCount) {

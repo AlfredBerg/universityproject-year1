@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+
 #define SPRITESPEED 3
 #define WALKSPEED 10
 
@@ -37,7 +38,7 @@ struct player {
 	int currentSprite;
 	SDL_Surface *Image;
 	SDL_Texture *Texture;
-	SDL_Rect dstRect, srcRect;
+	SDL_Rect rect;
 	SDL_Surface *nameText;
 	SDL_Texture *nameTexture;
 	SDL_Texture *hpBarTexture;

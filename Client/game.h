@@ -44,5 +44,5 @@ void playBackgroundMusic();
 void createWindowIcon(Game *game);
 
 // These functions could not be placed in player-module
-Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int srcRectW, int srcRectH);
-void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, int *rightWall);
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]);
+void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall);

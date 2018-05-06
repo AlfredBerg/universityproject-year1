@@ -3,7 +3,7 @@
 #include "game.h"
 #include "player.h"
 
-SDL_Rect camera = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+SDL_Rect camera = {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
 
 void renderCopyMoveWithCamera(SDL_Renderer *renderer, SDL_Texture *texture, SDL_Rect *srcRect, SDL_Rect *dstRect, const double angle, SDL_Point *center, SDL_RendererFlip flip) {
 	int oldX, oldY;
@@ -24,10 +24,10 @@ void renderCopyMoveWithCamera(SDL_Renderer *renderer, SDL_Texture *texture, SDL_
 
 }
 
-void updateCameraPosition(Player *player) {
+void updateCameraPosition(Player *player){
 	//Center the camera over the dot
-	camera.x = (player->dstRect.x + player->dstRect.w / 2) - WINDOW_WIDTH / 2;
-	camera.y = (player->dstRect.y + player->dstRect.h / 2) - WINDOW_HEIGHT / 1.5;
+	camera.x = (player->rect.x + player->rect.w / 2) - WINDOW_WIDTH / 2;
+	camera.y = (player->rect.y + player->rect.h / 2) - WINDOW_HEIGHT / 1.5;
 }
 
 int correctPosX(int x) {

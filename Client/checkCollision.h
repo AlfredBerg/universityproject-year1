@@ -9,8 +9,8 @@ int checkForWall(Tile map[][MAP_WIDTH], Player *player, int *key) {
 	int i, j, wallDetected = 0;
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
-			if (SDL_HasIntersection(&player->dstRect, &map[i][j].rect)) {
-				if ((map[i][j].y + TILE_HEIGHT < (player->y + player->dstRect.h))) {
+			if (SDL_HasIntersection(&player->rect, &map[i][j].rect)) {
+				if ((map[i][j].y + TILE_HEIGHT < (player->y + player->rect.h))) {
 					if (*key == LEFT) wallDetected = LEFT;
 					else wallDetected = RIGHT;
 				}
@@ -28,8 +28,8 @@ int checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *r
 
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
-			if (SDL_HasIntersection(&player->dstRect, &map[i][j].rect)) {
-				if (map[i][j].y + TILE_HEIGHT < player->y + player->dstRect.h) {
+			if (SDL_HasIntersection(&player->rect, &map[i][j].rect)) {
+				if (map[i][j].y + TILE_HEIGHT < player->y + player->rect.h) {
 					ceilingDetected = 1;
 					printf("\nCeiling detected");
 					if (*jumpTime > 0) {

@@ -7,7 +7,7 @@
 void fireProjectile(Projectile *projectile, int direction, int x, int y, int id) {
 	/*
 	if (projectile->projectilesFired >= MAXPROJECTILEOBJECTS) {
-	projectile->projectilesFired = 0;
+		projectile->projectilesFired = 0;
 	}
 	*/
 
@@ -36,7 +36,7 @@ void moveProjectiles(Projectile projectiles[]) {
 void detectProjectileColision(Projectile *projectile, Player players[], int projectileType) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
-			if (SDL_HasIntersection(&players[i].dstRect, &projectile->rect[j])) {
+			if(SDL_HasIntersection(&players[i].rect, &projectile->rect[j])) {
 				loseHealth(&players[i], projectile->dmg);
 				sendDeleteProjectileToServer(projectileType, j);
 			}
