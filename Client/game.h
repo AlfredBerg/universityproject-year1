@@ -29,6 +29,7 @@ struct game {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	int debug;
+	int whoWon;
 	SDL_Texture *cloudsBack;
 	SDL_Texture *cloudsFront;
 	SDL_Texture *bgBack;

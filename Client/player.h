@@ -33,6 +33,7 @@ struct player {
 	int lastDirection;
 	int isMoving;
 	int movementSpeed;
+	int iWon;
 	int previousX;
 	int previousY;
 	int currentSprite;

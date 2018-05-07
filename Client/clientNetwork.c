@@ -129,6 +129,11 @@ void updateProjectiles(Projectile *projectiles, char data[][30], int nrFields) {
 	}
 }
 
+void updateWhoWon(Player *player, char data[][30]) {
+	printf("Somebody won");
+	int winner = atoi(data[1]);
+	player[winner].iWon = 1;
+}
 
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles) {
 	char parsedData[101 * PROJECTILEFIELDSINPACKET][30];
@@ -136,7 +141,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 		parsedData[i][0] = '\0';
 	}
 
-	puts(serverdata);
+	//puts(serverdata);
 
 	int nrFields = decode(serverdata, parsedData, 4, 30);
 
@@ -146,6 +151,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	{
 	case 0: updateGamestate(client, player, parsedData); break;
 	case 1: updateProjectiles(projectiles, parsedData, nrFields); break;
+	case 2: updateWhoWon(player, parsedData); break;
 	default:
 		printf("Unknown data received\n");
 		break;

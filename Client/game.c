@@ -14,6 +14,8 @@
 extern Network client;
 extern SDL_Rect camera;
 
+void victoryCondition(Player players[], Game *game, int playerId);
+
 void initGame(Game *game) {
 
 	// Initialize SDL and audio system
@@ -130,8 +132,6 @@ int runGame(Game *game, Network *client) {
 	footsteps->volume = 50;
 	Mix_Chunk *jumpsound = Mix_LoadWAV("assets/jumpsound.wav");
 	jumpsound->volume = 50;
-
-
 
 
 	while (running)
@@ -312,6 +312,8 @@ int runGame(Game *game, Network *client) {
 		drawProjectiles(game, projectiles);
 		drawPickups(game, pickups, &nrOfPickups);
 
+		//Check if somebody won
+		victoryCondition(players, game, client->playerID);
 		//Show what was drawn
 		SDL_RenderPresent(game->renderer);
 	}
@@ -368,6 +370,7 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
 	player.currentSprite = 0;
 	player.movementSpeed = 10;
+	player.iWon = 0;
 
 	player.dstRect.x = x;
 	player.dstRect.y = y;
@@ -425,6 +428,34 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 	}
 }
 
+void victoryCondition(Player players[], Game *game, int playerid) {
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (players[i].iWon) {
+			//Victory screen
+			TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 52);
+			SDL_Color color = { 255, 255, 255, 255 };
+
+			char text[10];
+			if (players[playerid].iWon) {
+				sprintf(text, "Victory");
+			}
+			else {
+				sprintf(text, "Lost");
+			}
+			SDL_Surface *victoryText = TTF_RenderText_Solid(font, text, color);
+
+			SDL_Texture *nameTexture = SDL_CreateTextureFromSurface(game->renderer, victoryText);
+
+			SDL_Rect victoryRect = { camera.x, camera.y, WINDOW_WIDTH, WINDOW_HEIGHT };
+
+			renderCopyMoveWithCamera(game->renderer, nameTexture, NULL, &victoryRect, 0.0, NULL, 0);
+
+			SDL_RenderPresent(game->renderer);
+
+			SDL_Delay(5000);
+		}
+	}
+}
 
 
 //void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
