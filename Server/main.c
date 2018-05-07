@@ -185,8 +185,12 @@ void init(Network *server) {
 	server->clients[1].yPos = 50;
 	server->clients[2].xPos = 300;
 	server->clients[2].yPos = 370;
+	server->clients[3].xPos = 300;
+	server->clients[3].yPos = 370;
 	strcpy(server->clients[0].name, "spelare1");
 	strcpy(server->clients[1].name, "spelare2");
+	strcpy(server->clients[2].name, "spelare3");
+	strcpy(server->clients[3].name, "spelare4");
 	
 }
 

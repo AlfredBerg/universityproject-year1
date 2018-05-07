@@ -35,7 +35,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 1;
+	game->debug = 0;
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
@@ -68,13 +68,15 @@ int runGame(Game *game, Network *client) {
 	char player0Name[] = "Knight";
 	char player1Name[] = "Bear";
 	char player2Name[] = "Bird";
+	char player3Name[] = "NotBear";
 
 	// Create players
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, 0, player0Name, 60, 250, RIGHT, "assets/knightsprite.png", 16, 24);
 	players[1] = createPlayer(game, 1, player1Name, 300, 0, LEFT, "assets/bearsprite.png", 16, 24);
 	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png", 40, 40);
-	int nrOfPlayers = 3;
+	players[3] = createPlayer(game, 3, player3Name, 300, 0, LEFT, "assets/bearsprite.png", 16, 24);
+	int nrOfPlayers = 4;
 
 	// Create weapons
 	Weapon weapons[MAXNRWEAPONS];
