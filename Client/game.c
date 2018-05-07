@@ -41,7 +41,6 @@ void initGame(Game *game) {
 	game->spectateMode = 0;
 
 	initBackground(game);
-
 	createWindowIcon(game);
 }
 
@@ -49,7 +48,7 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client) {
 
 	// Randomization
-	srand(time(NULL));
+	//srand(time(NULL));
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
@@ -72,9 +71,9 @@ int runGame(Game *game, Network *client) {
 
 	// Create players
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, player0Name, 60, 250, RIGHT, "assets/knightsprite.png");
-	players[1] = createPlayer(game, 1, player1Name, 300, 0, LEFT, "assets/bearsprite.png");
-	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png");
+	players[0] = createPlayer(game, 0, player0Name, 60, 250, RIGHT, "assets/knightsprite.png", 16, 24);
+	players[1] = createPlayer(game, 1, player1Name, 300, 0, LEFT, "assets/bearsprite.png", 16, 24);
+	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png", 40, 40);
 	int nrOfPlayers = 3;
 
 	// Create weapons
@@ -93,7 +92,7 @@ int runGame(Game *game, Network *client) {
 
 	// Create pickups
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 550, 500, 5, "assets/p_red.png");
+	pickups[0] = createPickup(game, 0, 0, 0, 20, "assets/p_red.png");
 	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
 	int nrOfPickups = 2;
 
@@ -143,10 +142,21 @@ int runGame(Game *game, Network *client) {
 			continue;
 		}
 
+		for (int j = 0; j < MAXPLAYERS; j++) {
+			if (j == client->playerID) {
+				players[client->playerID].dstRect.x = players[client->playerID].x;
+				players[client->playerID].dstRect.y = players[client->playerID].y;
+			}
+			else {
+				players[j].dstRect.x = players[j].x;
+				players[j].dstRect.y = players[j].y;
+			}
+		}
+
 		SDL_RenderClear(game->renderer);
 		displayBackground(game);
 
-		if(game->spectateMode == 0)
+		if (game->spectateMode == 0)
 			updateCameraPosition(&players[client->playerID]);
 
 		playerNameTag(players, game->renderer);
@@ -160,10 +170,12 @@ int runGame(Game *game, Network *client) {
 		renderTick = SDL_GetTicks();
 		game->loopCount++;
 
-		SDL_Rect srcrect[3] = { { players[0].currentSprite * 16, 0, 16, 24 },{ players[1].currentSprite * 16, 0, 16, 24 }, { players[2].currentSprite * 40, 0, 40, 40 } };
-		SDL_Rect dstrect[3] = { { players[0].rect.x, players[0].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT }, { players[1].rect.x, players[1].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT }, { players[2].rect.x, players[2].rect.y, PLAYER_WIDTH, PLAYER_HEIGHT } };
+		//Sprite animation for players
+		for (int i = 0; i < MAXPLAYERS; i++) {
+			players[i].srcRect.x = players[i].currentSprite * players[i].srcRect.w;
+		}
 
-		//för fågeln
+		// Bird only
 		if (game->loopCount % SPRITESPEED == 0)
 			players[2].currentSprite += 1;
 
@@ -187,7 +199,7 @@ int runGame(Game *game, Network *client) {
 				key = RIGHT;
 				if (!Mix_Playing(0) && groundDetected)
 					Mix_PlayChannel(0, footsteps, 0);
-				if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey)) {
+				if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !rightWall) {
 					walkRight(&players[client->playerID], &key, &prevKey);
 					leftWall = 0;
 				}
@@ -203,7 +215,7 @@ int runGame(Game *game, Network *client) {
 				key = LEFT;
 				if (!Mix_Playing(0) && groundDetected)
 					Mix_PlayChannel(0, footsteps, 0);
-				if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey)) {
+				if ((!checkForWall(map, &players[client->playerID], &key) || key != prevKey) && !leftWall) {
 					walkLeft(&players[client->playerID], &key, &prevKey);
 					rightWall = 0;
 				}
@@ -252,19 +264,6 @@ int runGame(Game *game, Network *client) {
 			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 		}
 
-
-		for (int j = 0; j < MAXPLAYERS; j++) {
-			if (j == client->playerID) {
-				players[client->playerID].rect.x = players[client->playerID].x;
-				players[client->playerID].rect.y = players[client->playerID].y;
-			}
-			else {
-				players[j].rect.x = players[j].x;
-				players[j].rect.y = players[j].y;
-			}
-		}
-
-
 		//Detect projectile collisions with walls
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
@@ -291,8 +290,8 @@ int runGame(Game *game, Network *client) {
 
 		//-----------------------------DEBUG MODE-----------------------------------
 		if (game->debug == 1) {
-			SDL_RenderDrawRect(game->renderer, &players[1].rect);
-			SDL_RenderDrawRect(game->renderer, &players[0].rect);
+			SDL_RenderDrawRect(game->renderer, &players[1].dstRect);
+			SDL_RenderDrawRect(game->renderer, &players[0].dstRect);
 			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
 			SDL_RenderDrawRect(game->renderer, &weapons[1].rect);
 
@@ -306,7 +305,7 @@ int runGame(Game *game, Network *client) {
 		updatePlayerStates(players, game->loopCount);
 
 		//Draw players, weapons, projectiles & pickups
-		drawPlayers(game, players, srcrect, dstrect, &nrOfPlayers, &leftWall, &rightWall);
+		drawPlayers(game, players, &nrOfPlayers, &leftWall, &rightWall);
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
 		drawPickups(game, pickups, &nrOfPickups);
@@ -348,7 +347,7 @@ void createWindowIcon(Game *game) {
 
 //**************************************** Player functions **************************************************
 
-Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[]) {
+Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int srcRectW, int srcRectH) {
 	Player player;
 	strcpy(player.name, name);
 	player.id = id;
@@ -366,10 +365,18 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.Image = IMG_Load(imageName);
 	player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
 	player.currentSprite = 0;
-	player.rect.x = x;
-	player.rect.y = y;
-	player.rect.w = PLAYER_WIDTH;
-	player.rect.h = PLAYER_HEIGHT;
+	player.movementSpeed = 10;
+
+	player.dstRect.x = x;
+	player.dstRect.y = y;
+	player.dstRect.w = PLAYER_WIDTH;
+	player.dstRect.h = PLAYER_HEIGHT;
+
+	player.srcRect.x = player.currentSprite * srcRectW;
+	player.srcRect.y = 0;
+	player.srcRect.w = srcRectW;
+	player.srcRect.h = srcRectH;
+
 	player.isMoving = 0;
 
 	//Player name
@@ -394,20 +401,20 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	return player;
 }
 
-void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
+void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, int *rightWall) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].life > 0) {
 			if ((players[i].lastDirection == RIGHT) && (*leftWall == 1)) {
-				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &players[i].srcRect, &players[i].dstRect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
 			else if ((players[i].lastDirection == RIGHT) && (*leftWall == 0)) {
-				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, 0);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &players[i].srcRect, &players[i].dstRect, 0.0, NULL, 0);
 			}
 			else if ((players[i].lastDirection == LEFT) && (*rightWall == 0)) {
-				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &players[i].srcRect, &players[i].dstRect, 0.0, NULL, SDL_FLIP_HORIZONTAL);
 			}
 			else if ((players[i].lastDirection == LEFT) && (*leftWall == 0)) {
-				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, 0);
+				renderCopyMoveWithCamera(game->renderer, players[i].Texture, &players[i].srcRect, &players[i].dstRect, 0.0, NULL, 0);
 			}
 		}
 
