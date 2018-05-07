@@ -142,6 +142,17 @@ int runGame(Game *game, Network *client) {
 			continue;
 		}
 
+		for (int j = 0; j < MAXPLAYERS; j++) {
+			if (j == client->playerID) {
+				players[client->playerID].dstRect.x = players[client->playerID].x;
+				players[client->playerID].dstRect.y = players[client->playerID].y;
+			}
+			else {
+				players[j].dstRect.x = players[j].x;
+				players[j].dstRect.y = players[j].y;
+			}
+		}
+
 		SDL_RenderClear(game->renderer);
 		displayBackground(game);
 
@@ -252,19 +263,6 @@ int runGame(Game *game, Network *client) {
 		if (!checkForWall(map, &players[client->playerID], &key)) {
 			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
 		}
-
-
-		for (int j = 0; j < MAXPLAYERS; j++) {
-			if (j == client->playerID) {
-				players[client->playerID].dstRect.x = players[client->playerID].x;
-				players[client->playerID].dstRect.y = players[client->playerID].y;
-			}
-			else {
-				players[j].dstRect.x = players[j].x;
-				players[j].dstRect.y = players[j].y;
-			}
-		}
-
 
 		//Detect projectile collisions with walls
 		for (i = 0; i < MAP_HEIGHT; i++) {

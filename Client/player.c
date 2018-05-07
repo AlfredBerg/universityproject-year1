@@ -90,7 +90,7 @@ void destroyPlayerObject(Player *player) {
 
 void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 	//destroyPlayerObject(&players[id]);
-	printf("Deleted player\n");
+	//printf("Deleted player\n");
 
 	players[id].dstRect.h = 0;
 	players[id].dstRect.w = 0;

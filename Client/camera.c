@@ -20,14 +20,11 @@ void renderCopyMoveWithCamera(SDL_Renderer *renderer, SDL_Texture *texture, SDL_
 		dstRect->x = oldX;
 		dstRect->y = oldY;
 	}
-
-
 }
 
 void updateCameraPosition(Player *player) {
-	//Center the camera over the dot
-	camera.x = (player->dstRect.x + player->dstRect.w / 2) - WINDOW_WIDTH / 2;
-	camera.y = (player->dstRect.y + player->dstRect.h / 2) - WINDOW_HEIGHT / 1.5;
+	camera.x = (player->x + player->dstRect.w / 2) - WINDOW_WIDTH / 2;
+	camera.y = (player->y + player->dstRect.h / 2) - WINDOW_HEIGHT / 1.5;
 }
 
 int correctPosX(int x) {
