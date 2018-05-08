@@ -37,7 +37,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 0;
+	game->debug = 1;
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
@@ -291,14 +291,39 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//-----------------------------DEBUG MODE-----------------------------------
+		
 		if (game->debug == 1) {
-			SDL_RenderDrawRect(game->renderer, &players[1].dstRect);
-			SDL_RenderDrawRect(game->renderer, &players[0].dstRect);
-			SDL_RenderDrawRect(game->renderer, &weapons[0].rect);
-			SDL_RenderDrawRect(game->renderer, &weapons[1].rect);
+			SDL_Rect temporaryRect;
+			for (int i = 0; i < MAXPLAYERS; i++) {
+				temporaryRect.w = players[i].dstRect.w;
+				temporaryRect.h = players[i].dstRect.h;
+				temporaryRect.x = players[i].dstRect.x - camera.x;
+				temporaryRect.y = players[i].dstRect.y - camera.y;
+				SDL_RenderDrawRect(game->renderer, &temporaryRect);
+			}
+			for (int i = 0; i < MAXNRWEAPONS; i++) {
+				temporaryRect.w = weapons[i].rect.w;
+				temporaryRect.h = weapons[i].rect.h;
+				temporaryRect.x = weapons[i].rect.x - camera.x;
+				temporaryRect.y = weapons[i].rect.y - camera.y;
+				SDL_RenderDrawRect(game->renderer, &temporaryRect);
+			}
+			for (int j = 0; j < MAXPROJECTILES; j++) {
+				for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
+					temporaryRect.w = projectiles[j].rect[i].w;
+					temporaryRect.h = projectiles[j].rect[i].h;
+					temporaryRect.x = projectiles[j].rect[i].x - camera.x;
+					temporaryRect.y = projectiles[j].rect[i].y - camera.y;
+					SDL_RenderDrawRect(game->renderer, &temporaryRect);
+				}
+			}
 
-			for (int i = 0; i < MAXPROJECTILEOBJECTS; i++) {
-				SDL_RenderDrawRect(game->renderer, &projectiles[0].rect[i]);
+			for (int i = 0; i < MAX_NR_OF_PICKUPS; i++) {
+				temporaryRect.w = pickups[i].rect.w;
+				temporaryRect.h = pickups[i].rect.h;
+				temporaryRect.x = pickups[i].rect.x - camera.x;
+				temporaryRect.y = pickups[i].rect.y - camera.y;
+				SDL_RenderDrawRect(game->renderer, &temporaryRect);
 			}
 		}
 		//--------------------------------------------------------------------------
