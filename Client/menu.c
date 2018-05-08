@@ -207,19 +207,60 @@ int isAllowed(char* ch) {
 	return 0;
 }
 
-int lobby() {
+int lobby(Network *client, Game *game) {
 	int timer = 60;
 	int connectedPlayers = 1;
-//	char lobbyData[50];
-	
+	char lobbyinData[MAX_PACKET];
+	char lobbyData[16][30];
+	int done = 0;
+	char nrOfPlayers[2];
+	int c;
 
-	printf("\n Welcome to the lobby! \n");
-	while (SDL_TRUE) {
-//		recvLobbyData(lobbyData);
-		printf("\n%d players are connected. \n", connectedPlayers);
-		if (connectedPlayers > 1)
-			printf("\n Timer: %d \n", timer);
+	//Grafik
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 40);
+	SDL_Color color = { 65, 33, 52, 255 };
+	SDL_Color colorW = { 255, 255, 255, 255 };
+	SDL_Rect textRect;
+
+	SDL_Surface *lobbyImage1 = IMG_Load("assets/lobby1.png");
+	SDL_Texture *background1 = SDL_CreateTextureFromSurface(game->renderer, lobbyImage1);
+	SDL_FreeSurface(lobbyImage1);
+
+	SDL_Surface *lobbyImage2 = IMG_Load("assets/lobby2.png");
+	SDL_Texture *background2 = SDL_CreateTextureFromSurface(game->renderer, lobbyImage2);
+	SDL_FreeSurface(lobbyImage2);
+
+	while (!done) {
+		c = 2;
+
+		receivePacket(client->serverSocket, client->packet, lobbyinData);
+		decode(lobbyinData, lobbyData, 13, 37);
+		connectedPlayers = atoi(lobbyData[1]);
+		timer = atoi(lobbyData[3]);
+
+		SDL_RenderClear(game->renderer);
+		if (connectedPlayers > 1) {
+			SDL_RenderCopy(game->renderer, background2, NULL, NULL);
+			render_text(game->renderer, 760, 50, lobbyData[1], font, &textRect, &color);
+			render_text(game->renderer, 660, 560, lobbyData[3], font, &textRect, &colorW);
+			for (int i = 0; i < connectedPlayers; i++) {
+				render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
+				c += 3;
+			}
+		}
+		else {
+			SDL_RenderCopy(game->renderer, background1, NULL, NULL);
+			SDL_Event event;
+			if (SDL_PollEvent(&event))
+				if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT || event.type == SDL_KEYDOWN)
+					if (event.button.x > 305 && event.button.x < 715 && event.button.y > 550 && event.button.y < 620 || event.key.keysym.sym == SDLK_RETURN)
+						done = 1;
+		}
+		SDL_RenderPresent(game->renderer);
+
 		if (timer == 0 || connectedPlayers == 4)
-			return 1;
+			done = 1;
 	}
+
+	return 0;
 }

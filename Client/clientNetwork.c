@@ -136,7 +136,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 		parsedData[i][0] = '\0';
 	}
 
-	puts(serverdata);
+	//puts(serverdata);
 
 	int nrFields = decode(serverdata, parsedData, 4, 30);
 
@@ -147,7 +147,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	case 0: updateGamestate(client, player, parsedData); break;
 	case 1: updateProjectiles(projectiles, parsedData, nrFields); break;
 	default:
-		printf("Unknown data received\n");
+		//printf("\nUnknown data");
 		break;
 	}
 }
@@ -196,3 +196,4 @@ int initClient(Network *client, char serverIP[]) {
 
 	return connectToServer(client);
 }
+

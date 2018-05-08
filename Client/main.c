@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	while (game.running) {
 		menu(&game, serverIP);
 		if (initClient(&client, serverIP))
-			//	game.running = lobby();
+			lobby(&client, &game);
 			1 == 1;
 		while (game.running) {
 			game.running = runGame(&game, &client);

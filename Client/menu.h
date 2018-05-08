@@ -22,4 +22,4 @@ int menu(Game *game, char serverIP[]);
 int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]);
 void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Font *font, SDL_Rect *rect, SDL_Color *color);
 int isAllowed(char* ch);
-int lobby();
+int lobby(Network *client, Game *game);

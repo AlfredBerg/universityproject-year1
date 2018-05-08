@@ -237,11 +237,11 @@ void receiveLobby(Network *server, char data[][30]) {
 void updateLobby(Network *server) {
 	char data[MAX_PACKET];
 
-	if (server->nrGameloops % 100 == 0 && server->next_player > 2) {
+	if (server->nrGameloops % 100 == 0 && server->next_player > 1) {
 		(server->timer)--;
+		printf("\nTimer: %d \n", server->timer);
 	}
-
-	lobbyToString(&server, data);
+	lobbyToString(server, data);
 
 	for (int i = 0; i < MAX_SOCKETS; i++) {
 		sendPacket(data, server->clients[i].ip, server->serverSocket);
@@ -253,6 +253,6 @@ void lobbyToString(Network *server, char string[MAX_PACKET]) {
 	int length = 0;
 	length += sprintf(string + length, "4;");
 	for (int i = 0; i < MAX_CLIENTS; i++) {
-		length += sprintf(string + length, "%d;%s;%d;", server->next_player-1, server->clients[i].name, server->timer);
+		length += sprintf(string + length, "%d;%s;%d;", server->next_player, server->clients[i].name, server->timer);
 	}
 }

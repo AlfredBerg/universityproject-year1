@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 	Uint32 lastNetworkTick = SDL_GetTicks();
 	Uint32 lastGamestateTick = SDL_GetTicks();
 	
-	int lobby = SDL_FALSE; //Changed from true to false
+	int lobby = SDL_TRUE; //Changed from true to false
 	int nrReady = 0;
 	int looptime;
 	int timerCount = 0;
@@ -187,7 +187,7 @@ void init(Network *server) {
 	server->clients[2].yPos = 370;
 	strcpy(server->clients[0].name, "spelare1");
 	strcpy(server->clients[1].name, "spelare2");
-	
+	strcpy(server->clients[2].name, "spelare3");	
 }
 
 
