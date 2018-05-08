@@ -18,7 +18,7 @@ void bulletsToString(Network *server, char string[MAX_PACKET], int projectileTyp
 
 
 void sendVictoryToClient(Network *server, int winnerId) {
-	printf("Client %d won the game", winnerId);
+	printf("Client %d won the game \n", winnerId);
 
 	char data[MAX_PACKET];
 

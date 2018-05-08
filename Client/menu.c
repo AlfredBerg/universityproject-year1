@@ -218,7 +218,7 @@ int lobby(Network *client, Game *game) {
 	int c;
 
 	//Grafik
-	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 40);
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 58);
 	SDL_Color color = { 65, 33, 52, 255 };
 	SDL_Color colorW = { 255, 255, 255, 255 };
 	SDL_Rect textRect;
@@ -242,8 +242,8 @@ int lobby(Network *client, Game *game) {
 		SDL_RenderClear(game->renderer);
 		if (connectedPlayers > 1) {
 			SDL_RenderCopy(game->renderer, background2, NULL, NULL);
-			render_text(game->renderer, 760, 50, lobbyData[1], font, &textRect, &color);
-			render_text(game->renderer, 660, 560, lobbyData[3], font, &textRect, &colorW);
+			render_text(game->renderer, 742, 45, lobbyData[1], font, &textRect, &color);
+			render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
 			for (int i = 0; i < connectedPlayers; i++) {
 				render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
 				c += 3;

@@ -158,7 +158,7 @@ void init(Network *server) {
 	server->running = 1;
 	server->next_player = 0;
 	server->timer = 16;
-	server->allivePlayers = 0;
+	server->alivePlayers = 0;
 
 	//id, dmg, speed, w, h
 	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
@@ -213,14 +213,14 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
 
 	}
 
-	server->allivePlayers = 0;
+	server->alivePlayers = 0;
 	for (int i = 0; i < MAX_CLIENTS; i++) {
 		if (server->clients[i].health > 0) {
-			server->allivePlayers++;
+			server->alivePlayers++;
 		}
 	}
 
-	if (server->allivePlayers == 1) {
+	if (server->alivePlayers == 1) {
 		for (int i = 0; i < MAX_CLIENTS; i++) {
 			if (server->clients[i].health > 0) {
 				sendVictoryToClient(server, i);

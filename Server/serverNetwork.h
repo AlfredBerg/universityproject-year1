@@ -35,7 +35,7 @@ struct network {
 	UDPsocket sockets[MAX_SOCKETS];
 	int nrGameloops;
 	int running;
-	int allivePlayers;
+	int alivePlayers;
 	Items items;
 	int timer;
 };
