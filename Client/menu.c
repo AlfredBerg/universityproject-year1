@@ -214,7 +214,6 @@ int lobby(Network *client, Game *game) {
 	char lobbyinData[MAX_PACKET];
 	char lobbyData[16][30];
 	int done = 0;
-	char nrOfPlayers[2];
 	int c;
 
 	//Grafik

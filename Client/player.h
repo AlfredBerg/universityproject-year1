@@ -9,7 +9,7 @@
 #define SPRITESPEED 3
 #define WALKSPEED 10
 
-#define NAME_LENGTH 50
+#define NAME_LENGTH 20
 #define LEFT 2
 #define RIGHT 3
 

@@ -70,14 +70,14 @@ int runGame(Game *game, Network *client) {
 	char player0Name[] = "Knight";
 	char player1Name[] = "Bear";
 	char player2Name[] = "Bird";
-	char player3Name[] = "NotBear";
+	char player3Name[] = "Princess";
 
 	// Create players
 	Player players[MAXPLAYERS];
 	players[0] = createPlayer(game, 0, player0Name, 60, 250, RIGHT, "assets/knightsprite.png", 16, 24);
 	players[1] = createPlayer(game, 1, player1Name, 300, 0, LEFT, "assets/bearsprite.png", 16, 24);
-	players[2] = createPlayer(game, 2, player2Name, 400, 500, LEFT, "assets/bird.png", 40, 40);
-	players[3] = createPlayer(game, 3, player3Name, 300, 0, LEFT, "assets/bearsprite.png", 16, 24);
+	players[2] = createPlayer(game, 2, player2Name, 400, 400, LEFT, "assets/bird.png", 40, 40);
+	players[3] = createPlayer(game, 3, player3Name, 500, 100, LEFT, "assets/princesssprite.png", 16, 24);
 	int nrOfPlayers = 4;
 
 	// Create weapons
