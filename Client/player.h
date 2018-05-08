@@ -13,7 +13,7 @@
 #define LEFT 2
 #define RIGHT 3
 
-#define MAXPLAYERS 3
+#define MAXPLAYERS 4
 #define INVULNERABILITY_TIME 100
 
 #define PLAYER_WIDTH 40
@@ -33,6 +33,7 @@ struct player {
 	int lastDirection;
 	int isMoving;
 	int movementSpeed;
+	int iWon;
 	int previousX;
 	int previousY;
 	int currentSprite;

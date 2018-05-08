@@ -35,6 +35,7 @@ struct network {
 	UDPsocket sockets[MAX_SOCKETS];
 	int nrGameloops;
 	int running;
+	int allivePlayers;
 	Items items;
 	int timer;
 };
@@ -53,3 +54,4 @@ void gamestateToString(Network *server, char string[]);
 void updateLobby(Network *server);
 void receiveLobby(Network *server, char data[][30]);
 void lobbyToString(Network *server, char string[MAX_PACKET]);
+void sendVictoryToClient(Network *server, int winnerId);

@@ -17,6 +17,18 @@
 void bulletsToString(Network *server, char string[MAX_PACKET], int projectileType);
 
 
+void sendVictoryToClient(Network *server, int winnerId) {
+	printf("Client %d won the game", winnerId);
+
+	char data[MAX_PACKET];
+
+	sprintf(data, "2;%d", winnerId);
+
+	for (int i = 0; i < MAX_SOCKETS; i++) {
+		sendPacket(data, server->clients[i].ip, server->serverSocket);
+	}
+}
+
 void updateClients(Network *server, Uint32 *lastTick) {
 
 	if (SDL_TICKS_PASSED(SDL_GetTicks(), *lastTick + TICK_RATE)) {

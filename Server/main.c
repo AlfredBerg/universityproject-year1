@@ -60,7 +60,6 @@ int main(int argc, char **argv)
 			perror("SDLNet_CheckSockets");
 		}
 		else if (nrReady == 0) {
-			//No sockets ready, do server activity
 			
 		}
 		else {
@@ -159,6 +158,7 @@ void init(Network *server) {
 	server->running = 1;
 	server->next_player = 0;
 	server->timer = 16;
+	server->allivePlayers = 0;
 
 	//id, dmg, speed, w, h
 	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
@@ -185,9 +185,12 @@ void init(Network *server) {
 	server->clients[1].yPos = 50;
 	server->clients[2].xPos = 300;
 	server->clients[2].yPos = 370;
+	server->clients[3].xPos = 300;
+	server->clients[3].yPos = 370;
 	strcpy(server->clients[0].name, "spelare1");
 	strcpy(server->clients[1].name, "spelare2");
 	strcpy(server->clients[2].name, "spelare3");	
+	strcpy(server->clients[3].name, "spelare4");
 }
 
 
@@ -209,6 +212,23 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
 		}
 
 	}
+
+	server->allivePlayers = 0;
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		if (server->clients[i].health > 0) {
+			server->allivePlayers++;
+		}
+	}
+
+	if (server->allivePlayers == 1) {
+		for (int i = 0; i < MAX_CLIENTS; i++) {
+			if (server->clients[i].health > 0) {
+				sendVictoryToClient(server, i);
+			}
+		}
+		
+	}
+
 
 	*lastGamestateTick = SDL_GetTicks();
 }
