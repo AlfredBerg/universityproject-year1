@@ -7,6 +7,17 @@ int menu(Game *game, char serverIP[]) {
 	SDL_Texture *background1 = SDL_CreateTextureFromSurface(game->renderer, menuImage1);
 	SDL_FreeSurface(menuImage1);
 
+
+	game->menuImage2 = IMG_Load("assets/meny2.png");
+	game->background2 = SDL_CreateTextureFromSurface(game->renderer, game->menuImage2);
+	SDL_FreeSurface(game->menuImage2);
+
+	game->menuImage3 = IMG_Load("assets/meny3.png");
+	game->background3 = SDL_CreateTextureFromSurface(game->renderer, game->menuImage3);
+	SDL_FreeSurface(game->menuImage3);
+
+	game->font = TTF_OpenFont("assets/pixlig font.ttf", 40);
+
 	int startGame = 1;
 	int menuLoop = 1;
 	int menuPage = 1;
@@ -36,22 +47,12 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 	int running = 1;
 	SDL_Event event;
 
+	SDL_Rect textRect;
+	SDL_Color color = { 65, 33, 52, 255 };
+
 	//Init text
 	char playerName[16] = "Player";
 	int done = SDL_FALSE;
-
-	//Grafik
-	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 40);
-	SDL_Color color = { 65, 33, 52, 255 };
-	SDL_Rect textRect;
-
-	SDL_Surface *menuImage2 = IMG_Load("assets/meny2.png");
-	SDL_Texture *background2 = SDL_CreateTextureFromSurface(game->renderer, menuImage2);
-	SDL_FreeSurface(menuImage2);
-
-	SDL_Surface *menuImage3 = IMG_Load("assets/meny3.png");
-	SDL_Texture *background3 = SDL_CreateTextureFromSurface(game->renderer, menuImage3);
-	SDL_FreeSurface(menuImage3);
 
 	while (SDL_PollEvent(&event))
 	{
@@ -109,11 +110,11 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 						break;
 					}
 				}
-				SDL_RenderCopy(game->renderer, background2, NULL, NULL);
-				render_text(game->renderer, 336, 292, serverIP, font, &textRect, &color);
+				SDL_RenderCopy(game->renderer, game->background2, NULL, NULL);
+				render_text(game->renderer, 336, 292, serverIP, game->font, &textRect, &color);
 				SDL_RenderPresent(game->renderer);
 			}
-			SDL_DestroyTexture(background2);
+			SDL_DestroyTexture(game->background2);
 			SDL_RenderClear(game->renderer);
 			SDL_StopTextInput();
 			break;
@@ -156,11 +157,11 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 						break;
 					}
 				}
-				SDL_RenderCopy(game->renderer, background3, NULL, NULL);
-				render_text(game->renderer, 336, 292, playerName, font, &textRect, &color);
+				SDL_RenderCopy(game->renderer, game->background3, NULL, NULL);
+				render_text(game->renderer, 336, 292, playerName, game->font, &textRect, &color);
 				SDL_RenderPresent(game->renderer);
 			}
-			SDL_DestroyTexture(background3);
+			SDL_DestroyTexture(game->background3);
 			SDL_StopTextInput();
 			break;
 		}

@@ -30,6 +30,11 @@ struct game {
 	SDL_Renderer* renderer;
 	int debug;
 	int whoWon;
+	SDL_Surface *menuImage2;
+	SDL_Texture *background2;
+	SDL_Surface *menuImage3;
+	SDL_Texture *background3;
+	TTF_Font *font;
 	SDL_Texture *cloudsBack;
 	SDL_Texture *cloudsFront;
 	SDL_Texture *bgBack;
