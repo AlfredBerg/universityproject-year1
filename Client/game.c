@@ -489,7 +489,7 @@ void victoryCondition(Player players[], Game *game, int playerid) {
 
 			SDL_RenderPresent(game->renderer);
 
-			SDL_Delay(5000);
+			//SDL_Delay(5000);
 		}
 	}
 }
