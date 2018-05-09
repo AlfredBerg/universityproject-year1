@@ -29,7 +29,7 @@ struct game {
 	int spectateMode;
 	int loopCount;
 	int livingPlayers[MAX_PLAYERS];
-	int connectedPlayers[MAX_PLAYERS];
+	int connectedPlayers;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	int debug;

@@ -210,7 +210,7 @@ int isAllowed(char* ch) {
 
 int lobby(Network *client, Game *game, char playerNames[][30]) {
 	int timer = 60;
-	int connectedPlayers = 1;
+	game->connectedPlayers = 1;
 	char lobbyinData[MAX_PACKET];
 	char lobbyData[16][30];
 	int done = 0;
@@ -241,15 +241,15 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 		}
 		else {
 			decode(lobbyinData, lobbyData, 13, 30);
-			connectedPlayers = atoi(lobbyData[1]);
+			game->connectedPlayers = atoi(lobbyData[1]);
 			timer = atoi(lobbyData[3]);
 
 			SDL_RenderClear(game->renderer);
-			if (connectedPlayers > 1) {
+			if (game->connectedPlayers > 1) {
 				SDL_RenderCopy(game->renderer, background2, NULL, NULL);
 				render_text(game->renderer, 742, 45, lobbyData[1], font, &textRect, &color);
 				render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
-				for (int i = 0; i < connectedPlayers; i++) {
+				for (int i = 0; i < game->connectedPlayers; i++) {
 					render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
 					strcpy(playerNames[i], lobbyData[c]);
 					c += 3;
@@ -265,7 +265,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 			}
 			SDL_RenderPresent(game->renderer);
 
-			if (timer == 0 || connectedPlayers == 4)
+			if (timer == 0 || game->connectedPlayers == 4)
 				done = 1;
 		}
 	}
