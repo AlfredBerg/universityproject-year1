@@ -9,12 +9,9 @@
 #include "checkCollision.h"
 #include "camera.h"
 
-#define SPECTATESPEED 10
-
 extern Network client;
 extern SDL_Rect camera;
 
-void victoryCondition(Player players[], Game *game, int playerId);
 
 void initGame(Game *game) {
 
@@ -110,11 +107,8 @@ int runGame(Game *game, Network *client) {
 	//	}
 	//}
 
-	int running = 1;
-	//int again = 0;
-
 	SDL_Event event;
-
+	int running = 1;
 	int prevKey = 0;
 	int key = 0;
 	int isJumping = 0;
@@ -351,6 +345,7 @@ int runGame(Game *game, Network *client) {
 
 		// Check if somebody won
 		victoryCondition(players, game, client->playerID);
+
 		// Show what was drawn
 		SDL_RenderPresent(game->renderer);
 	}
@@ -360,8 +355,6 @@ int runGame(Game *game, Network *client) {
 }
 
 void quitGame(Game *game) {
-	//SDL_DestroyTexture !!!
-
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
 	TTF_Quit();
@@ -387,7 +380,6 @@ void createWindowIcon(Game *game) {
 
 
 //**************************************** Player functions **************************************************
-
 Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int srcRectW, int srcRectH) {
 	Player player;
 	strcpy(player.name, name);
@@ -516,56 +508,4 @@ void victoryCondition(Player players[], Game *game, int playerid) {
 //		else
 //			deletePlayer(players, players[i].id, nrOfPlayers);
 //	}
-//}
-
-
-//*****************restart() not yet implemented********************
-//int restart(Game* game) {
-//
-//	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
-//	SDL_Color color = { 255, 255, 255, 255 };
-//	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
-//
-//	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
-//	SDL_FreeSurface(rematch);
-//
-//	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
-//
-//	SDL_Event ev;
-//
-//	int running = 1;
-//	while (running) {
-//
-//		while (SDL_PollEvent(&ev) != 0)
-//		{
-//			if (ev.type == SDL_QUIT)
-//				running = 0;
-//
-//			else if (ev.type == SDL_MOUSEBUTTONDOWN)
-//			{
-//				if (ev.button.button == SDL_BUTTON_LEFT) {
-//
-//					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
-//						SDL_DestroyTexture(rematch_Texture);
-//						running = 1;
-//						return running;
-//
-//					}
-//				}
-//			}
-//		}
-//		SDL_RenderClear(game->renderer);
-//		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
-//		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
-//		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
-//		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
-//		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
-//		*/
-//
-//		SDL_RenderPresent(game->renderer);
-//
-//
-//	}
-//	SDL_DestroyTexture(rematch_Texture);
-//	return running;
 //}
