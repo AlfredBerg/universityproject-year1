@@ -125,7 +125,11 @@ int runGame(Game *game, Network *client) {
 	int leftWall = 0;
 	int rightWall = 0;
 
+	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
+	SDL_Rect timerRect = {5, 5, 60, 40};
+	SDL_Color color = { 0, 0, 0, 0 };
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 32);
 
 	// Sound effects
 	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
@@ -291,7 +295,7 @@ int runGame(Game *game, Network *client) {
 		}
 
 		//-----------------------------DEBUG MODE-----------------------------------
-		
+
 		if (game->debug == 1) {
 			SDL_Rect temporaryRect;
 			for (int i = 0; i < MAXPLAYERS; i++) {
@@ -331,15 +335,23 @@ int runGame(Game *game, Network *client) {
 
 		updatePlayerStates(players, game->loopCount);
 
-		//Draw players, weapons, projectiles & pickups
+		// Draw players, weapons, projectiles & pickups
 		drawPlayers(game, players, &nrOfPlayers, &leftWall, &rightWall);
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
 		drawPickups(game, pickups, &nrOfPickups);
 
-		//Check if somebody won
+		// Count timer + Display timer
+		Uint32 timerNow = (SDL_GetTicks() - startTimer) / 1000;
+		static char timerText[5] = { 0 };
+		sprintf(timerText, "%d", timerNow);			// Convert int to string
+		SDL_Surface *timerImage = TTF_RenderText_Solid(font, timerText, color);
+		SDL_Texture *timerTexture = SDL_CreateTextureFromSurface(game->renderer, timerImage);
+		SDL_RenderCopy(game->renderer, timerTexture, NULL, &timerRect);
+
+		// Check if somebody won
 		victoryCondition(players, game, client->playerID);
-		//Show what was drawn
+		// Show what was drawn
 		SDL_RenderPresent(game->renderer);
 	}
 	running = 1;
