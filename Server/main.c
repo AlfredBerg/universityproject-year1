@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 
 	Uint32 lastNetworkTick = SDL_GetTicks();
 	Uint32 lastGamestateTick = SDL_GetTicks();
+	server.lastNetworkTick = SDL_GetTicks();
 	
 	int lobby = SDL_TRUE; //Changed from true to false
 	int nrReady = 0;
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
 				updateLobby(&server);
 		}
 		else {
-			updateClients(&server, &lastNetworkTick);
+			updateClients(&server, &server.lastNetworkTick);
 			updateGamestate(&server, &lastGamestateTick);
 		}
 

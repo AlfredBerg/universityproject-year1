@@ -259,12 +259,19 @@ void updateLobby(Network *server) {
 		(server->timer)--;
 		printf("\nTimer: %d \n", server->timer);
 	}
-	lobbyToString(server, data);
 
-	for (int i = 0; i < MAX_SOCKETS; i++) {
-		sendPacket(data, server->clients[i].ip, server->serverSocket);
-		puts(data);
+	lobbyToString(server, data);
+	if (SDL_TICKS_PASSED(SDL_GetTicks(), server->lastNetworkTick + TICK_RATE)) {
+		for (int i = 0; i < MAX_SOCKETS; i++) {
+			sendPacket(data, server->clients[i].ip, server->serverSocket);
+			puts(data);
+		}
+
+		server->lastNetworkTick = SDL_GetTicks();
 	}
+
+
+
 }
 
 void lobbyToString(Network *server, char string[MAX_PACKET]) {

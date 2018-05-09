@@ -38,6 +38,7 @@ struct network {
 	int alivePlayers;
 	Items items;
 	int timer;
+	Uint32 lastNetworkTick;
 };
 typedef struct network Network;
 
