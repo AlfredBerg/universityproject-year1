@@ -234,33 +234,40 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 		c = 2;
 
 		receivePacket(client->serverSocket, client->packet, lobbyinData);
-		decode(lobbyinData, lobbyData, 13, 30);
-		connectedPlayers = atoi(lobbyData[1]);
-		timer = atoi(lobbyData[3]);
 
-		SDL_RenderClear(game->renderer);
-		if (connectedPlayers > 1) {
-			SDL_RenderCopy(game->renderer, background2, NULL, NULL);
-			render_text(game->renderer, 742, 45, lobbyData[1], font, &textRect, &color);
-			render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
-			for (int i = 0; i < connectedPlayers; i++) {
-				render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
-				strcpy(playerNames[i], lobbyData[c]);
-				c += 3;
-			}
+
+		if (lobbyinData[0] != '4') {
+			done = 1;
 		}
 		else {
-			SDL_RenderCopy(game->renderer, background1, NULL, NULL);
-			SDL_Event event;
-			if (SDL_PollEvent(&event))
-				if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT || event.type == SDL_KEYDOWN)
-					if (event.button.x > 305 && event.button.x < 715 && event.button.y > 550 && event.button.y < 620 || event.key.keysym.sym == SDLK_RETURN)
-						done = 1;
-		}
-		SDL_RenderPresent(game->renderer);
+			decode(lobbyinData, lobbyData, 13, 30);
+			connectedPlayers = atoi(lobbyData[1]);
+			timer = atoi(lobbyData[3]);
 
-		if (timer == 0 || connectedPlayers == 4 )
-			done = 1;
+			SDL_RenderClear(game->renderer);
+			if (connectedPlayers > 1) {
+				SDL_RenderCopy(game->renderer, background2, NULL, NULL);
+				render_text(game->renderer, 742, 45, lobbyData[1], font, &textRect, &color);
+				render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
+				for (int i = 0; i < connectedPlayers; i++) {
+					render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
+					strcpy(playerNames[i], lobbyData[c]);
+					c += 3;
+				}
+			}
+			else {
+				SDL_RenderCopy(game->renderer, background1, NULL, NULL);
+				SDL_Event event;
+				if (SDL_PollEvent(&event))
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT || event.type == SDL_KEYDOWN)
+						if (event.button.x > 305 && event.button.x < 715 && event.button.y > 550 && event.button.y < 620 || event.key.keysym.sym == SDLK_RETURN)
+							done = 1;
+			}
+			SDL_RenderPresent(game->renderer);
+
+			if (timer == 0 || connectedPlayers == 4)
+				done = 1;
+		}
 	}
 
 	return 0;

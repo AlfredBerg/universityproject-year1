@@ -9,12 +9,9 @@
 #include "checkCollision.h"
 #include "camera.h"
 
-#define SPECTATESPEED 10
-
 extern Network client;
 extern SDL_Rect camera;
 
-void victoryCondition(Player players[], Game *game, int playerId);
 
 void initGame(Game *game) {
 
@@ -84,8 +81,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png");
 	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
-	weapons[2] = createWeapon(game, 2, 200, 100, 2, 1000, 1, "assets/hand.png");
-	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png");
+	weapons[2] = createWeapon(game, 2, 200, 0, 2, 1000, 1, "assets/hand.png");
+	weapons[3] = createWeapon(game, 3, 600, 0, 10, 200, 0, "assets/beachball.png");
 	int nrOfWeapons = 4;
 
 	// Create projectiles
@@ -110,11 +107,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	//	}
 	//}
 
-	int running = 1;
-	//int again = 0;
-
 	SDL_Event event;
-
+	int running = 1;
 	int prevKey = 0;
 	int key = 0;
 	int isJumping = 0;
@@ -125,7 +119,11 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int leftWall = 0;
 	int rightWall = 0;
 
+	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
+	SDL_Rect timerRect = {5, 5, 60, 40};
+	SDL_Color color = { 0, 0, 0, 0 };
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 32);
 
 	// Sound effects
 	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
@@ -291,7 +289,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 
 		//-----------------------------DEBUG MODE-----------------------------------
-		
+
 		if (game->debug == 1) {
 			SDL_Rect temporaryRect;
 			for (int i = 0; i < MAXPLAYERS; i++) {
@@ -331,15 +329,24 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 		updatePlayerStates(players, game->loopCount);
 
-		//Draw players, weapons, projectiles & pickups
+		// Draw players, weapons, projectiles & pickups
 		drawPlayers(game, players, &nrOfPlayers, &leftWall, &rightWall);
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
 		drawPickups(game, pickups, &nrOfPickups);
 
-		//Check if somebody won
+		// Count timer + Display timer
+		Uint32 timerNow = (SDL_GetTicks() - startTimer) / 1000;
+		static char timerText[5] = { 0 };
+		sprintf(timerText, "%d", timerNow);			// Convert int to string
+		SDL_Surface *timerImage = TTF_RenderText_Solid(font, timerText, color);
+		SDL_Texture *timerTexture = SDL_CreateTextureFromSurface(game->renderer, timerImage);
+		SDL_RenderCopy(game->renderer, timerTexture, NULL, &timerRect);
+
+		// Check if somebody won
 		victoryCondition(players, game, client->playerID);
-		//Show what was drawn
+
+		// Show what was drawn
 		SDL_RenderPresent(game->renderer);
 	}
 	running = 1;
@@ -348,8 +355,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 }
 
 void quitGame(Game *game) {
-	//SDL_DestroyTexture !!!
-
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
 	TTF_Quit();
@@ -375,7 +380,6 @@ void createWindowIcon(Game *game) {
 
 
 //**************************************** Player functions **************************************************
-
 Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int srcRectW, int srcRectH) {
 	Player player;
 	strcpy(player.name, name);
@@ -477,7 +481,7 @@ void victoryCondition(Player players[], Game *game, int playerid) {
 
 			SDL_RenderPresent(game->renderer);
 
-			SDL_Delay(5000);
+			//SDL_Delay(5000);
 		}
 	}
 }
@@ -504,56 +508,4 @@ void victoryCondition(Player players[], Game *game, int playerid) {
 //		else
 //			deletePlayer(players, players[i].id, nrOfPlayers);
 //	}
-//}
-
-
-//*****************restart() not yet implemented********************
-//int restart(Game* game) {
-//
-//	TTF_Font *font2 = TTF_OpenFont("fintext.ttf", 20);
-//	SDL_Color color = { 255, 255, 255, 255 };
-//	SDL_Surface *rematch = TTF_RenderText_Solid(font2, "Rematch", color);
-//
-//	SDL_Texture *rematch_Texture = SDL_CreateTextureFromSurface(game->renderer, rematch);
-//	SDL_FreeSurface(rematch);
-//
-//	SDL_Rect RematchFontRect = { 200, 260, 150, 80 };
-//
-//	SDL_Event ev;
-//
-//	int running = 1;
-//	while (running) {
-//
-//		while (SDL_PollEvent(&ev) != 0)
-//		{
-//			if (ev.type == SDL_QUIT)
-//				running = 0;
-//
-//			else if (ev.type == SDL_MOUSEBUTTONDOWN)
-//			{
-//				if (ev.button.button == SDL_BUTTON_LEFT) {
-//
-//					if (ev.button.x > 200 && ev.button.x < 350 && ev.button.y>280 && ev.button.y < 340) {
-//						SDL_DestroyTexture(rematch_Texture);
-//						running = 1;
-//						return running;
-//
-//					}
-//				}
-//			}
-//		}
-//		SDL_RenderClear(game->renderer);
-//		SDL_RenderCopy(game->renderer, rematch_Texture, NULL, &RematchFontRect);
-//		/*SDL_RenderCopy(game->renderer, image2_texture, &srcrect, &dstrect);//draw
-//		SDL_RenderCopy(game->renderer, image3_texture, &srcrect2, &dstrect2);
-//		SDL_RenderCopy(game->renderer, image5_texture, NULL, &bild5);
-//		SDL_RenderCopy(game->renderer, image7_texture, NULL, &bild7);
-//		*/
-//
-//		SDL_RenderPresent(game->renderer);
-//
-//
-//	}
-//	SDL_DestroyTexture(rematch_Texture);
-//	return running;
 //}
