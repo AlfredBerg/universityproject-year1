@@ -37,6 +37,9 @@ int main(int argc, char **argv)
 	int looptime;
 	int timerCount = 0;
 
+	//Debug configurations:
+	int noLobby = 0;
+
 	while (server.running) {
 		(server.nrGameloops)++;
 
@@ -45,7 +48,7 @@ int main(int argc, char **argv)
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
 
 		if (lobby) {
-			if (server.timer == 0 || server.next_player > 4)
+			if (server.timer == 0 || server.next_player > 4 || noLobby)
 				lobby = SDL_FALSE;
 			else
 				updateLobby(&server);
@@ -54,6 +57,7 @@ int main(int argc, char **argv)
 			updateClients(&server, &lastNetworkTick);
 			updateGamestate(&server, &lastGamestateTick);
 		}
+
 
 		if (nrReady == -1) {
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
