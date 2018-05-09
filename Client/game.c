@@ -84,8 +84,8 @@ int runGame(Game *game, Network *client) {
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png");
 	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
-	weapons[2] = createWeapon(game, 2, 200, 100, 2, 1000, 1, "assets/hand.png");
-	weapons[3] = createWeapon(game, 3, 600, 100, 10, 200, 0, "assets/beachball.png");
+	weapons[2] = createWeapon(game, 2, 200, 0, 2, 1000, 1, "assets/hand.png");
+	weapons[3] = createWeapon(game, 3, 600, 0, 10, 200, 0, "assets/beachball.png");
 	int nrOfWeapons = 4;
 
 	// Create projectiles
