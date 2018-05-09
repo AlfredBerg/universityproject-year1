@@ -27,8 +27,10 @@ void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
 	client->lastTick = SDL_GetTicks();
 }
 
-int connectToServer(Network *client) {
-	char data[MAX_PACKET] = "HELLO\n";
+int connectToServer(Network *client, char playerName[]) {
+	char data[MAX_PACKET];
+	sprintf(data, "HELLO;%s;", playerName);
+	puts(data);
 	char decoded[2][30];
 
 	sendPacket(data, client->serverIP, client->serverSocket);
@@ -158,7 +160,7 @@ void parseData(char serverdata[], Player *player, Network *client, Projectile *p
 	}
 }
 
-int initClient(Network *client, char serverIP[]) {
+int initClient(Network *client, char serverIP[], char playerName[]) {
 
 	client->lastTick = SDL_GetTicks();
 	client->connectedToServer = 0;
@@ -200,6 +202,6 @@ int initClient(Network *client, char serverIP[]) {
 		exit(-1);
 	}
 
-	return connectToServer(client);
+	return connectToServer(client, playerName);
 }
 

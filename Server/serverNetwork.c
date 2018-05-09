@@ -160,22 +160,27 @@ void newClient(int *nrReady, Network *server) {
 
 int AcceptSocket(Network *server) {
 	char packetdata[MAX_PACKET];
+	char datan[4][30];
 
 	int success = receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
 
 	if (!success) {
 		return 0;
 	}
+	puts(packetdata);
+
+	decode(packetdata, datan, 4, 20);
 
 	//printf("\nIncoming: %s\n", packetdata);
-	if (!strcmp("HELLO\n", packetdata)) {
+	if (!strcmp("HELLO", datan[0])) {
 
 		if (server->next_player >= MAX_SOCKETS) {
 			fprintf(stderr, "ER: Server full!.\n");
 			return 0;
 		}
 
-		printf("I got a new client that want to connect\n");
+		printf("%s wants to connect!\n", datan[1]);
+		strcpy(server->clients[server->next_player].name, datan[1]);
 
 		server->clients[server->next_player].ip = server->serverSocketPacket->address;
 
@@ -238,6 +243,7 @@ void bulletsToString(Network *server, char string[MAX_PACKET], int projectileTyp
 	}
 }
 
+//Används ej
 void receiveLobby(Network *server, char data[][30]) {
 	int c = 2;
 	for (int i = 0; i < MAX_CLIENTS; i++) {
@@ -257,6 +263,7 @@ void updateLobby(Network *server) {
 
 	for (int i = 0; i < MAX_SOCKETS; i++) {
 		sendPacket(data, server->clients[i].ip, server->serverSocket);
+		puts(data);
 	}
 }
 

@@ -1,6 +1,6 @@
 #include "menu.h"
 
-int menu(Game *game, char serverIP[]) {
+int menu(Game *game, char serverIP[], char playerName[]) {
 
 	//Init menu images
 	SDL_Surface *menuImage1 = IMG_Load("assets/meny1.png");
@@ -34,7 +34,7 @@ int menu(Game *game, char serverIP[]) {
 			break;
 		}
 
-		startGame = menuOptions(&menuLoop, &menuPage, game, serverIP);
+		startGame = menuOptions(&menuLoop, &menuPage, game, serverIP, playerName);
 	}
 
 	//  SDL_DestroyTexture(text);
@@ -43,7 +43,7 @@ int menu(Game *game, char serverIP[]) {
 	return startGame;
 }
 
-int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
+int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char playerName[]) {
 	int running = 1;
 	SDL_Event event;
 
@@ -51,7 +51,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[]) {
 	SDL_Color color = { 65, 33, 52, 255 };
 
 	//Init text
-	char playerName[16] = "Player";
+	
 	int done = SDL_FALSE;
 
 	while (SDL_PollEvent(&event))
@@ -208,7 +208,7 @@ int isAllowed(char* ch) {
 	return 0;
 }
 
-int lobby(Network *client, Game *game) {
+int lobby(Network *client, Game *game, char playerNames[][30]) {
 	int timer = 60;
 	int connectedPlayers = 1;
 	char lobbyinData[MAX_PACKET];
@@ -234,7 +234,7 @@ int lobby(Network *client, Game *game) {
 		c = 2;
 
 		receivePacket(client->serverSocket, client->packet, lobbyinData);
-		decode(lobbyinData, lobbyData, 13, 37);
+		decode(lobbyinData, lobbyData, 13, 30);
 		connectedPlayers = atoi(lobbyData[1]);
 		timer = atoi(lobbyData[3]);
 
@@ -245,6 +245,7 @@ int lobby(Network *client, Game *game) {
 			render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
 			for (int i = 0; i < connectedPlayers; i++) {
 				render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
+				strcpy(playerNames[i], lobbyData[c]);
 				c += 3;
 			}
 		}
@@ -258,7 +259,7 @@ int lobby(Network *client, Game *game) {
 		}
 		SDL_RenderPresent(game->renderer);
 
-		if (timer == 0 || connectedPlayers == 4)
+		if (timer == 0 || connectedPlayers == 4 )
 			done = 1;
 	}
 

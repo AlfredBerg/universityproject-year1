@@ -21,19 +21,21 @@
 Network client;
 
 int main(int argc, char** argv)
-{	
+{
 	Game game;
-	char serverIP [16] = "127.0.0.1";
+	char serverIP[16] = "127.0.0.1";
+	char playerName[16] = "Player";
+	char playerNames[4][30] = {"Knight", "Bear", "Bird", "Princess"};
 
 	initGame(&game); 
 
 	while (game.running) {
-		menu(&game, serverIP);
-		if (initClient(&client, serverIP))
-			lobby(&client, &game);
+		menu(&game, serverIP, playerName);
+		if (initClient(&client, serverIP, playerName))
+			lobby(&client, &game, playerNames);
 			1 == 1;
 		while (game.running) {
-			game.running = runGame(&game, &client);
+			game.running = runGame(&game, &client, playerNames);
 		}
 	}
 
