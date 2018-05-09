@@ -118,14 +118,9 @@ void deleteProjectile(Network *server, char data[][30]) {
 
 }
 
-void updateServerdata(Network *server, char indata[]) {
-	char data[DATAFIELDSINPACKET][30];
+void updateServerdata(Network *server, char data[][30]) {
 
 	//puts(indata); //Debug see what the server recives
-
-
-	decode(indata, data, MAX_PACKET, DATAFIELDSINPACKET);
-
 
 	switch (atoi(data[0])) //What kind of data is in this packet?
 	{
@@ -160,18 +155,18 @@ void newClient(int *nrReady, Network *server) {
 
 int AcceptSocket(Network *server) {
 	char packetdata[MAX_PACKET];
-	char datan[4][30];
+	char datan[51][30];
 
 	int success = receivePacket(server->serverSocket, server->serverSocketPacket, packetdata);
 
 	if (!success) {
 		return 0;
 	}
-	puts(packetdata);
+
+	//printf("Incoming: %s\n", packetdata);
 
 	decode(packetdata, datan, 4, 20);
 
-	//printf("\nIncoming: %s\n", packetdata);
 	if (!strcmp("HELLO", datan[0])) {
 
 		if (server->next_player >= MAX_SOCKETS) {
@@ -193,7 +188,7 @@ int AcceptSocket(Network *server) {
 		return 1;
 	}
 	else if (isClient(server)){
-		updateServerdata(server, packetdata);
+		updateServerdata(server, datan);
 	}
 	else {
 		puts("Unknown packet recived");
@@ -263,7 +258,6 @@ void updateLobby(Network *server) {
 
 	for (int i = 0; i < MAX_SOCKETS; i++) {
 		sendPacket(data, server->clients[i].ip, server->serverSocket);
-		puts(data);
 	}
 }
 

@@ -30,7 +30,6 @@ void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup) {
 int connectToServer(Network *client, char playerName[]) {
 	char data[MAX_PACKET];
 	sprintf(data, "HELLO;%s;", playerName);
-	puts(data);
 	char decoded[2][30];
 
 	sendPacket(data, client->serverIP, client->serverSocket);
