@@ -1,13 +1,17 @@
 #include "weapon.h"
+#define HANDPROJECTILE 1
 
-void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[]) {
+void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[], int playerID) {
 	fireWeapon(weapons, players, client, projectiles);
 
 	pickUpWeapon(client, weapons, players);
-
-	for (int i = 0; i < MAXPROJECTILES; i++) {
-		detectProjectileColision(&projectiles[i], players, i);
+	if (players[client->playerID].weaponID == 2) {
+		detectHandColision(&projectiles[1], players, 1, playerID);
 	}
+	else {
+		detectProjectileColision(&projectiles[0], players, 0);
+	}
+
 
 	int id;
 	for (int i = 0; i < MAXPLAYERS; i++) {

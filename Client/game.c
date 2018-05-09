@@ -82,14 +82,14 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png");
 	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
-	weapons[2] = createWeapon(game, 2, 200, 0, 2, 1000, 1, "assets/hand.png");
+	weapons[2] = createWeapon(game, 2, 200, 100, 4, 20, 1, "assets/hand.png");
 	weapons[3] = createWeapon(game, 3, 600, 0, 10, 200, 0, "assets/beachball.png");
 	int nrOfWeapons = 4;
 
 	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
-	projectiles[1] = createProjectile(game, 1, 2, 100, 800, 600, "assets/handProjectile.png");
+	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT / 2, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
 
 	// Create pickups
@@ -165,7 +165,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 		pickUpPickup(pickups, players);
-		weaponActions(weapons, players, client, projectiles);
+		weaponActions(weapons, players, client, projectiles, client->playerID);
+
 		//moveProjectiles(projectiles);
 
 		renderTick = SDL_GetTicks();
