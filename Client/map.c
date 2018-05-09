@@ -133,6 +133,10 @@ void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 		tile->image = IMG_Load("assets/map/t12.png");
 		tile->texture = SDL_CreateTextureFromSurface(renderer, tile->image);
 		SDL_FreeSurface(tile->image);
+
+		tile->image = IMG_Load("assets/map/g7.png");
+		tile->grassTexture = SDL_CreateTextureFromSurface(renderer, tile->image);
+		SDL_FreeSurface(tile->image);
 		tile->rect = rect;
 		break;
 
@@ -243,6 +247,7 @@ void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 	//
 	case 12:
 		renderCopyMoveWithCamera(renderer, tile->texture, NULL, &rect, 0.0, NULL, 0);
+		renderCopyMoveWithCamera(renderer, tile->grassTexture, NULL, &rect, 0.0, NULL, 0);
 		break;
 
 	case 13:
