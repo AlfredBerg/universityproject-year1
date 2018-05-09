@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include "weapon.h"
 #include "map.h"
+#include "checkCollision.h"
 
 #define GRAVITYSPEED 10
 

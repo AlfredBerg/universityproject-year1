@@ -40,7 +40,7 @@ typedef struct network Network;
 int initClient(Network *client, char serverIP[], char playerName[]);
 void updateServer(Player *player, Network *client, Projectile *projectiles);
 void parseData(char serverdata[], Player *player, Network *client, Projectile *projectiles);
-int connectToServer(Network *client);
+int connectToServer(Network *client, char playerName[]);
 void sendBulletToServer(Network *client, int projectileType, int x, int y, int direction);
 int compareString(char str1[], char str2[], int len);
 void sendPickupToServer(Network *client, int typeOfPickup, int idOfPickup);

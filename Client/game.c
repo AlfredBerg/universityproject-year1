@@ -8,6 +8,7 @@
 #include "pickup.h"
 #include "checkCollision.h"
 #include "camera.h"
+#include "menu.h"
 
 extern Network client;
 extern SDL_Rect camera;
@@ -30,7 +31,7 @@ void initGame(Game *game) {
 		exit(1);
 	}
 
-	game->window = SDL_CreateWindow("Grupp10", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	game->window = SDL_CreateWindow("RealOne", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -63,19 +64,19 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 	}
 
-	// Player names
-	//char player0Name[] = "Knight";
-	//char player1Name[] = "Bear";
-	//char player2Name[] = "Bird";
-	//char player3Name[] = "Princess";
+	char playerSprites[4][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
+	int spawnXPos[4] = { 0, 100, 400, 450 };
+	int spawnYPos[4] = { 250, 0, 450, 150 };
 
 	// Create players
 	Player players[MAXPLAYERS];
-	players[0] = createPlayer(game, 0, playerNames[0], 60, 250, RIGHT, "assets/knightsprite.png", 16, 24);
-	players[1] = createPlayer(game, 1, playerNames[1], 300, 0, LEFT, "assets/bearsprite.png", 16, 24);
-	players[2] = createPlayer(game, 2, playerNames[2], 400, 400, LEFT, "assets/bird.png", 40, 40);
-	players[3] = createPlayer(game, 3, playerNames[3], 500, 100, LEFT, "assets/princesssprite.png", 16, 24);
-	int nrOfPlayers = 4;
+	for (int i = 0; i < MAXPLAYERS; i++) {  //Ska vara game->connectedPlayers men det ger error med kameran
+		if (i == 2) //Om det är fågeln
+			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 40, 40); //Den är i en annan storlek..
+		else
+			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 16, 24);
+	}
+	int nrOfPlayers = game->connectedPlayers;
 
 	// Create weapons
 	Weapon weapons[MAXNRWEAPONS];
@@ -123,7 +124,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 	SDL_Rect timerRect = {5, 5, 60, 40};
 	SDL_Color color = { 0, 0, 0, 0 };
-	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 32);
+	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 50);
 
 	// Sound effects
 	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
@@ -339,9 +340,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		Uint32 timerNow = (SDL_GetTicks() - startTimer) / 1000;
 		static char timerText[5] = { 0 };
 		sprintf(timerText, "%d", timerNow);			// Convert int to string
-		SDL_Surface *timerImage = TTF_RenderText_Solid(font, timerText, color);
-		SDL_Texture *timerTexture = SDL_CreateTextureFromSurface(game->renderer, timerImage);
-		SDL_RenderCopy(game->renderer, timerTexture, NULL, &timerRect);
+		render_text(game->renderer, 5, 0, timerText, font, &timerRect, &color);
 
 		// Check if somebody won
 		victoryCondition(players, game, client->playerID);

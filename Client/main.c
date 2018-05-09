@@ -10,8 +10,8 @@
 #include <SDL_ttf.h>
 #include <SDL_net.h>
 
-#include "player.h"
 #include "game.h"
+#include "player.h"
 #include "menu.h"
 #include "weapon.h"
 #include "sharedNetwork.h"
