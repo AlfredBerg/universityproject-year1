@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	int timerCount = 0;
 
 	//Debug configurations:
-	int noLobby = 0;
+	int noLobby = 1;
 
 	while (server.running) {
 		(server.nrGameloops)++;
