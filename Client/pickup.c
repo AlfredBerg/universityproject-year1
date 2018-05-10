@@ -39,14 +39,8 @@ Pickup createPickup(Game *game, int id, int x, int y, int healing, const char im
 }
 
 void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups) {
-	for (int i = 0; i < *nrOfPickups; i++) {
-		if (pickupIDtoDelete == pickups[i].id) {
-			for (int j = 0; j < *nrOfPickups - 1; j++)
-				pickups[j] = pickups[j + 1];
-			*nrOfPickups = *nrOfPickups - 1;
-			printf("Deleted pickup\n");
-		}
-	}
+	pickups[pickupIDtoDelete].rect.w = 0;
+	pickups[pickupIDtoDelete].rect.h = 0;
 }
 
 void drawPickups(Game *game, Pickup pickups[], int *nrOfPickups) {
