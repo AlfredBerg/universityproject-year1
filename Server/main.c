@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	int timerCount = 0;
 
 	//Debug configurations:
-	int noLobby = 1;
+	int noLobby = 0;
 
 	while (server.running) {
 		(server.nrGameloops)++;
@@ -162,7 +162,7 @@ void init(Network *server) {
 
 	server->running = 1;
 	server->next_player = 0;
-	server->timer = 16;
+	server->timer = 10;
 	server->alivePlayers = 0;
 
 	//id, dmg, speed, w, h

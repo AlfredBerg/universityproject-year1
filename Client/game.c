@@ -344,12 +344,12 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		render_text(game->renderer, 5, 0, timerText, font, &timerRect, &color);
 
 		// Check if somebody won
-		victoryCondition(players, game, client->playerID);
+		running = !victoryCondition(players, game, client->playerID);
 
 		// Show what was drawn
 		SDL_RenderPresent(game->renderer);
 	}
-	running = 1;
+	//running = 1;
 
 	return running;
 }
@@ -457,33 +457,37 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 	}
 }
 
-void victoryCondition(Player players[], Game *game, int playerid) {
+int victoryCondition(Player players[], Game *game, int playerid) {
+	int choose = 0;
+	
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].iWon) {
+			
 			//Victory screen
-			TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 52);
-			SDL_Color color = { 255, 255, 255, 255 };
+			if (players[playerid].iWon) 
+				game->gameOverImage = IMG_Load("assets/winscreen.png");
+			else 
+				game->gameOverImage = IMG_Load("assets/losescreen.png");
 
-			char text[10];
-			if (players[playerid].iWon) {
-				sprintf(text, "Victory");
-			}
-			else {
-				sprintf(text, "Lost");
-			}
-			SDL_Surface *victoryText = TTF_RenderText_Solid(font, text, color);
+			game->gameOverScreen = SDL_CreateTextureFromSurface(game->renderer, game->gameOverImage);
+			SDL_FreeSurface(game->gameOverImage);
+			SDL_RenderCopy(game->renderer, game->gameOverScreen, NULL, NULL);
 
-			SDL_Texture *nameTexture = SDL_CreateTextureFromSurface(game->renderer, victoryText);
+			//SDL_Rect victoryRect = { camera.x, camera.y, WINDOW_WIDTH, WINDOW_HEIGHT };
 
-			SDL_Rect victoryRect = { camera.x, camera.y, WINDOW_WIDTH, WINDOW_HEIGHT };
-
-			renderCopyMoveWithCamera(game->renderer, nameTexture, NULL, &victoryRect, 0.0, NULL, 0);
+			//renderCopyMoveWithCamera(game->renderer, game->gameOverScreen, NULL, &victoryRect, 0.0, NULL, 0);
 
 			SDL_RenderPresent(game->renderer);
 
-			//SDL_Delay(5000);
+			SDL_Event event;
+			while (!choose)
+				if (SDL_PollEvent(&event))
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
+						if (event.button.x > 70 && event.button.x < 450 && event.button.y > 400 && event.button.y < 465)
+							return 1;
 		}
 	}
+	return 0;
 }
 
 
