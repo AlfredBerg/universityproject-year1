@@ -191,7 +191,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 			}
 		}
 
-		//Move fighter
+		//Move player
 		const Uint8 *KeyState;
 		KeyState = SDL_GetKeyboardState(NULL);
 		if (players[client->playerID].life > 0) {
@@ -256,14 +256,14 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 
 
-		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
+		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map, &leftWall, &rightWall);
 
 		if (groundDetected == 0) {
-			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected);
+			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected, &leftWall, &rightWall);
 		}
 
 		if (!checkForWall(map, &players[client->playerID], &key)) {
-			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected);
+			jump(&players[client->playerID], &isJumping, &jumpTime, &doJump, &groundDetected, &roofDetected, &leftWall, &rightWall);
 		}
 
 		//Detect projectile collisions with walls

@@ -23,7 +23,7 @@ int checkForWall(Tile map[][MAP_WIDTH], Player *player, int *key) {
 	return wallDetected;
 }
 
-int checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *roofDetected, int *groundDetected) {
+int checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *roofDetected, int *groundDetected, int *leftWall, int *rightWall) {
 	int i, j, ceilingDetected = 0;
 
 	for (i = 0; i < MAP_HEIGHT; i++) {
@@ -31,10 +31,11 @@ int checkForCeiling(Tile map[][MAP_WIDTH], Player *player, int *jumpTime, int *r
 			if (SDL_HasIntersection(&player->dstRect, &map[i][j].rect)) {
 				if (map[i][j].y + TILE_HEIGHT < player->y + player->dstRect.h) {
 					ceilingDetected = 1;
-					printf("\nCeiling detected");
 					if (*jumpTime > 0) {
 						*roofDetected = 1;
 						*jumpTime = 0;
+						*leftWall = 0;
+						*rightWall = 0;
 					}
 					break;
 				}
@@ -52,7 +53,7 @@ int checkOnlyGround(Tile map[][MAP_WIDTH], SDL_Rect *object) {
 		for (j = 0; j < MAP_WIDTH; j++) {
 			if (SDL_HasIntersection(object, &map[i][j].rect)) {
 				if ((map[i][j].y - 10 < object->y + object->h) && (map[i][j].y > object->y)) { // - 10 för säkerhets skull (om seg dator / server)
-					groundDetected = 1;
+					groundDetected = 1;	
 					break;
 				}
 			}

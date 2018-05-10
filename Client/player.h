@@ -47,7 +47,7 @@ struct player {
 };
 typedef struct player Player;
 
-void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected);
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected, int *leftWall, int *rightWall);
 void walkRight(Player *player, int *key, int *prevKey);
 void walkLeft(Player *player, int *key, int *prevKey);
 void loseHealth(Player *player, int damage);
@@ -55,4 +55,4 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
 void updatePlayerStates(Player players[], int loopCount);
-void jump2(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected);
+

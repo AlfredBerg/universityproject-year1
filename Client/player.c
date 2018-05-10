@@ -4,11 +4,13 @@
 #include "clientNetwork.h"
 
 
-void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected) {
+void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected, int *leftWall, int *rightWall) {
 	if (!*roofDetected) {
 		if (*doJump == 1) {
 			if (!*isJumping) {
-				*jumpTime = 18;
+				*jumpTime = 10;
+				*leftWall = 0;
+				*rightWall = 0;
 			}
 			if (*jumpTime > 0) {
 				*isJumping = 1;
@@ -21,6 +23,8 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 					*doJump = 0;
 					*isJumping = 0;
 					*roofDetected = 0;
+					*leftWall = 0;			
+					*rightWall = 0;
 				}
 			}
 		}
@@ -48,7 +52,6 @@ void loseHealth(Player *player, int damage) {
 	sendHitToServer(damage, player->id);
 
 }
-
 
 void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 

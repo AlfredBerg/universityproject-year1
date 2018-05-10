@@ -9,7 +9,7 @@
 
 #define GRAVITYSPEED 10
 
-void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected, Tile map[][MAP_WIDTH]) {
+void gravity(Player *player, Weapon weapons[], int *groundDetected, int *roofDetected, Tile map[][MAP_WIDTH], int *leftWall, int *rightWall) {
 
 	if (!checkOnlyGround(map, &player->dstRect)) {
 		player->y += GRAVITYSPEED;
