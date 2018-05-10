@@ -65,8 +65,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	}
 
 	char playerSprites[4][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
-	int spawnXPos[4] = { 0, 100, 400, 450 };
-	int spawnYPos[4] = { 250, 0, 450, 150 };
+	int spawnXPos[4] = { 0, 800, 400, 450 };
+	int spawnYPos[4] = { 250, 200, 450, 150 };
 
 	// Create players
 	Player players[MAXPLAYERS];
@@ -78,13 +78,18 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	}
 	int nrOfPlayers = game->connectedPlayers;
 
+
+	int weaponXpos[4] = { 0, 200, 400, 600 };
+	int weaponYpos[4] = { 0, 0, 0, 0 };
 	// Create weapons
 	Weapon weapons[MAXNRWEAPONS];
-	weapons[0] = createWeapon(game, 0, 500, 100, 10, 200, 0, "assets/pistol.png");
-	weapons[1] = createWeapon(game, 1, 100, 400, 10, 200, 0, "assets/pistol.png");
-	weapons[2] = createWeapon(game, 2, 200, 100, 4, 20, 1, "assets/hand.png");
-	weapons[3] = createWeapon(game, 3, 600, 0, 10, 200, 0, "assets/beachball.png");
+	weapons[0] = createWeapon(game, 0, weaponXpos[0], weaponYpos[0], 10, 200, 0, "assets/pistol.png");
+	weapons[1] = createWeapon(game, 1, weaponXpos[1], weaponYpos[1], 10, 200, 0, "assets/pistol.png");
+	weapons[2] = createWeapon(game, 2, weaponXpos[2], weaponYpos[2], 4, 20, 1, "assets/hand.png");
+	weapons[3] = createWeapon(game, 3, weaponXpos[3], weaponYpos[3], 10, 200, 0, "assets/beachball.png");
 	int nrOfWeapons = 4;
+
+
 
 	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
