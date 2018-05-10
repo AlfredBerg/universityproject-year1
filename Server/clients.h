@@ -13,6 +13,9 @@
 #define MAX_NR_OF_PICKUPS 2
 
 #define BULLET 0
+
+#define FALLOUTOFMAPDEPTH 1024
+
 struct projectiles {
 	int id;
 	int projectileType;

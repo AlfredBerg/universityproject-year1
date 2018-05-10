@@ -234,6 +234,11 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
 		
 	}
 
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		if (server->clients[i].yPos > FALLOUTOFMAPDEPTH) {
+			server->clients[i].health = 0;
+		}
+	}
 
 	*lastGamestateTick = SDL_GetTicks();
 }
