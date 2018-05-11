@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	char serverIP[16] = "127.0.0.1";
 	char playerName[16] = "Player";
 	char playerNames[4][30] = {"Knight", "Bear", "Bird", "Princess"};
-	srand(time(NULL)); //For gunshot randomisation
+	
 
 	initGame(&game); 
 

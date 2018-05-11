@@ -48,7 +48,7 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init randomization
-	//srand(time(NULL));
+	srand(time(NULL));
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
