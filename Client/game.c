@@ -79,7 +79,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Create players
 	char playerSprites[MAXPLAYERS][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
 	int spawnXPos[MAXPLAYERS] = { 0, 800, 400, 450 };
-	int spawnYPos[MAXPLAYERS] = { 250, 200, 450, 150 };
+	int spawnYPos[MAXPLAYERS] = { 250, 132, 400, 150 };
 
 	Player players[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
@@ -92,14 +92,17 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create weapons
+	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
 	int weaponXpos[4] = { 0, 200, 400, 600 };
 	int weaponYpos[4] = { 0, 0, 0, 0 };
+	int weaponDamage[4] = {10, 10, 4, 10};
+	int weaponFireRate[4] = { 200, 200, 20, 200 };
+	int weaponProjectileType[4] = { 0, 0, 1, 0 };
 
 	Weapon weapons[MAXNRWEAPONS];
-	weapons[0] = createWeapon(game, 0, weaponXpos[0], weaponYpos[0], 10, 200, 0, "assets/pistol.png");
-	weapons[1] = createWeapon(game, 1, weaponXpos[1], weaponYpos[1], 10, 200, 0, "assets/pistol.png");
-	weapons[2] = createWeapon(game, 2, weaponXpos[2], weaponYpos[2], 4, 20, 1, "assets/hand.png");
-	weapons[3] = createWeapon(game, 3, weaponXpos[3], weaponYpos[3], 10, 200, 0, "assets/beachball.png");
+	for (int i = 0; i < MAXNRWEAPONS; i++) {
+		weapons[i] = createWeapon(game, i, weaponXpos[i], weaponYpos[i], weaponDamage[i], weaponFireRate[i], weaponProjectileType[i], weaponNames[i]);
+	}
 	int nrOfWeapons = 4;
 
 
@@ -396,7 +399,7 @@ void quitGame(Game *game) {
 }
 
 void playBackgroundMusic() {
-	Mix_Music *backgroundMusic = Mix_LoadMUS("hello.mp3");
+	Mix_Music *backgroundMusic = Mix_LoadMUS("assets/Rolemusic_02_LeaflessQuinceTree.mp3");
 	Mix_VolumeMusic(50);
 
 	if (!backgroundMusic)
