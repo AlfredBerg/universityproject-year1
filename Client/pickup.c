@@ -9,11 +9,11 @@ void pickUpPickup(Pickup pickups[], Player players[]) {
 		}
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
-			if (SDL_HasIntersection(&players[j].dstRect, &pickups[i].rect)) {		//small bug, picking up one extra time
+			if (SDL_HasIntersection(&players[j].dstRect, &pickups[i].rect)) {		// Small bug, picking up one extra time
 				printf("Picked up pickup\n");
 				players[j].pickupID = pickups[i].id;
 				pickups[i].isPickedUp = 1;
-				if (players[j].life + pickups[i].healing < 100 || players[j].life + pickups[i].healing == 100) {				//health only increases if needed
+				if (players[j].life + pickups[i].healing < 100 || players[j].life + pickups[i].healing == 100) {	// Health only increases if needed
 					printf("Health = + %d\n", pickups[i].healing);
 					loseHealth(&players[j], -pickups[i].healing);
 				}

@@ -53,7 +53,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
 	loadMap("assets/map/map2.map", lvl1);
-	
+
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
 	//switch (decideMap) {
@@ -103,7 +103,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfWeapons = 4;
 
 
-
 	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
@@ -113,9 +112,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Create pickups
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 0, 0, 20, "assets/p_red.png");
-	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
-	int nrOfPickups = 2;
+	pickups[0] = createPickup(game, 0, 0, 0, 10, "assets/p_red.png");
+	pickups[1] = createPickup(game, 1, 550, 400, 20, "assets/p_green.png");
+	pickups[2] = createPickup(game, 2, 300, 420, 30, "assets/p_blue.png");
+	int nrOfPickups = 3;
 
 	// For future use! Placing weapons & pickups by randomization & if there's no tile /Sara
 	// Place pickups in random spots where there's no tile

@@ -7,7 +7,7 @@
 #include "clientNetwork.h"
 #include "game.h"
 
-#define MAX_NR_OF_PICKUPS 2
+#define MAX_NR_OF_PICKUPS 6
 #define PICKUP_WIDTH 32
 #define PICKUP_HEIGHT 32
 
