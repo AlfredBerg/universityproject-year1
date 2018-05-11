@@ -47,12 +47,23 @@ void initGame(Game *game) {
 
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
-	// Randomization
+	// Init randomization
 	//srand(time(NULL));
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map1.map", lvl1);
+	loadMap("assets/map/map2.map", lvl1);
+	
+	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
+	//int decideMap = rand() % 2;
+	//switch (decideMap) {
+	//	case 0:
+	//		loadMap("assets/map/map1.map", lvl1);
+	//		break;
+	//	case 1:
+	//		loadMap("assets/map/map2.map", lvl1);
+	//		break;
+	//}
 
 	// Init map
 	Tile map[MAP_HEIGHT][MAP_WIDTH];
@@ -64,14 +75,15 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 	}
 
+
+	// Create players
 	char playerSprites[4][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
 	int spawnXPos[4] = { 0, 800, 400, 450 };
 	int spawnYPos[4] = { 250, 200, 450, 150 };
 
-	// Create players
 	Player players[MAXPLAYERS];
-	for (int i = 0; i < MAXPLAYERS; i++) {  //Ska vara game->connectedPlayers men det ger error med kameran
-		if (i == 2) //Om det är fågeln
+	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
+		if (i == 2) // Om det är fågeln
 			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 40, 40); //Den är i en annan storlek..
 		else
 			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 16, 24);
@@ -79,9 +91,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfPlayers = game->connectedPlayers;
 
 
+	// Create weapons
 	int weaponXpos[4] = { 0, 200, 400, 600 };
 	int weaponYpos[4] = { 0, 0, 0, 0 };
-	// Create weapons
+
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, weaponXpos[0], weaponYpos[0], 10, 200, 0, "assets/pistol.png");
 	weapons[1] = createWeapon(game, 1, weaponXpos[1], weaponYpos[1], 10, 200, 0, "assets/pistol.png");
@@ -96,6 +109,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
 	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT / 2, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
+
 
 	// Create pickups
 	Pickup pickups[MAX_NR_OF_PICKUPS];
@@ -127,7 +141,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
-	SDL_Rect timerRect = {5, 5, 60, 40};
+	SDL_Rect timerRect = { 5, 5, 60, 40 };
 	SDL_Color color = { 0, 0, 0, 0 };
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 50);
 
@@ -464,14 +478,14 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 
 int victoryCondition(Player players[], Game *game, int playerid) {
 	int choose = 0;
-	
+
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].iWon) {
-			
+
 			//Victory screen
-			if (players[playerid].iWon) 
+			if (players[playerid].iWon)
 				game->gameOverImage = IMG_Load("assets/winscreen.png");
-			else 
+			else
 				game->gameOverImage = IMG_Load("assets/losescreen.png");
 
 			game->gameOverScreen = SDL_CreateTextureFromSurface(game->renderer, game->gameOverImage);
