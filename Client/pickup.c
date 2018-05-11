@@ -30,6 +30,7 @@ Pickup createPickup(Game *game, int id, int x, int y, int healing, const char im
 	pickup.healing = healing;
 	pickup.image = IMG_Load(imageName);
 	pickup.texture = SDL_CreateTextureFromSurface(game->renderer, pickup.image);
+	SDL_FreeSurface(pickup.image);
 	pickup.rect.x = x;
 	pickup.rect.y = y;
 	pickup.rect.w = PICKUP_WIDTH;
@@ -39,8 +40,9 @@ Pickup createPickup(Game *game, int id, int x, int y, int healing, const char im
 }
 
 void deletePickup(Pickup pickups[], int pickupIDtoDelete) {
-	pickups[pickupIDtoDelete].rect.w = 0;
 	pickups[pickupIDtoDelete].rect.h = 0;
+	pickups[pickupIDtoDelete].rect.w = 0;
+	SDL_DestroyTexture(&pickups[pickupIDtoDelete].texture);
 }
 
 void drawPickups(Game *game, Pickup pickups[]) {

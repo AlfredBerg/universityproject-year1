@@ -52,7 +52,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map2.map", lvl1);
+	loadMap("assets/map/map1.map", lvl1);
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -112,9 +112,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
-	int pickupXPos[MAX_NR_OF_PICKUPS] = {0, 550, 300, 5, 10, 20};
-	int pickupYPos[MAX_NR_OF_PICKUPS] = {0, 400, 420, 5, 10, 20};
+	int pickupXPos[MAX_NR_OF_PICKUPS] = {0, 550, 300, 30, 900, 100};
+	int pickupYPos[MAX_NR_OF_PICKUPS] = {0, 400, 420, 30, 900, 900};
 	int pickupHealing[MAX_NR_OF_PICKUPS] = { 5, 10, 15, 20, 25, 30 };
+
 	Pickup pickups[MAX_NR_OF_PICKUPS];
 	for (int i = 0; i < MAX_NR_OF_PICKUPS; i++)
 		pickups[i] = createPickup(game, i, pickupXPos[i], pickupYPos[i], pickupHealing[i], pickupNames[i]);
