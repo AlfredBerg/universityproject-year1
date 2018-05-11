@@ -18,12 +18,12 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 				--(*jumpTime);
 				*groundDetected = 0;
 			}
-			if (*jumpTime <= 0) {
+			if (*jumpTime < 0 || *jumpTime == 0) {
 				if (*groundDetected == 1) {
 					*doJump = 0;
 					*isJumping = 0;
 					*roofDetected = 0;
-					*leftWall = 0;			
+					*leftWall = 0;
 					*rightWall = 0;
 				}
 			}
@@ -97,18 +97,6 @@ void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 
 	players[id].dstRect.h = 0;
 	players[id].dstRect.w = 0;
-
-	/*
-	for (int i = 0; i < *nrOfPlayers; i++) {
-	if (players[i].id == id){
-	for (int j = 0; j < *nrOfPlayers - 1; j++)
-	players[j] = players[j + 1];
-	*nrOfPlayers = *nrOfPlayers - 1;
-	destroyPlayerObject(&players[i]);
-	printf("Deleted player\n");
-	}
-	}
-	*/
 
 }
 
