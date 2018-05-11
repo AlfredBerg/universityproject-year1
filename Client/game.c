@@ -47,12 +47,23 @@ void initGame(Game *game) {
 
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
-	// Randomization
+	// Init randomization
 	//srand(time(NULL));
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map1.map", lvl1);
+	loadMap("assets/map/map2.map", lvl1);
+
+	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
+	//int decideMap = rand() % 2;
+	//switch (decideMap) {
+	//	case 0:
+	//		loadMap("assets/map/map1.map", lvl1);
+	//		break;
+	//	case 1:
+	//		loadMap("assets/map/map2.map", lvl1);
+	//		break;
+	//}
 
 	// Init map
 	Tile map[MAP_HEIGHT][MAP_WIDTH];
@@ -64,14 +75,15 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 	}
 
-	char playerSprites[4][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
-	int spawnXPos[4] = { 0, 800, 400, 450 };
-	int spawnYPos[4] = { 250, 200, 450, 150 };
 
 	// Create players
+	char playerSprites[MAXPLAYERS][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
+	int spawnXPos[MAXPLAYERS] = { 0, 800, 400, 450 };
+	int spawnYPos[MAXPLAYERS] = { 250, 200, 450, 150 };
+
 	Player players[MAXPLAYERS];
-	for (int i = 0; i < MAXPLAYERS; i++) {  //Ska vara game->connectedPlayers men det ger error med kameran
-		if (i == 2) //Om det är fågeln
+	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
+		if (i == 2) // Om det är fågeln
 			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 40, 40); //Den är i en annan storlek..
 		else
 			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 16, 24);
@@ -79,9 +91,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfPlayers = game->connectedPlayers;
 
 
+	// Create weapons
 	int weaponXpos[4] = { 0, 200, 400, 600 };
 	int weaponYpos[4] = { 0, 0, 0, 0 };
-	// Create weapons
+
 	Weapon weapons[MAXNRWEAPONS];
 	weapons[0] = createWeapon(game, 0, weaponXpos[0], weaponYpos[0], 10, 200, 0, "assets/pistol.png");
 	weapons[1] = createWeapon(game, 1, weaponXpos[1], weaponYpos[1], 10, 200, 0, "assets/pistol.png");
@@ -90,18 +103,21 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfWeapons = 4;
 
 
-
 	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
 	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT / 2, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
 
+
 	// Create pickups
+	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
+	int pickupXPos[MAX_NR_OF_PICKUPS] = {0, 550, 300, 5, 10, 20};
+	int pickupYPos[MAX_NR_OF_PICKUPS] = {0, 400, 420, 5, 10, 20};
+	int pickupHealing[MAX_NR_OF_PICKUPS] = { 5, 10, 15, 20, 25, 30 };
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 0, 0, 20, "assets/p_red.png");
-	pickups[1] = createPickup(game, 1, 550, 400, 10, "assets/p_green.png");
-	int nrOfPickups = 2;
+	for (int i = 0; i < MAX_NR_OF_PICKUPS; i++)
+		pickups[i] = createPickup(game, i, pickupXPos[i], pickupYPos[i], pickupHealing[i], pickupNames[i]);
 
 	// For future use! Placing weapons & pickups by randomization & if there's no tile /Sara
 	// Place pickups in random spots where there's no tile
@@ -127,7 +143,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
-	SDL_Rect timerRect = {5, 5, 60, 40};
+	SDL_Rect timerRect = { 5, 5, 60, 40 };
 	SDL_Color color = { 0, 0, 0, 0 };
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 50);
 
@@ -342,7 +358,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		drawPlayers(game, players, &nrOfPlayers, &leftWall, &rightWall);
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
-		drawPickups(game, pickups, &nrOfPickups);
+		drawPickups(game, pickups);
 
 		// Count timer + Display timer
 		Uint32 timerNow = (SDL_GetTicks() - startTimer) / 1000;
@@ -466,7 +482,6 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 
 int victoryCondition(Player players[], Game *game, int playerid) {
 	int choose = 0;
-	
 	
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].iWon) {
