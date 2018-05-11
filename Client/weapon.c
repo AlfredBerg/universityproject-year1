@@ -1,4 +1,6 @@
 #include "weapon.h"
+#include <stdlib.h>
+#include <time.h>
 #define HANDPROJECTILE 1
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[], int playerID) {
@@ -70,6 +72,24 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		}
 
 		printf("Shots fired!\n");
+
+		
+		//Sound effects for gun
+		if (weaponId == 0 || weaponId == 1) {
+			int gunshotChoice = rand() % 3 + 1;
+			char gunshotPath[30];
+
+			if (gunshotChoice == 1)
+				sprintf(gunshotPath, "assets/gunshot1.wav");
+			else if (gunshotChoice == 2)
+				sprintf(gunshotPath, "assets/gunshot2.wav");
+			else if (gunshotChoice == 3)
+				sprintf(gunshotPath, "assets/gunshot3.wav");
+
+			Mix_Chunk *gunshot = Mix_LoadWAV(gunshotPath);
+			gunshot->volume = 80;
+			Mix_PlayChannel(1, gunshot, 0);
+		}
 
 		//Offline code
 		/*
