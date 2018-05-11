@@ -45,7 +45,7 @@ Pickup createPickup(Game *game, int id, int x, int y, int healing, const char im
 void deletePickup(Pickup pickups[], int pickupIDtoDelete) {
 	pickups[pickupIDtoDelete].rect.h = 0;
 	pickups[pickupIDtoDelete].rect.w = 0;
-	SDL_DestroyTexture(&pickups[pickupIDtoDelete].texture);
+	SDL_DestroyTexture(pickups[pickupIDtoDelete].texture);
 }
 
 void drawPickups(Game *game, Pickup pickups[]) {

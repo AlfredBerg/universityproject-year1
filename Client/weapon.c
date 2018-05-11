@@ -73,7 +73,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 
 		printf("Shots fired!\n");
 
-		
+
 		//Sound effects for gun
 		if (weaponId == 0 || weaponId == 1) {
 			int gunshotChoice = rand() % 3 + 1;
@@ -138,6 +138,7 @@ Weapon createWeapon(Game *game, int id, int x, int y, int dmg, int fireRate, int
 	weapon.projectileType = projectileType;
 	weapon.Image = IMG_Load(imageName);
 	weapon.Texture = SDL_CreateTextureFromSurface(game->renderer, weapon.Image);
+	SDL_FreeSurface(weapon.Image);
 	weapon.rect.x = x;
 	weapon.rect.y = y;
 	weapon.rect.w = WEAPON_WIDTH;
@@ -156,6 +157,7 @@ Projectile createProjectile(Game *game, int id, int dmg, int speed, int w, int h
 	projectile.h = h;
 	projectile.Image = IMG_Load(imageName);
 	projectile.Texture = SDL_CreateTextureFromSurface(game->renderer, projectile.Image);
+	SDL_FreeSurface(projectile.Image);
 	return projectile;
 }
 

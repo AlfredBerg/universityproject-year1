@@ -55,4 +55,3 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer);
 void deletePlayer(Player players[], int id, int *nrOfPlayers);
 void updatePlayerStates(Player players[], int loopCount);
-
