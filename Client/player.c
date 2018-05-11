@@ -8,7 +8,7 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 	if (!*roofDetected) {
 		if (*doJump == 1) {
 			if (!*isJumping) {
-				*jumpTime = 10;
+				*jumpTime = 15;
 				*leftWall = 0;
 				*rightWall = 0;
 			}

@@ -48,7 +48,7 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init randomization
-	//srand(time(NULL));
+	srand(time(NULL));
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
@@ -151,8 +151,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Sound effects
 	Mix_Chunk *footsteps = Mix_LoadWAV("assets/footsteps.wav");
 	footsteps->volume = 50;
-	Mix_Chunk *jumpsound = Mix_LoadWAV("assets/jumpsound.wav");
-	jumpsound->volume = 50;
+	Mix_Chunk *jumpSound = Mix_LoadWAV("assets/jumpSound.wav");
+	jumpSound->volume = 50;
+	
+	
 
 
 	while (running)
@@ -252,7 +254,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 			if (KeyState[SDL_SCANCODE_W]) {
 				doJump = 1;
 				if (groundDetected)
-					Mix_PlayChannel(1, jumpsound, 0);
+					Mix_PlayChannel(1, jumpSound, 0);
 			}
 			if (KeyState[SDL_SCANCODE_SPACE]) {
 				players[client->playerID].weaponFired = 1;
@@ -481,15 +483,25 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 
 int victoryCondition(Player players[], Game *game, int playerid) {
 	int choose = 0;
-
+	
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].iWon) {
-
+			char sound[30];
 			//Victory screen
-			if (players[playerid].iWon)
+			if (players[playerid].iWon) {
 				game->gameOverImage = IMG_Load("assets/winscreen.png");
-			else
+				sprintf(sound, "assets/winSound.wav");
+			}
+			else {
 				game->gameOverImage = IMG_Load("assets/losescreen.png");
+				sprintf(sound, "assets/loseSound.wav");
+			}
+
+			//Sound effects
+			Mix_HaltMusic();
+			Mix_Chunk *gameOverSound = Mix_LoadWAV(sound);
+			gameOverSound->volume = 100;
+			Mix_PlayChannel(1, gameOverSound, 0);
 
 			game->gameOverScreen = SDL_CreateTextureFromSurface(game->renderer, game->gameOverImage);
 			SDL_FreeSurface(game->gameOverImage);
