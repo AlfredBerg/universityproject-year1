@@ -422,6 +422,7 @@ Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirec
 	player.lastDirection = lastDirection;
 	player.Image = IMG_Load(imageName);
 	player.Texture = SDL_CreateTextureFromSurface(game->renderer, player.Image);
+	SDL_FreeSurface(player.Image);
 	player.currentSprite = 0;
 	player.movementSpeed = 10;
 	player.iWon = 0;

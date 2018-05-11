@@ -97,6 +97,7 @@ void deletePlayer(Player players[], int id, int *nrOfPlayers) {
 
 	players[id].dstRect.h = 0;
 	players[id].dstRect.w = 0;
+	SDL_DestroyTexture(&players[id].Texture);
 
 }
 
