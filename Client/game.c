@@ -112,8 +112,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
-	int pickupXPos[MAX_NR_OF_PICKUPS] = {0, 550, 300, 30, 900, 100};
-	int pickupYPos[MAX_NR_OF_PICKUPS] = {0, 400, 420, 30, 900, 900};
+	int pickupXPos[MAX_NR_OF_PICKUPS] = { 0, 550, 300, 30, 900, 100 };
+	int pickupYPos[MAX_NR_OF_PICKUPS] = { 0, 400, 420, 30, 900, 900 };
 	int pickupHealing[MAX_NR_OF_PICKUPS] = { 5, 10, 15, 20, 25, 30 };
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
@@ -153,8 +153,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	footsteps->volume = 50;
 	Mix_Chunk *jumpSound = Mix_LoadWAV("assets/jumpSound.wav");
 	jumpSound->volume = 50;
-	
-	
+
+
 
 
 	while (running)
@@ -379,6 +379,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 }
 
 void quitGame(Game *game) {
+	deleteBackground(game);
 	SDL_DestroyRenderer(game->renderer);
 	SDL_DestroyWindow(game->window);
 	TTF_Quit();
@@ -483,7 +484,7 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 
 int victoryCondition(Player players[], Game *game, int playerid) {
 	int choose = 0;
-	
+
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].iWon) {
 			char sound[30];

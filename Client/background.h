@@ -5,3 +5,4 @@
 
 void displayBackground(Game *game);
 void initBackground(Game *game);
+void deleteBackground(Game *game);
