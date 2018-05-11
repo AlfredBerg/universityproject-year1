@@ -277,3 +277,8 @@ void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y) {
 	}
 
 }
+
+void destroyTiles(Tile *tile) {
+	SDL_DestroyTexture(tile->texture);
+	SDL_DestroyTexture(tile->grassTexture);
+}
