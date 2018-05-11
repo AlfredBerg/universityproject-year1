@@ -38,16 +38,16 @@ Pickup createPickup(Game *game, int id, int x, int y, int healing, const char im
 	return pickup;
 }
 
-void deletePickup(Pickup pickups[], int pickupIDtoDelete, int *nrOfPickups) {
+void deletePickup(Pickup pickups[], int pickupIDtoDelete) {
 	pickups[pickupIDtoDelete].rect.w = 0;
 	pickups[pickupIDtoDelete].rect.h = 0;
 }
 
-void drawPickups(Game *game, Pickup pickups[], int *nrOfPickups) {
-	for (int i = 0; i < *nrOfPickups; i++) {
+void drawPickups(Game *game, Pickup pickups[]) {
+	for (int i = 0; i < MAX_NR_OF_PICKUPS; i++) {
 		if (!pickups[i].isPickedUp)
 			renderCopyMoveWithCamera(game->renderer, pickups[i].texture, NULL, &pickups[i].rect, 0.0, NULL, 0);
 		else
-			deletePickup(pickups, pickups[i].id, nrOfPickups);
+			deletePickup(pickups, pickups[i].id);
 	}
 }

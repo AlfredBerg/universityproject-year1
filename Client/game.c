@@ -77,9 +77,9 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create players
-	char playerSprites[4][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
-	int spawnXPos[4] = { 0, 800, 400, 450 };
-	int spawnYPos[4] = { 250, 200, 450, 150 };
+	char playerSprites[MAXPLAYERS][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
+	int spawnXPos[MAXPLAYERS] = { 0, 800, 400, 450 };
+	int spawnYPos[MAXPLAYERS] = { 250, 200, 450, 150 };
 
 	Player players[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
@@ -111,11 +111,13 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create pickups
+	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
+	int pickupXPos[MAX_NR_OF_PICKUPS] = {0, 550, 300, 5, 10, 20};
+	int pickupYPos[MAX_NR_OF_PICKUPS] = {0, 400, 420, 5, 10, 20};
+	int pickupHealing[MAX_NR_OF_PICKUPS] = { 5, 10, 15, 20, 25, 30 };
 	Pickup pickups[MAX_NR_OF_PICKUPS];
-	pickups[0] = createPickup(game, 0, 0, 0, 10, "assets/p_red.png");
-	pickups[1] = createPickup(game, 1, 550, 400, 20, "assets/p_green.png");
-	pickups[2] = createPickup(game, 2, 300, 420, 30, "assets/p_blue.png");
-	int nrOfPickups = 3;
+	for (int i = 0; i < MAX_NR_OF_PICKUPS; i++)
+		pickups[i] = createPickup(game, i, pickupXPos[i], pickupYPos[i], pickupHealing[i], pickupNames[i]);
 
 	// For future use! Placing weapons & pickups by randomization & if there's no tile /Sara
 	// Place pickups in random spots where there's no tile
@@ -354,7 +356,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		drawPlayers(game, players, &nrOfPlayers, &leftWall, &rightWall);
 		drawWeapons(game, players, weapons);
 		drawProjectiles(game, projectiles);
-		drawPickups(game, pickups, &nrOfPickups);
+		drawPickups(game, pickups);
 
 		// Count timer + Display timer
 		Uint32 timerNow = (SDL_GetTicks() - startTimer) / 1000;
