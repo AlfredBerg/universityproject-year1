@@ -516,6 +516,9 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 			gameOverSound->volume = 100;
 			Mix_PlayChannel(1, gameOverSound, 0);
 
+			Mix_Chunk *clickSound = Mix_LoadWAV("assets/clickSound.wav");
+			clickSound->volume = 100;
+
 			game->gameOverScreen = SDL_CreateTextureFromSurface(game->renderer, game->gameOverImage);
 			SDL_FreeSurface(game->gameOverImage);
 			SDL_RenderCopy(game->renderer, game->gameOverScreen, NULL, NULL);
@@ -532,15 +535,18 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
 						if (event.button.x > 70 && event.button.x < 450 && event.button.y > 400 && event.button.y < 465) {
 							game->replay = 0;
+							Mix_PlayChannel(1, clickSound, 0);
 							return 1;
 						}
 						else if (event.button.x > 600 && event.button.x < 940 && event.button.y > 400 && event.button.y < 465) {
 							game->replay = 1;
+							Mix_PlayChannel(1, clickSound, 0);
 							return 1;
 						}
 					}
 					else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
 						game->replay = 1;
+						Mix_PlayChannel(1, clickSound, 0);
 						return 1;
 					}
 		}
