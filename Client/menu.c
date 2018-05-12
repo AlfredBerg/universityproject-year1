@@ -238,6 +238,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 
 		if (lobbyinData[0] != '4') {
 			done = 1;
+			//printf("\nNot lobby packet! \n");
 		}
 		else {
 			decode(lobbyinData, lobbyData, 13, 30);
@@ -269,6 +270,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 				done = 1;
 		}
 	}
+	game->running = 1;
 
 	return 0;
 }

@@ -14,7 +14,7 @@
 
 #define BULLET 0
 
-#define FALLOUTOFMAPDEPTH 1024
+#define FALLOUTOFMAPDEPTH 1536
 
 struct projectiles {
 	int id;

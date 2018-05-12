@@ -43,6 +43,7 @@ struct game {
 	SDL_Texture *cloudsFront;
 	SDL_Texture *bgBack;
 	SDL_Texture *bgFront;
+	int replay;
 };
 typedef struct game Game;
 

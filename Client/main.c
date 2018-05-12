@@ -26,6 +26,7 @@ int main(int argc, char** argv)
 	char serverIP[16] = "127.0.0.1";
 	char playerName[16] = "Player";
 	char playerNames[4][30] = {"Knight", "Bear", "Bird", "Princess"};
+	int doLobby = 0;
 	
 
 	initGame(&game); 
@@ -33,11 +34,14 @@ int main(int argc, char** argv)
 	while (game.running) {
 		menu(&game, serverIP, playerName);
 		if (initClient(&client, serverIP, playerName))
-			lobby(&client, &game, playerNames);
-			1 == 1;
-		while (game.running) {
-			game.running = runGame(&game, &client, playerNames);
-		}
+			doLobby = 1;
+		do {
+			Mix_ResumeMusic();
+			if (doLobby)
+				lobby(&client, &game, playerNames);
+			while (game.running)
+				game.running = runGame(&game, &client, playerNames);
+		} while (game.replay);
 	}
 
 	quitGame(&game);

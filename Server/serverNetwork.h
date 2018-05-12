@@ -39,6 +39,7 @@ struct network {
 	Items items;
 	int timer;
 	Uint32 lastNetworkTick;
+	int restart;
 };
 typedef struct network Network;
 

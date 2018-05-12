@@ -18,7 +18,7 @@
 void init(Network *server);
 void quit(Network *server);
 void updateClients(Network *server, Uint32 *lastTick);
-void updateGamestate(Network *server, Uint32 *lastGamestateTick);
+void updateGamestate(Network *server, Uint32 *lastGamestateTick, int * lobby);
 Items createItems(int nrWeapons, int nrPickups);
 
 int main(int argc, char **argv)
@@ -56,9 +56,12 @@ int main(int argc, char **argv)
 		}
 		else {
 			updateClients(&server, &server.lastNetworkTick);
-			updateGamestate(&server, &lastGamestateTick);
+			updateGamestate(&server, &lastGamestateTick, &lobby);
 		}
 
+		if (server.restart) {
+			server.restart = restart(&server);
+		}
 
 		if (nrReady == -1) {
 			printf("SDLNet_CheckSockets: %s\n", SDLNet_GetError());
@@ -164,6 +167,7 @@ void init(Network *server) {
 	server->next_player = 0;
 	server->timer = 10;
 	server->alivePlayers = 0;
+	server->restart = 0;
 
 	//id, dmg, speed, w, h
 	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
@@ -199,7 +203,7 @@ void init(Network *server) {
 }
 
 
-void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
+void updateGamestate(Network *server, Uint32 *lastGamestateTick, int * lobby) {
 	if (!SDL_TICKS_PASSED(SDL_GetTicks(), *lastGamestateTick + RENDER_TICK)) {
 		return;
 	}
@@ -229,6 +233,8 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick) {
 		for (int i = 0; i < MAX_CLIENTS; i++) {
 			if (server->clients[i].health > 0) {
 				sendVictoryToClient(server, i);
+				*lobby = SDL_TRUE;
+				server->restart = 1;
 			}
 		}
 		
@@ -259,4 +265,32 @@ Items createItems(int nrWeapons, int nrPickups) {
 	}
 
 	return items;
+}
+
+int restart(Network *server) {
+
+	server->running = 1;
+	server->timer = 10;
+	server->alivePlayers = server->next_player - 1;
+	server->restart = 0;
+
+	for (int i = 0; i < MAX_CLIENTS; i++) {
+		server->clients[i].health = 100;
+		server->clients[i].pickupId = -1;
+		server->clients[i].weaponId = -1;
+	}
+
+	//Hardcoded stuff, remove me
+	server->clients[0].xPos = 50;
+	server->clients[0].yPos = 50;
+	server->clients[1].xPos = 300;
+	server->clients[1].yPos = 50;
+	server->clients[2].xPos = 300;
+	server->clients[2].yPos = 370;
+	server->clients[3].xPos = 300;
+	server->clients[3].yPos = 370;
+
+	server->items = createItems(MAXNRWEAPONS, MAX_NR_OF_PICKUPS);
+
+	return 0;
 }

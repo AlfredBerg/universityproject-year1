@@ -39,6 +39,7 @@ void initGame(Game *game) {
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
+	game->replay = 0;
 
 	initBackground(game);
 	createWindowIcon(game);
@@ -381,7 +382,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	//Delete map
 	for (i = 0; i < MAP_HEIGHT; i++) {
 		for (j = 0; j < MAP_WIDTH; j++) {
-			destroyTiles(&map[i][j]);
+			//destroyTiles(&map[i][j]); Spelet crashar vid replay
 		}
 	}
 
@@ -400,7 +401,7 @@ void quitGame(Game *game) {
 
 void playBackgroundMusic() {
 	Mix_Music *backgroundMusic = Mix_LoadMUS("assets/Rolemusic_02_LeaflessQuinceTree.mp3");
-	Mix_VolumeMusic(50);
+	Mix_VolumeMusic(35);
 
 	if (!backgroundMusic)
 		printf("Background music is not working\n");
@@ -510,7 +511,7 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 			}
 
 			//Sound effects
-			Mix_HaltMusic();
+			Mix_PauseMusic();
 			Mix_Chunk *gameOverSound = Mix_LoadWAV(sound);
 			gameOverSound->volume = 100;
 			Mix_PlayChannel(1, gameOverSound, 0);
@@ -528,9 +529,20 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 			SDL_Event event;
 			while (!choose)
 				if (SDL_PollEvent(&event))
-					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT)
-						if (event.button.x > 70 && event.button.x < 450 && event.button.y > 400 && event.button.y < 465)
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+						if (event.button.x > 70 && event.button.x < 450 && event.button.y > 400 && event.button.y < 465) {
+							game->replay = 0;
 							return 1;
+						}
+						else if (event.button.x > 600 && event.button.x < 940 && event.button.y > 400 && event.button.y < 465) {
+							game->replay = 1;
+							return 1;
+						}
+					}
+					else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+						game->replay = 1;
+						return 1;
+					}
 		}
 	}
 	return 0;
