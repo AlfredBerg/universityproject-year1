@@ -96,7 +96,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
 	int weaponXpos[4] = { 0, 200, 400, 600 };
 	int weaponYpos[4] = { 0, 0, 0, 0 };
-	int weaponDamage[4] = {10, 10, 4, 10};
+	int weaponDamage[4] = { 10, 10, 4, 10 };
 	int weaponFireRate[4] = { 200, 200, 20, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 0 };
 
@@ -379,13 +379,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	}
 	//running = 1;
 
-	//Delete map
-	for (i = 0; i < MAP_HEIGHT; i++) {
-		for (j = 0; j < MAP_WIDTH; j++) {
-			//destroyTiles(&map[i][j]); Spelet crashar vid replay
-		}
-	}
-
 	return running;
 }
 
@@ -409,7 +402,7 @@ void playBackgroundMusic() {
 }
 
 void createWindowIcon(Game *game) {
-	SDL_Surface *icon = IMG_Load("assets/crystal.png");
+	SDL_Surface *icon = IMG_Load("assets/pistol.png");
 	SDL_SetWindowIcon(game->window, icon);
 	SDL_FreeSurface(icon);
 }
