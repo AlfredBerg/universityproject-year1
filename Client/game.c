@@ -149,7 +149,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 	SDL_Rect timerRect = { 5, 5, 60, 40 };
-	SDL_Color color = { 0, 0, 0, 0 };
+	SDL_Color color = { 255, 255, 255, 255 };	
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 50);
 
 	// Sound effects
