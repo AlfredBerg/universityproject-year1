@@ -2,6 +2,7 @@
 #include "player.h"
 #include "camera.h"
 #include "clientNetwork.h"
+#include "map.h"
 
 
 void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groundDetected, int *roofDetected, int *leftWall, int *rightWall) {
@@ -34,11 +35,22 @@ void jump(Player *player, int *isJumping, int *jumpTime, int *doJump, int *groun
 
 void walkRight(Player *player, int *key, int *prevKey) {
 	player->x += player->movementSpeed;
+
+	int max = (TILE_WIDTH * MAP_WIDTH) - 1;
+
+	if (player->x > max)
+		player->x = max;
+
 	*prevKey = *key;
+
 }
 
 void walkLeft(Player *player, int *key, int *prevKey) {
 	player->x -= player->movementSpeed;
+
+	if (player->x < 0)
+		player->x = 0;
+
 	*prevKey = *key;
 }
 
