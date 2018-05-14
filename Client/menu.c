@@ -110,18 +110,22 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 							Mix_PlayChannel(1, eraseSound, 0);
 						}
 						//Handle return
-						else if (event.key.keysym.sym == SDLK_RETURN && strlen(serverIP) >= 7) {
-							*menuPage = 3;
-							done = SDL_TRUE;
+						else if (event.key.keysym.sym == SDLK_RETURN) {
 							Mix_PlayChannel(1, clickSound, 0);
+							if (strlen(serverIP) >= 7 && serverIP[strlen(serverIP) - 1] != '.') {
+								*menuPage = 3;
+								done = SDL_TRUE;
+							}
 						}
 						break;
 					case SDL_MOUSEBUTTONDOWN:
 						if (event.button.button == SDL_BUTTON_LEFT && strlen(serverIP) >= 7) {
 							if (event.button.x > 450 && event.button.x < 570 && event.button.y > 360 && event.button.y < 420) {
-								*menuPage = 3;
-								done = SDL_TRUE;
 								Mix_PlayChannel(1, clickSound, 0);
+								if (serverIP[strlen(serverIP) - 1] != '.') {
+									*menuPage = 3;
+									done = SDL_TRUE;
+								}
 							}
 						}
 						break;
@@ -216,42 +220,47 @@ void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Fon
 }
 
 int isAllowed(char* ch, char serverIP[16], char *prevChar) {
-	int nrOfDots = 0, foundDot = 0;
+	int foundDot = 0;
 
-	if (!strcmp(ch, ".") && *prevChar != '.') {
-		*prevChar = ch[0];
-		for (int i = 0; i < strlen(serverIP); i++) {
-			if (ch[0] == serverIP[i])
-				nrOfDots++;
-		}
-		if (nrOfDots < 3)
+	if (!strcmp(ch, ".") && serverIP[strlen(serverIP) - 1] != '.' && strlen(serverIP) > 0) {
+		if (nrOfDots(serverIP) < 3)
 			return 1;
 		else
 			return 0;
 	}
 	else {
-		if (strlen(serverIP) <= 3)
+		if (strlen(serverIP) < 3)
 			foundDot = 1;
 		else
-			for (int i = strlen(serverIP); i > strlen(serverIP) - 3; i--)
+			for (int i = strlen(serverIP) - 1; i > strlen(serverIP) - 4; i--) {
 				if (serverIP[i] == '.')
 					foundDot = 1;
+			}
 		if (foundDot) {
-			if (!strcmp(ch, "0")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "1")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "2")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "3")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "4")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "5")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "6")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "7")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "8")) { *prevChar = ch[0]; return 1; }
-			else if (!strcmp(ch, "9")) { *prevChar = ch[0]; return 1; }
+			if (!strcmp(ch, "0")) return 1;
+			else if (!strcmp(ch, "1")) return 1;
+			else if (!strcmp(ch, "2")) return 1;
+			else if (!strcmp(ch, "3")) return 1;
+			else if (!strcmp(ch, "4")) return 1;
+			else if (!strcmp(ch, "5")) return 1;
+			else if (!strcmp(ch, "6")) return 1;
+			else if (!strcmp(ch, "7")) return 1;
+			else if (!strcmp(ch, "8")) return 1;
+			else if (!strcmp(ch, "9")) return 1;
 		}
 	}
 	
 
 	return 0;
+}
+
+int nrOfDots(char serverIP[16]) {
+	int nrOfDots = 0;
+	for (int i = 0; i < strlen(serverIP); i++)
+		if (serverIP[i] == '.')
+			nrOfDots++;
+
+	return nrOfDots;
 }
 
 int lobby(Network *client, Game *game, char playerNames[][30]) {
