@@ -304,6 +304,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 		}
 	}
 	game->running = 1;
+	game->spectateMode = 0; //Kanske ska flyttas!
 
 	return 0;
 }
