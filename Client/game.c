@@ -113,7 +113,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
 
-
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
 	int pickupXPos[MAX_NR_OF_PICKUPS] = { 100, 550, 300, 600, 900, 100 };
@@ -159,7 +158,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	jumpSound->volume = 50;
 
 
-
+	moveItemsFromMapCollision(map, weapons, pickups);
 
 	while (running)
 	{
@@ -170,8 +169,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 			updateServer(players, client, projectiles);
 			continue;
 		}
-
-		moveItemsFromMapCollision(map, weapons, pickups);
 
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
@@ -550,6 +547,9 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 	return 0;
 }
 
+int randomX() {
+	return rand() % MAP_WIDTH * TILE_WIDTH;
+}
 
 //void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
 //
