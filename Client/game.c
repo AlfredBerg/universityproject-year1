@@ -53,7 +53,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map2.map", lvl1);
+	loadMap("assets/map/map1.map", lvl1);
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
