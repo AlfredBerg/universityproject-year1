@@ -48,7 +48,7 @@ void detectProjectileColision(Projectile *projectile, Player players[], int proj
 
 void detectHandColision(Projectile *projectile, Player players[], int projectileType, int playerID) {
 
-	players[1].lastDirection = RIGHT;
+	//players[1].lastDirection = RIGHT;
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
 
@@ -62,4 +62,3 @@ void detectHandColision(Projectile *projectile, Player players[], int projectile
 		}
 	}
 }
-

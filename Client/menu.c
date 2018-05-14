@@ -284,7 +284,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 				render_text(game->renderer, 742, 45, lobbyData[1], font, &textRect, &color);
 				render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
 				for (int i = 0; i < game->connectedPlayers; i++) {
-					render_text(game->renderer, 420, 150 + i * 70, lobbyData[c], font, &textRect, &color);
+					render_text(game->renderer, 500 - (strlen(lobbyData[c]) * 16), 150 + i * 70, lobbyData[c], font, &textRect, &color);
 					strcpy(playerNames[i], lobbyData[c]);
 					c += 3;
 				}
@@ -304,7 +304,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 		}
 	}
 	game->running = 1;
-	game->spectateMode = 0; //Kanske ska flyttas!
+	game->spectateMode = 0;
 
 	return 0;
 }
