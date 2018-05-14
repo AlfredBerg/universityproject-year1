@@ -3,12 +3,12 @@
 #include <time.h>
 #define HANDPROJECTILE 1
 
-void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[], int playerID) {
+void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[], int playerID, SDL_Rect *camera) {
 	fireWeapon(weapons, players, client, projectiles);
 
 	pickUpWeapon(client, weapons, players);
 	if (players[client->playerID].weaponID == 2) {
-		detectHandColision(&projectiles[1], players, 1, playerID);
+		detectHandColision(&projectiles[1], players, 1, playerID, camera);
 	}
 	else {
 		detectProjectileColision(&projectiles[0], players, 0);
@@ -101,11 +101,22 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		}
 		*/
 		if (players[client->playerID].lastDirection == LEFT) {
+			//if (players[client->playerID].weaponID == 2)
+				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);
+			
+		//	else
 			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, LEFT);
 		}
-		else {
+		else if (players[client->playerID].lastDirection == RIGHT) {
+			//if (players[client->playerID].weaponID == 2)
+				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);
+			
+		//	else
 			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y, RIGHT);
 		}
+		else {
+		}
+		
 
 		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 	}

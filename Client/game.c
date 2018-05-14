@@ -110,7 +110,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
-	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT / 2, "assets/handProjectile.png");
+	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
 
 
@@ -193,7 +193,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 		pickUpPickup(pickups, players);
-		weaponActions(weapons, players, client, projectiles, client->playerID);
+		weaponActions(weapons, players, client, projectiles, client->playerID, &camera);
 
 		//moveProjectiles(projectiles);
 
