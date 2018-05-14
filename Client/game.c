@@ -53,7 +53,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map3.map", lvl1);
+	loadMap("assets/map/map2.map", lvl1);
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -149,7 +149,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
 	SDL_Rect timerRect = { 5, 5, 60, 40 };
-	SDL_Color color = { 255, 255, 255, 255 };	
+	SDL_Color color = { 255, 255, 255, 255 };
 	TTF_Font *font = TTF_OpenFont("assets/pixlig font.ttf", 50);
 
 	// Sound effects
