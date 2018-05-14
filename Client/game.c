@@ -215,6 +215,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 			//const char* key = SDL_GetKeyName(event.key.keysym.sym);
 			if (event.type == SDL_QUIT) {
 				running = 0;
+				game->replay = 0;
 				return running;
 			}
 		}

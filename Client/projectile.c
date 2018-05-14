@@ -48,7 +48,6 @@ void detectProjectileColision(Projectile *projectile, Player players[], int proj
 
 void detectHandColision(Projectile *projectile, Player players[], int projectileType, int playerID, SDL_Rect *camera) {
 
-
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
 			
@@ -72,4 +71,3 @@ void detectHandColision(Projectile *projectile, Player players[], int projectile
 		}
 	}
 }
-

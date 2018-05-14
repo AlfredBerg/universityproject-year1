@@ -71,10 +71,10 @@ void playerHealthbar(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 
 	SDL_Rect healthbar[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {
-		healthbar[i].x = players[i].x + 5;
+		healthbar[i].x = players[i].x;
 		healthbar[i].y = players[i].y - 10;
 		healthbar[i].h = height;
-		healthbar[i].w = players[i].life / 2;
+		healthbar[i].w = players[i].life / 2.44;
 		renderCopyMoveWithCamera(renderer, players[i].hpBarTexture, NULL, &healthbar[i], 0.0, NULL, 0);
 	}
 }
@@ -83,7 +83,7 @@ void playerNameTag(Player players[MAXPLAYERS], SDL_Renderer* renderer) {
 	SDL_Rect names[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (players[i].life > 0) {
-			names[i].x = players[i].x + 5;
+			names[i].x = players[i].x + 20 - (strlen(players[i].name) * 5.5);
 			names[i].y = players[i].y - 30;
 			names[i].h = players[i].nameText->h;
 			names[i].w = players[i].nameText->w;
