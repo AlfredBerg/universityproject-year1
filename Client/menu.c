@@ -59,6 +59,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 	eraseSound->volume = 50;
 
 	//Init text
+	char prevChar = '0';
 	
 	int done = SDL_FALSE;
 
@@ -97,7 +98,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 					case SDL_TEXTINPUT:
 						//Add new text onto the end of our text
 						if (strlen(serverIP) < 15)
-							if (isAllowed(event.text.text, serverIP)) {
+							if (isAllowed(event.text.text, serverIP, &prevChar)) {
 								strcat(serverIP, event.text.text);
 								Mix_PlayChannel(1, typeSound, 0);
 							}
@@ -214,10 +215,11 @@ void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Fon
 	SDL_DestroyTexture(texture);
 }
 
-int isAllowed(char* ch, char serverIP[16]) {
-	int nrOfDots = 0;
+int isAllowed(char* ch, char serverIP[16], char *prevChar) {
+	int nrOfDots = 0, foundDot = 0;
 
-	if (!strcmp(ch, ".")) {
+	if (!strcmp(ch, ".") && *prevChar != '.') {
+		*prevChar = ch[0];
 		for (int i = 0; i < strlen(serverIP); i++) {
 			if (ch[0] == serverIP[i])
 				nrOfDots++;
@@ -227,16 +229,27 @@ int isAllowed(char* ch, char serverIP[16]) {
 		else
 			return 0;
 	}
-	else if (!strcmp(ch, "0")) return 1;
-	else if (!strcmp(ch, "1")) return 1;
-	else if (!strcmp(ch, "2")) return 1;
-	else if (!strcmp(ch, "3")) return 1;
-	else if (!strcmp(ch, "4")) return 1;
-	else if (!strcmp(ch, "5")) return 1;
-	else if (!strcmp(ch, "6")) return 1;
-	else if (!strcmp(ch, "7")) return 1;
-	else if (!strcmp(ch, "8")) return 1;
-	else if (!strcmp(ch, "9")) return 1;
+	else {
+		if (strlen(serverIP) <= 3)
+			foundDot = 1;
+		else
+			for (int i = strlen(serverIP); i > strlen(serverIP) - 3; i--)
+				if (serverIP[i] == '.')
+					foundDot = 1;
+		if (foundDot) {
+			if (!strcmp(ch, "0")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "1")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "2")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "3")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "4")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "5")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "6")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "7")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "8")) { *prevChar = ch[0]; return 1; }
+			else if (!strcmp(ch, "9")) { *prevChar = ch[0]; return 1; }
+		}
+	}
+	
 
 	return 0;
 }
