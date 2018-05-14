@@ -171,6 +171,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 			continue;
 		}
 
+		moveItemsFromMapCollision(map, weapons, pickups);
+
 		for (int j = 0; j < MAXPLAYERS; j++) {
 			if (j == client->playerID) {
 				players[client->playerID].dstRect.x = players[client->playerID].x;

@@ -5,6 +5,18 @@
 #include "player.h"
 #include "map.h"
 
+int collisionWithMap(Tile map[][MAP_WIDTH], SDL_Rect inRect) {
+	int i, j;
+	for (i = 0; i < MAP_HEIGHT; i++) {
+		for (j = 0; j < MAP_WIDTH; j++) {
+			if (SDL_HasIntersection(&inRect, &map[i][j].rect)) {
+				return 1;
+			}
+		}
+	}
+	return  0;
+}
+
 int checkForWall(Tile map[][MAP_WIDTH], Player *player, int *key) {
 	int i, j, wallDetected = 0;
 	for (i = 0; i < MAP_HEIGHT; i++) {
@@ -19,7 +31,7 @@ int checkForWall(Tile map[][MAP_WIDTH], Player *player, int *key) {
 		}
 		if (wallDetected) break;
 	}
-	printf("\nWALL = %d", wallDetected);
+	//printf("\nWALL = %d", wallDetected);
 	return wallDetected;
 }
 
