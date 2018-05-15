@@ -16,7 +16,6 @@
 
 void bulletsToString(Network *server, char string[MAX_PACKET], int projectileType);
 
-
 void sendVictoryToClient(Network *server, int winnerId) {
 	printf("Client %d won the game \n", winnerId);
 
@@ -267,8 +266,8 @@ void updateLobby(Network *server) {
 void lobbyToString(Network *server, char string[MAX_PACKET]) {
 	//nrOfPlayers;p0Name;p1Name;timer;
 	int length = 0;
-	length += sprintf(string + length, "4;");
+	length += sprintf(string + length, "4;%d;%d;%d;", server->next_player, 5, server->timer);
 	for (int i = 0; i < MAX_CLIENTS; i++) {
-		length += sprintf(string + length, "%d;%s;%d;", server->next_player, server->clients[i].name, server->timer);
+		length += sprintf(string + length, "%s;", server->clients[i].name);
 	}
 }

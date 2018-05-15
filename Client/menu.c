@@ -281,19 +281,22 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 	SDL_Texture *background2 = SDL_CreateTextureFromSurface(game->renderer, lobbyImage2);
 	SDL_FreeSurface(lobbyImage2);
 
+	int lobbyPacketOffset = 0;
+
 	while (!done) {
-		c = 2;
+		c = 4;
 
 		receivePacket(client->serverSocket, client->packet, lobbyinData);
 
 
 		if (lobbyinData[0] != '4') {
 			done = 1;
-			//printf("\nNot lobby packet! \n");
+			printf("\nNot lobby packet! Exiting\n");
 		}
 		else {
 			decode(lobbyinData, lobbyData, 13, 30);
 			game->connectedPlayers = atoi(lobbyData[1]);
+			game->randomInit = atoi(lobbyData[2]);
 			timer = atoi(lobbyData[3]);
 
 			SDL_RenderClear(game->renderer);
@@ -302,9 +305,9 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 				render_text(game->renderer, 742, 45, lobbyData[1], font, &textRect, &color);
 				render_text(game->renderer, 670, 555, lobbyData[3], font, &textRect, &colorW);
 				for (int i = 0; i < game->connectedPlayers; i++) {
-					render_text(game->renderer, 500 - (strlen(lobbyData[c]) * 16), 150 + i * 70, lobbyData[c], font, &textRect, &color);
-					strcpy(playerNames[i], lobbyData[c]);
-					c += 3;
+					render_text(game->renderer, 500 - (strlen(lobbyData[c + lobbyPacketOffset]) * 16), 150 + i * 70, lobbyData[c + lobbyPacketOffset], font, &textRect, &color);
+					strcpy(playerNames[i], lobbyData[c + lobbyPacketOffset]);
+					c += 1;
 				}
 			}
 			else {

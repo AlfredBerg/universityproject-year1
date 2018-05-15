@@ -44,6 +44,7 @@ struct game {
 	SDL_Texture *bgBack;
 	SDL_Texture *bgFront;
 	int replay;
+	int randomInit;
 	Mix_Chunk *clickSound;
 	Mix_Chunk *typeSound;
 	Mix_Chunk *eraseSound;
