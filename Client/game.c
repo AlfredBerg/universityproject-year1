@@ -53,7 +53,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map1.map", lvl1);
+	loadMap("assets/map/map2.map", lvl1);
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -93,7 +93,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create weapons
-	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/pistol.png" };
+	char weaponNames[4][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
 	int weaponXpos[4] = { randomX(), randomX(), randomX(), randomX() };
 	int weaponYpos[4] = { randomY(), randomY(), randomY(), randomY() };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
@@ -144,7 +144,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int roofDetected = 0;
 	int leftWall = 0;
 	int rightWall = 0;
-	int babab = 1;
 
 	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
@@ -158,10 +157,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Mix_Chunk *jumpSound = Mix_LoadWAV("assets/jumpSound.wav");
 	jumpSound->volume = 50;
 
-
 	moveItemsFromMapCollision(map, weapons, pickups, players);
-
-	printf("\nSpectate: %d, health %d\n", game->spectateMode, players[client->playerID].life);
 
 	while (running)
 	{
@@ -170,10 +166,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
 			updateServer(players, client, projectiles);
-			if (babab < 10) {
-				printf("\nSpectate: %d, health %d\n", game->spectateMode, players[client->playerID].life);
-				babab++;
-			}
 			continue;
 		}
 

@@ -49,6 +49,8 @@ int main(int argc, char **argv)
 
 		nrReady = SDLNet_CheckSockets(server.socketSet, SOCKET_TIMEOUT);
 
+		
+
 		if (lobby) {
 			if (server.timer == 0 || server.next_player > 4 || noLobby)
 				lobby = SDL_FALSE;
@@ -174,7 +176,7 @@ void init(Network *server) {
 	server->restart = 0;
 
 	//id, dmg, speed, w, h
-	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
+	ProjectileData projectileData[1]; //= { 0, 10, 12, 30, 30 };
 
 
 	server->projectileData[BULLET].id = 0;
@@ -275,7 +277,7 @@ int restart(Network *server) {
 
 	server->running = 1;
 	server->timer = 10;
-	server->alivePlayers = server->next_player - 1;
+	server->alivePlayers = server->next_player;
 	server->restart = 0;
 
 	for (int i = 0; i < MAX_CLIENTS; i++) {
