@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #ifndef _MSC_VER
 #include <unistd.h> 
@@ -163,6 +164,9 @@ void init(Network *server) {
 		server->sockets[i] = NULL;
 	}
 
+	srand(time(NULL));
+
+	server->seed = rand();
 	server->running = 1;
 	server->next_player = 0;
 	server->timer = 10;

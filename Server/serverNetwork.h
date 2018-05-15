@@ -38,6 +38,7 @@ struct network {
 	int alivePlayers;
 	Items items;
 	int timer;
+	int seed;
 	Uint32 lastNetworkTick;
 	int restart;
 };

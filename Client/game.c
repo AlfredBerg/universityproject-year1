@@ -49,7 +49,7 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init randomization
-	srand(3);
+	srand(game->seed);
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
@@ -549,11 +549,15 @@ int victoryCondition(Player players[], Game *game, int playerid, Network *client
 }
 
 int randomX() {
-	return rand() % MAP_WIDTH * TILE_WIDTH;
+	int random = rand() % (MAP_WIDTH * TILE_WIDTH - 100);
+	random += 100;
+	return random;
 }
 
 int randomY() {
-	return rand() % MAP_HEIGHT * TILE_HEIGHT;
+	int random = rand() % (MAP_HEIGHT * TILE_HEIGHT - 100);
+	random += 100;
+	return random;
 }
 
 //void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
