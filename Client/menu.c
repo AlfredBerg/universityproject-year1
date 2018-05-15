@@ -18,6 +18,13 @@ int menu(Game *game, char serverIP[], char playerName[]) {
 
 	game->font = TTF_OpenFont("assets/pixlig font.ttf", 40);
 
+	game->clickSound = Mix_LoadWAV("assets/clickSound.wav");
+	game->clickSound->volume = 100;
+	game->typeSound = Mix_LoadWAV("assets/typeSound.wav");
+	game->typeSound->volume = 100;
+	game->eraseSound = Mix_LoadWAV("assets/eraseSound.wav");
+	game->eraseSound->volume = 50;
+
 	int startGame = 1;
 	int menuLoop = 1;
 	int menuPage = 1;
@@ -44,24 +51,13 @@ int menu(Game *game, char serverIP[], char playerName[]) {
 }
 
 int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char playerName[]) {
-	int running = 1;
+	int running = 1, done = SDL_FALSE;
 	SDL_Event event;
 
 	SDL_Rect textRect;
 	SDL_Color color = { 65, 33, 52, 255 };
-
-
-	Mix_Chunk *clickSound = Mix_LoadWAV("assets/clickSound.wav");
-	clickSound->volume = 100;
-	Mix_Chunk *typeSound = Mix_LoadWAV("assets/typeSound.wav");
-	typeSound->volume = 100;
-	Mix_Chunk *eraseSound = Mix_LoadWAV("assets/eraseSound.wav");
-	eraseSound->volume = 50;
-
-	//Init text
-	char prevChar = '0';
 	
-	int done = SDL_FALSE;
+	
 
 	while (SDL_PollEvent(&event))
 	{
@@ -75,12 +71,12 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 			if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
 				if (event.button.x > 220 && event.button.x < 800 && event.button.y > 210 && event.button.y < 420) {
 					*menuPage = 2;
-					Mix_PlayChannel(1, clickSound, 0);
+					Mix_PlayChannel(1, game->clickSound, 0);
 				}
 			}
 			else if (event.type == SDL_KEYDOWN && (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE)) {
 				*menuPage = 2;
-				Mix_PlayChannel(1, clickSound, 0);
+				Mix_PlayChannel(1, game->clickSound, 0);
 			}
 			break;
 		case 2:
@@ -98,20 +94,20 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 					case SDL_TEXTINPUT:
 						//Add new text onto the end of our text
 						if (strlen(serverIP) < 15)
-							if (isAllowed(event.text.text, serverIP, &prevChar)) {
+							if (isAllowed(event.text.text, serverIP)) {
 								strcat(serverIP, event.text.text);
-								Mix_PlayChannel(1, typeSound, 0);
+								Mix_PlayChannel(1, game->typeSound, 0);
 							}
 						break;
 					case SDL_KEYDOWN:
 						//Handle backspace
 						if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(serverIP) > 0) {
 							serverIP[strlen(serverIP) - 1] = '\0';
-							Mix_PlayChannel(1, eraseSound, 0);
+							Mix_PlayChannel(1, game->eraseSound, 0);
 						}
 						//Handle return
 						else if (event.key.keysym.sym == SDLK_RETURN) {
-							Mix_PlayChannel(1, clickSound, 0);
+							Mix_PlayChannel(1, game->clickSound, 0);
 							if (strlen(serverIP) >= 7 && serverIP[strlen(serverIP) - 1] != '.') {
 								*menuPage = 3;
 								done = SDL_TRUE;
@@ -121,7 +117,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 					case SDL_MOUSEBUTTONDOWN:
 						if (event.button.button == SDL_BUTTON_LEFT && strlen(serverIP) >= 7) {
 							if (event.button.x > 450 && event.button.x < 570 && event.button.y > 360 && event.button.y < 420) {
-								Mix_PlayChannel(1, clickSound, 0);
+								Mix_PlayChannel(1, game->clickSound, 0);
 								if (serverIP[strlen(serverIP) - 1] != '.') {
 									*menuPage = 3;
 									done = SDL_TRUE;
@@ -155,21 +151,21 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 						//Add new text onto the end of our text
 						if (strlen(playerName) < 15) {
 							strcat(playerName, event.text.text);
-							Mix_PlayChannel(1, typeSound, 0);
+							Mix_PlayChannel(1, game->typeSound, 0);
 						}
 						break;
 					case SDL_KEYDOWN:
 						//Handle backspace
 						if (event.key.keysym.sym == SDLK_BACKSPACE && strlen(playerName) > 0) {
 							playerName[strlen(playerName) - 1] = '\0';
-							Mix_PlayChannel(1, eraseSound, 0);
+							Mix_PlayChannel(1, game->eraseSound, 0);
 						}
 						//Handle return
 						else if (event.key.keysym.sym == SDLK_RETURN && strlen(playerName) > 0) {
 							running = 1;
 							*menuLoop = 0;
 							done = SDL_TRUE;
-							Mix_PlayChannel(1, clickSound, 0);
+							Mix_PlayChannel(1, game->clickSound, 0);
 						}
 						break;
 					case SDL_MOUSEBUTTONDOWN:
@@ -178,7 +174,7 @@ int menuOptions(int *menuLoop, int *menuPage, Game *game, char serverIP[], char 
 								running = 1;
 								*menuLoop = 0;
 								done = SDL_TRUE;
-								Mix_PlayChannel(1, clickSound, 0);
+								Mix_PlayChannel(1, game->clickSound, 0);
 							}
 						}
 						break;
@@ -219,7 +215,7 @@ void render_text(SDL_Renderer *renderer, int x, int y, const char *text, TTF_Fon
 	SDL_DestroyTexture(texture);
 }
 
-int isAllowed(char* ch, char serverIP[16], char *prevChar) {
+int isAllowed(char* ch, char serverIP[16]) {
 	int foundDot = 0;
 
 	if (!strcmp(ch, ".") && serverIP[strlen(serverIP) - 1] != '.' && strlen(serverIP) > 0) {
