@@ -1,6 +1,8 @@
+#include "pickup.h"
 #include "weapon.h"
 #include <stdlib.h>
 #include <time.h>
+
 #define HANDPROJECTILE 1
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[], int playerID, SDL_Rect *camera) {
@@ -43,10 +45,6 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 			}
 
 		}
-		else {
-
-		}
-
 	}
 
 	//Update position
@@ -207,6 +205,28 @@ void drawProjectiles(Game *game, Projectile projectiles[]) {
 				renderCopyMoveWithCamera(game->renderer, projectiles[i].Texture, NULL, &projectiles[i].rect[j], 0.0, NULL, NULL);
 			}
 
+		}
+	}
+}
+
+void moveItemsFromMapCollision(Tile map[][MAP_WIDTH], Weapon weapons[], Pickup pickups[]) {
+	int wCollision = 1, pCollision = 1;
+	while (wCollision || pCollision) {
+		wCollision = 0;
+		pCollision = 0;
+		for (int i = 0; i < MAXNRWEAPONS; i++) {
+			if(collisionWithMap(map, weapons[i].rect ) && weapons[i].isPickedUp < 1) {
+				weapons[i].y -= 10;
+				weapons[i].rect.y -= 10;
+				wCollision++;
+			}
+		}
+		for (int i = 0; i < MAX_NR_OF_PICKUPS; i++) {
+			if (collisionWithMap(map, pickups[i].rect) && pickups[i].isPickedUp < 1) {
+				pickups[i].y -= 10;
+				pickups[i].rect.y -= 10;
+				pCollision++;
+			}
 		}
 	}
 }

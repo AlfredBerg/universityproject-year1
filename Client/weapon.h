@@ -8,6 +8,7 @@
 #include "projectile.h"
 #include "player.h"
 #include "game.h"
+#include "pickup.h"
 
 #define MAXNRWEAPONS 4
 
@@ -35,3 +36,4 @@ Weapon createWeapon(Game *game, int id, int x, int y, int dmg, int fireRate, int
 Projectile createProjectile(Game *game, int id, int dmg, int speed, int w, int h, const char imageName[]);
 void drawWeapons(Game *game, Player players[], Weapon weapons[]);
 void drawProjectiles(Game *game, Projectile projectiles[]);
+void moveItemsFromMapCollision(Tile map[][MAP_WIDTH], Weapon weapons[], Pickup pickups[]);

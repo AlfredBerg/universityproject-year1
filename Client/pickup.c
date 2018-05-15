@@ -49,7 +49,11 @@ void deletePickup(Pickup pickups[], int pickupIDtoDelete) {
 }
 
 void drawPickups(Game *game, Pickup pickups[]) {
+
 	for (int i = 0; i < MAX_NR_OF_PICKUPS; i++) {
+		pickups[i].rect.x = pickups[i].x;
+		pickups[i].rect.y = pickups[i].y;
+
 		if (!pickups[i].isPickedUp)
 			renderCopyMoveWithCamera(game->renderer, pickups[i].texture, NULL, &pickups[i].rect, 0.0, NULL, 0);
 		else

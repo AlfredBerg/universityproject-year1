@@ -35,7 +35,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 1;
+	game->debug = 0;
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
@@ -53,7 +53,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map3.map", lvl1);
+	loadMap("assets/map/map1.map", lvl1);
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -93,9 +93,9 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create weapons
-	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
-	int weaponXpos[4] = { 200, 400, 400, 600 };
-	int weaponYpos[4] = { 100, 100, 100, 100 };
+	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/pistol.png" };
+	int weaponXpos[4] = { 1500, 400, 900, 600 };
+	int weaponYpos[4] = { 600, 100, 400, 100 };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
 	int weaponFireRate[4] = { 200, 200, 20, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 0 };
@@ -112,7 +112,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
 	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
 	int nrOfProjectiles = 2;
-
 
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
@@ -159,7 +158,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	jumpSound->volume = 50;
 
 
-
+	moveItemsFromMapCollision(map, weapons, pickups);
 
 	while (running)
 	{
@@ -548,6 +547,9 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 	return 0;
 }
 
+int randomX() {
+	return rand() % MAP_WIDTH * TILE_WIDTH;
+}
 
 //void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
 //
