@@ -49,7 +49,7 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init randomization
-	srand(time(NULL));
+	srand(5);
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
@@ -79,8 +79,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Create players
 	char playerSprites[MAXPLAYERS][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
-	int spawnXPos[MAXPLAYERS] = { 100, 800, 400, 450 };
-	int spawnYPos[MAXPLAYERS] = { 250, 132, 400, 150 };
+	int spawnXPos[MAXPLAYERS] = { randomX(), randomX(), randomX(), randomX() };
+	int spawnYPos[MAXPLAYERS] = { randomY(), randomY(), randomY(), randomY() };
 
 	Player players[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
@@ -94,8 +94,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Create weapons
 	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/pistol.png" };
-	int weaponXpos[4] = { 1500, 400, 900, 600 };
-	int weaponYpos[4] = { 600, 100, 400, 100 };
+	int weaponXpos[4] = { randomX(), randomX(), randomX(), randomX() };
+	int weaponYpos[4] = { randomY(), randomY(), randomY(), randomY() };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
 	int weaponFireRate[4] = { 200, 200, 20, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 0 };
@@ -115,8 +115,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
-	int pickupXPos[MAX_NR_OF_PICKUPS] = { 100, 550, 300, 600, 900, 100 };
-	int pickupYPos[MAX_NR_OF_PICKUPS] = { 100, 400, 420, 100, 900, 900 };
+	int pickupXPos[MAX_NR_OF_PICKUPS] = { randomX(), randomX(), randomX(), randomX(), randomX(), randomX() };
+	int pickupYPos[MAX_NR_OF_PICKUPS] = { randomY(), randomY(), randomY(), randomY(), randomY(), randomY() };
 	int pickupHealing[MAX_NR_OF_PICKUPS] = { 5, 10, 15, 20, 25, 30 };
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
@@ -158,7 +158,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	jumpSound->volume = 50;
 
 
-	moveItemsFromMapCollision(map, weapons, pickups);
+	moveItemsFromMapCollision(map, weapons, pickups, players);
 
 	while (running)
 	{
@@ -549,6 +549,10 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 
 int randomX() {
 	return rand() % MAP_WIDTH * TILE_WIDTH;
+}
+
+int randomY() {
+	return rand() % MAP_HEIGHT * TILE_HEIGHT;
 }
 
 //void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {

@@ -267,7 +267,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 	int timer = 60;
 	game->connectedPlayers = 1;
 	char lobbyinData[MAX_PACKET];
-	char lobbyData[16][30];
+	char lobbyData[100][30];
 	int done = 0;
 	int c;
 

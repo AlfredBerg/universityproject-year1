@@ -209,11 +209,12 @@ void drawProjectiles(Game *game, Projectile projectiles[]) {
 	}
 }
 
-void moveItemsFromMapCollision(Tile map[][MAP_WIDTH], Weapon weapons[], Pickup pickups[]) {
-	int wCollision = 1, pCollision = 1;
-	while (wCollision || pCollision) {
+void moveItemsFromMapCollision(Tile map[][MAP_WIDTH], Weapon weapons[], Pickup pickups[], Player players[]) {
+	int wCollision = 1, pCollision = 1, playerCollision = 1;
+	while (wCollision || pCollision || playerCollision) {
 		wCollision = 0;
 		pCollision = 0;
+		playerCollision = 0;
 		for (int i = 0; i < MAXNRWEAPONS; i++) {
 			if(collisionWithMap(map, weapons[i].rect ) && weapons[i].isPickedUp < 1) {
 				weapons[i].y -= 10;
@@ -226,6 +227,13 @@ void moveItemsFromMapCollision(Tile map[][MAP_WIDTH], Weapon weapons[], Pickup p
 				pickups[i].y -= 10;
 				pickups[i].rect.y -= 10;
 				pCollision++;
+			}
+		}
+		for (int i = 0; i < MAXPLAYERS; i++) {
+			if (collisionWithMap(map, players[i].dstRect)) {
+				players[i].y -= 10;
+				players[i].dstRect.y -= 10;
+				playerCollision++;
 			}
 		}
 	}
