@@ -35,7 +35,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 0;
+	game->debug = 1;
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
@@ -93,12 +93,12 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create weapons
-	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/pistol.png" };
+	char weaponNames[4][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
 	int weaponXpos[4] = { randomX(), randomX(), randomX(), randomX() };
 	int weaponYpos[4] = { randomY(), randomY(), randomY(), randomY() };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
 	int weaponFireRate[4] = { 200, 200, 20, 200 };
-	int weaponProjectileType[4] = { 0, 0, 1, 0 };
+	int weaponProjectileType[4] = { 0, 0, 1, 2 };
 
 	Weapon weapons[MAXNRWEAPONS];
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
@@ -111,7 +111,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
 	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
-	int nrOfProjectiles = 2;
+	projectiles[2] = createProjectile(game, 2, 10, 12, 60, 60, "assets/beachball.png");
+	int nrOfProjectiles = 3;
 
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
@@ -304,10 +305,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		//Detect projectile collisions with walls
 		for (i = 0; i < MAP_HEIGHT; i++) {
 			for (j = 0; j < MAP_WIDTH; j++) {
-				if (map[i][j].ID != 0) {
+				for (int p = 0; p < MAXPROJECTILES; p++) {
 					for (int k = 0; k < MAXPROJECTILEOBJECTS; k++) {
-						if (SDL_HasIntersection(&projectiles[0].rect[k], &map[i][j].rect)) {
-							sendDeleteProjectileToServer(0, k);
+						if (SDL_HasIntersection(&projectiles[p].rect[k], &map[i][j].rect)) {
+							sendDeleteProjectileToServer(p, k);
 						}
 					}
 				}

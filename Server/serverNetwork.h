@@ -18,10 +18,15 @@
 #define FIELDS_IN_GAMESTATE 5
 
 #define DATAFIELDSINPACKET 10
-#define NRPROJECTILES 1
+#define NRPROJECTILES 3
 
 #define LEFT 2
 #define RIGHT 3
+
+#define BOTTOMLEFT 4
+#define TOPLEFT 5 
+#define TOPRIGHT 6
+#define BOTTOMRIGHT 7
 
 struct network {
 	int next_player;

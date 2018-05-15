@@ -5,7 +5,7 @@
 #include <SDL_image.h>
 
 
-#define MAXPROJECTILES 2
+#define MAXPROJECTILES 3
 #define MAXPROJECTILEOBJECTS 50
 
 struct objects {

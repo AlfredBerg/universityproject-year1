@@ -63,8 +63,9 @@ void updatePositions(Network *server, char data[][30]) {
 void createProjectiles(Network *server, char data[][30]) {
 	//printf("Projectile created\n");
 	//projectile type, x, y, direction
+	
 	int id = server->projectileData[BULLET].nrProjectilesShot;
-
+	int projectileType = atoi(data[1]);
 	if (id >= MAXPROJECTILEOBJECTS) {
 		id = id % MAXPROJECTILEOBJECTS;
 	}
@@ -108,12 +109,55 @@ void registerHit(Network *server, char data[][30]) {
 
 void deleteProjectile(Network *server, char data[][30]) {
 	//projectile type, id
+	int projectileType = atoi(data[1]);
 	int id = atoi(data[2]);
-	server->projectileData[BULLET].Projectiles[id].id = id;
-	server->projectileData[BULLET].Projectiles[id].projectileType = atoi(data[1]);
-	server->projectileData[BULLET].Projectiles[id].x = 30000;
-	server->projectileData[BULLET].Projectiles[id].y = 30000;
-	server->projectileData[BULLET].Projectiles[id].direction = 0;
+	if (projectileType != 2) {
+		server->projectileData[BULLET].Projectiles[id].id = id;
+		server->projectileData[BULLET].Projectiles[id].projectileType = atoi(data[1]);
+		server->projectileData[BULLET].Projectiles[id].x = 30000;
+		server->projectileData[BULLET].Projectiles[id].y = 30000;
+		server->projectileData[BULLET].Projectiles[id].direction = LEFT;
+	}
+	else {
+		server->projectileData[BULLET].Projectiles[id].id = id;
+		server->projectileData[BULLET].Projectiles[id].projectileType = atoi(data[1]);
+		server->projectileData[BULLET].Projectiles[id].x;
+		server->projectileData[BULLET].Projectiles[id].y;
+
+		if (server->projectileData[BULLET].Projectiles[id].direction == LEFT) {
+			server->projectileData[BULLET].Projectiles[id].direction = BOTTOMRIGHT;
+		}
+		if (server->projectileData[BULLET].Projectiles[id].direction == RIGHT) {
+			server->projectileData[BULLET].Projectiles[id].direction = BOTTOMLEFT;
+		}
+
+
+		if (server->projectileData[BULLET].Projectiles[id].direction == BOTTOMLEFT) {
+			server->projectileData[BULLET].Projectiles[id].x += server->projectileData[BULLET].speed + 10;
+			server->projectileData[BULLET].Projectiles[id].y -= server->projectileData[BULLET].speed + 10;
+		}
+		else if (server->projectileData[BULLET].Projectiles[id].direction == TOPLEFT) {
+			server->projectileData[BULLET].Projectiles[id].x += server->projectileData[BULLET].speed + 10;
+			server->projectileData[BULLET].Projectiles[id].y += server->projectileData[BULLET].speed + 10;
+		}
+		else if (server->projectileData[BULLET].Projectiles[id].direction == TOPRIGHT) {
+			server->projectileData[BULLET].Projectiles[id].x -= server->projectileData[BULLET].speed + 10;
+			server->projectileData[BULLET].Projectiles[id].y += server->projectileData[BULLET].speed + 10;
+		}
+		else if (server->projectileData[BULLET].Projectiles[id].direction == BOTTOMRIGHT) {
+			server->projectileData[BULLET].Projectiles[id].x -= server->projectileData[BULLET].speed + 10;
+			server->projectileData[BULLET].Projectiles[id].y -= server->projectileData[BULLET].speed + 10;
+		}
+
+		
+
+		server->projectileData[BULLET].Projectiles[id].direction++;
+		if (server->projectileData[BULLET].Projectiles[id].direction > BOTTOMRIGHT) {
+			server->projectileData[BULLET].Projectiles[id].direction = BOTTOMLEFT;
+		}
+		//SDL_Delay(50);
+	}
+
 
 }
 
@@ -161,7 +205,6 @@ int AcceptSocket(Network *server) {
 	if (!success) {
 		return 0;
 	}
-
 	//printf("Incoming: %s\n", packetdata);
 
 	decode(packetdata, datan, 4, 20);

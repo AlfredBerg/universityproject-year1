@@ -9,12 +9,17 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 	fireWeapon(weapons, players, client, projectiles);
 
 	pickUpWeapon(client, weapons, players);
+
 	if (players[client->playerID].weaponID == 2) {
 		detectHandColision(&projectiles[1], players, 1, playerID, camera);
 	}
-	else {
-		detectProjectileColision(&projectiles[0], players, 0);
+
+	for (int i = 0; i < MAXPROJECTILES; i++) {
+		if (i != 1) {
+			detectProjectileColision(&projectiles[i], players, i);
+		}
 	}
+
 
 
 	int id;
@@ -89,15 +94,6 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 			Mix_PlayChannel(1, gunshot, 0);
 		}
 
-		//Offline code
-		/*
-		if (players[client->playerID].lastDirection == LEFT) {
-		fireProjectile(&projectiles[weapons[weaponId].projectileType], LEFT, weapons[weaponId].x - 30, weapons[weaponId].y, 1);
-		}
-		else {
-		fireProjectile(&projectiles[weapons[weaponId].projectileType], RIGHT, weapons[weaponId].x + 70, weapons[weaponId].y, 1);
-		}
-		*/
 		if (players[client->playerID].lastDirection == LEFT) {
 			//if (players[client->playerID].weaponID == 2)
 				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);

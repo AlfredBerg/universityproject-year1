@@ -13,6 +13,7 @@
 #define MAX_NR_OF_PICKUPS 2
 
 #define BULLET 0
+#define BEACHBALL 2
 
 #define FALLOUTOFMAPDEPTH 1536
 

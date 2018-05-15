@@ -38,7 +38,6 @@ void detectProjectileColision(Projectile *projectile, Player players[], int proj
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
 
 			if (SDL_HasIntersection(&players[i].dstRect, &projectile->rect[j])) {
-
 				loseHealth(&players[i], projectile->dmg);
 				sendDeleteProjectileToServer(projectileType, j);
 			}

@@ -174,15 +174,20 @@ void init(Network *server) {
 	server->restart = 0;
 
 	//id, dmg, speed, w, h
-	ProjectileData projectileData = { 0, 10, 12, 30, 30 };
-
-
 	server->projectileData[BULLET].id = 0;
 	server->projectileData[BULLET].dmg = 10;
-	server->projectileData[BULLET].speed = 12;
+	server->projectileData[BULLET].speed = 6;
 	server->projectileData[BULLET].w = 30;
 	server->projectileData[BULLET].h = 30;
 	server->projectileData[BULLET].nrProjectilesShot = 0;
+
+	server->projectileData[BEACHBALL].id = 2;
+	server->projectileData[BEACHBALL].dmg = 10;
+	server->projectileData[BEACHBALL].speed = 10;
+	server->projectileData[BEACHBALL].w = 30;
+	server->projectileData[BEACHBALL].h = 30;
+	server->projectileData[BEACHBALL].nrProjectilesShot = 0;
+	
 
 	for (int i = 0; i < MAX_CLIENTS; i++) {
 		server->clients[i].health = 100;
@@ -212,15 +217,35 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick, int * lobby) {
 		return;
 	}
 
-	for (int i = 0; i < NRPROJECTILES; i++) {
+	for (int i = 0; i < 1; i++) {
 
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
 			if (server->projectileData[i].Projectiles[j].direction == RIGHT) {
 				server->projectileData[i].Projectiles[j].x += server->projectileData[i].speed;
 			}
-			else {
+			else if(server->projectileData[i].Projectiles[j].direction == LEFT){
 				server->projectileData[i].Projectiles[j].x -= server->projectileData[i].speed;
 			}
+			else if (server->projectileData[i].Projectiles[j].direction == BOTTOMLEFT) {
+				server->projectileData[i].Projectiles[j].x -= server->projectileData[i].speed;
+				server->projectileData[i].Projectiles[j].y += server->projectileData[i].speed;
+			}
+			else if (server->projectileData[i].Projectiles[j].direction == TOPLEFT) {
+				server->projectileData[i].Projectiles[j].x -= server->projectileData[i].speed;
+				server->projectileData[i].Projectiles[j].y -= server->projectileData[i].speed;
+			}
+			else if (server->projectileData[i].Projectiles[j].direction == TOPRIGHT) {
+				server->projectileData[i].Projectiles[j].x += server->projectileData[i].speed;
+				server->projectileData[i].Projectiles[j].y -= server->projectileData[i].speed;
+			}
+			else if (server->projectileData[i].Projectiles[j].direction == BOTTOMRIGHT) {
+				server->projectileData[i].Projectiles[j].x += server->projectileData[i].speed;
+				server->projectileData[i].Projectiles[j].y += server->projectileData[i].speed;
+			}
+			else {
+				//printf("You picked a non valid direction for the bullet");
+			}
+
 			
 		}
 
