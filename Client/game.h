@@ -44,6 +44,9 @@ struct game {
 	SDL_Texture *bgBack;
 	SDL_Texture *bgFront;
 	int replay;
+	Mix_Chunk *clickSound;
+	Mix_Chunk *typeSound;
+	Mix_Chunk *eraseSound;
 };
 typedef struct game Game;
 
