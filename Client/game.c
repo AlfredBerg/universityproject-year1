@@ -35,7 +35,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 1;
+	game->debug = 0;
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
@@ -93,9 +93,9 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 
 	// Create weapons
-	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
-	int weaponXpos[4] = { 200, 400, 400, 600 };
-	int weaponYpos[4] = { 100, 100, 100, 100 };
+	char weaponNames[4][20] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/pistol.png" };
+	int weaponXpos[4] = { 1500, 400, 900, 600 };
+	int weaponYpos[4] = { 600, 100, 400, 100 };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
 	int weaponFireRate[4] = { 200, 200, 20, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 0 };
