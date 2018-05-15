@@ -144,6 +144,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int roofDetected = 0;
 	int leftWall = 0;
 	int rightWall = 0;
+	int babab = 1;
 
 	// Init timer
 	Uint32 startTimer = SDL_GetTicks(), renderTick = SDL_GetTicks();
@@ -160,6 +161,8 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	moveItemsFromMapCollision(map, weapons, pickups, players);
 
+	printf("\nSpectate: %d, health %d\n", game->spectateMode, players[client->playerID].life);
+
 	while (running)
 	{
 
@@ -167,6 +170,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		if (!SDL_TICKS_PASSED(SDL_GetTicks(), renderTick + RENDER_TICK)) {
 			//Do between ticks
 			updateServer(players, client, projectiles);
+			if (babab < 10) {
+				printf("\nSpectate: %d, health %d\n", game->spectateMode, players[client->playerID].life);
+				babab++;
+			}
 			continue;
 		}
 

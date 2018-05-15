@@ -39,6 +39,7 @@ int main(int argc, char** argv)
 			Mix_ResumeMusic();
 			if (doLobby)
 				lobby(&client, &game, playerNames);
+			printf("\nSpectate mode: %d \n", game.spectateMode);
 			while (game.running)
 				game.running = runGame(&game, &client, playerNames);
 		} while (game.replay);
