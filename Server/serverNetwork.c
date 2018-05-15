@@ -214,7 +214,7 @@ void closeSocket(Network *server, int index) {
 
 
 void gamestateToString(Network *server, char string[]) {
-	//x1;y1;weaponId;PickupId
+	//x1;y1;weaponId;PickupId;Health
 	int length = 0;
 	length += sprintf(string + length, "0;");
 	for (int i = 0; i < MAX_CLIENTS; i++) {
@@ -266,7 +266,7 @@ void updateLobby(Network *server) {
 void lobbyToString(Network *server, char string[MAX_PACKET]) {
 	//nrOfPlayers;p0Name;p1Name;timer;
 	int length = 0;
-	length += sprintf(string + length, "4;%d;%d;%d;", server->next_player, 5, server->timer);
+	length += sprintf(string + length, "4;%d;%d;%d;", server->next_player, 3, server->timer);
 	for (int i = 0; i < MAX_CLIENTS; i++) {
 		length += sprintf(string + length, "%s;", server->clients[i].name);
 	}

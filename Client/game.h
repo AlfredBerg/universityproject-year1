@@ -52,7 +52,7 @@ struct game {
 typedef struct game Game;
 
 void initGame(Game *game);
-//int restart(Game *game);
+int restart(Game *game);
 int runGame(Game *game, Network *client, char playerNames[][30]);
 void quitGame(Game *game);
 void playBackgroundMusic();

@@ -49,7 +49,7 @@ void initGame(Game *game) {
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Init randomization
-	srand(5);
+	srand(3);
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
@@ -372,7 +372,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		render_text(game->renderer, 5, 0, timerText, font, &timerRect, &color);
 
 		// Check if somebody won
-		running = !victoryCondition(players, game, client->playerID);
+		running = !victoryCondition(players, game, client->playerID, client, projectiles);
 
 		// Show what was drawn
 		SDL_RenderPresent(game->renderer);
@@ -487,7 +487,7 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 	}
 }
 
-int victoryCondition(Player players[], Game *game, int playerid) {
+int victoryCondition(Player players[], Game *game, int playerid, Network *client, Projectile *projectiles) {
 	int choose = 0;
 
 	for (int i = 0; i < MAXPLAYERS; i++) {
@@ -542,6 +542,7 @@ int victoryCondition(Player players[], Game *game, int playerid) {
 						Mix_PlayChannel(1, clickSound, 0);
 						return 1;
 					}
+					updateServer(players, client, projectiles);
 		}
 	}
 	return 0;
