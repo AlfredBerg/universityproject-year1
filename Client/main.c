@@ -32,19 +32,19 @@ int main(int argc, char** argv)
 	initGame(&game); 
 
 	while (game.running) {
-		menu(&game, serverIP, playerName);
-		if (initClient(&client, serverIP, playerName))
-			doLobby = 1;
-		do {
-			Mix_ResumeMusic();
-			if (doLobby)
-				lobby(&client, &game, playerNames);
-			printf("\nSpectate mode: %d \n", game.spectateMode);
-			while (game.running)
-				game.running = runGame(&game, &client, playerNames);
-		} while (game.replay);
+		if (game.running = menu(&game, serverIP, playerName)) {
+			if (initClient(&client, serverIP, playerName))
+				doLobby = 1;
+			do {
+				Mix_ResumeMusic();
+				if (doLobby)
+					game.running = lobby(&client, &game, playerNames);
+				while (game.running)
+					game.running = runGame(&game, &client, playerNames);
+			} while (game.replay);
+		}
 	}
-
+	
 	quitGame(&game);
 	return 0;
 }

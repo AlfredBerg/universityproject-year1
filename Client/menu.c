@@ -288,7 +288,6 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 
 		receivePacket(client->serverSocket, client->packet, lobbyinData);
 
-
 		if (lobbyinData[0] != '4') {
 			//done = 1;
 			printf("\nNot lobby packet! Exiting\n");
@@ -309,14 +308,23 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 					strcpy(playerNames[i], lobbyData[c + lobbyPacketOffset]);
 					c += 1;
 				}
+				SDL_Event event;
+				if (SDL_PollEvent(&event))
+					if (event.type == SDL_QUIT) {
+						return 0;
+					}
 			}
 			else {
 				SDL_RenderCopy(game->renderer, background1, NULL, NULL);
 				SDL_Event event;
 				if (SDL_PollEvent(&event))
-					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT || event.type == SDL_KEYDOWN)
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT || event.type == SDL_KEYDOWN){
 						if (event.button.x > 305 && event.button.x < 715 && event.button.y > 550 && event.button.y < 620 || event.key.keysym.sym == SDLK_RETURN)
 							done = 1;
+					}
+					else if (event.type == SDL_QUIT) {
+						return 0;
+					}
 			}
 			SDL_RenderPresent(game->renderer);
 
@@ -324,8 +332,7 @@ int lobby(Network *client, Game *game, char playerNames[][30]) {
 				done = 1;
 		}
 	}
-	game->running = 1;
 	game->spectateMode = 0;
 
-	return 0;
+	return 1;
 }
