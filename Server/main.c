@@ -177,7 +177,7 @@ void init(Network *server) {
 
 	server->projectileData[BULLET].id = 0;
 	server->projectileData[BULLET].dmg = 10;
-	server->projectileData[BULLET].speed = 6;
+	server->projectileData[BULLET].speed = 16;
 	server->projectileData[BULLET].w = 30;
 	server->projectileData[BULLET].h = 30;
 	server->projectileData[BULLET].nrProjectilesShot = 0;
