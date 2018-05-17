@@ -97,7 +97,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int weaponXpos[4] = { randomX(), randomX(), randomX(), randomX() };
 	int weaponYpos[4] = { randomY(), randomY(), randomY(), randomY() };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
-	int weaponFireRate[4] = { 200, 200, 700, 200 };
+	int weaponFireRate[4] = { 200, 200, 800, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 2 };
 
 	Weapon weapons[MAXNRWEAPONS];
