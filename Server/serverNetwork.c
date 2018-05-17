@@ -303,7 +303,7 @@ void updateLobby(Network *server) {
 			sendPacket(data, server->clients[i].ip, server->serverSocket);
 		}
 		server->lastNetworkTick = SDL_GetTicks();
-	}	
+	}
 }
 
 void lobbyToString(Network *server, char string[MAX_PACKET]) {
