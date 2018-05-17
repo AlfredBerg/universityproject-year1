@@ -53,7 +53,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
-	loadMap("assets/map/map2.map", lvl1);
+	loadMap("assets/map/map1.map", lvl1);
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -97,7 +97,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int weaponXpos[4] = { randomX(), randomX(), randomX(), randomX() };
 	int weaponYpos[4] = { randomY(), randomY(), randomY(), randomY() };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
-	int weaponFireRate[4] = { 200, 200, 20, 200 };
+	int weaponFireRate[4] = { 200, 200, 700, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 2 };
 
 	Weapon weapons[MAXNRWEAPONS];

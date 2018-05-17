@@ -3,16 +3,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+extern SDL_Rect camera;
+
 #define HANDPROJECTILE 1
 
 void weaponActions(Weapon weapons[], Player players[], Network *client, Projectile projectiles[], int playerID, SDL_Rect *camera) {
 	fireWeapon(weapons, players, client, projectiles);
 
 	pickUpWeapon(client, weapons, players);
-
-	if (players[client->playerID].weaponID == 2) {
-		detectHandColision(&projectiles[1], players, 1, playerID, camera);
-	}
 
 	for (int i = 0; i < MAXPROJECTILES; i++) {
 		if (i != 1) {
@@ -77,42 +75,46 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		printf("Shots fired!\n");
 
 
-		//Sound effects for gun
-		if (weaponId == 0 || weaponId == 1) {
-			int gunshotChoice = rand() % 3 + 1;
-			char gunshotPath[30];
-
-			if (gunshotChoice == 1)
-				sprintf(gunshotPath, "assets/gunshot1.wav");
-			else if (gunshotChoice == 2)
-				sprintf(gunshotPath, "assets/gunshot2.wav");
-			else if (gunshotChoice == 3)
-				sprintf(gunshotPath, "assets/gunshot3.wav");
-
-			Mix_Chunk *gunshot = Mix_LoadWAV(gunshotPath);
-			gunshot->volume = 80;
-			Mix_PlayChannel(1, gunshot, 0);
-		}
-
-		if (players[client->playerID].lastDirection == LEFT) {
-			//if (players[client->playerID].weaponID == 2)
-				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);
-			
-		//	else
-			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, LEFT);
-		}
-		else if (players[client->playerID].lastDirection == RIGHT) {
-			//if (players[client->playerID].weaponID == 2)
-				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);
-			
-		//	else
-			sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y, RIGHT);
+		if (players[client->playerID].weaponID == 2) {
+			detectHandColision(&projectiles[1], players, 1, client->playerID, &camera);
+			players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 		}
 		else {
-		}
-		
+			//Sound effects for gun
+			if (weaponId == 0 || weaponId == 1) {
+				int gunshotChoice = rand() % 3 + 1;
+				char gunshotPath[30];
 
-		players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
+				if (gunshotChoice == 1)
+					sprintf(gunshotPath, "assets/gunshot1.wav");
+				else if (gunshotChoice == 2)
+					sprintf(gunshotPath, "assets/gunshot2.wav");
+				else if (gunshotChoice == 3)
+					sprintf(gunshotPath, "assets/gunshot3.wav");
+
+				Mix_Chunk *gunshot = Mix_LoadWAV(gunshotPath);
+				gunshot->volume = 80;
+				Mix_PlayChannel(1, gunshot, 0);
+			}
+
+			if (players[client->playerID].lastDirection == LEFT) {
+				//if (players[client->playerID].weaponID == 2)
+				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);
+
+				//	else
+				sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x - 30, weapons[weaponId].y, LEFT);
+			}
+			else if (players[client->playerID].lastDirection == RIGHT) {
+				//if (players[client->playerID].weaponID == 2)
+				//sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y - (WINDOW_WIDTH / 2), RIGHT);
+
+				//	else
+				sendBulletToServer(client, weapons[weaponId].projectileType, weapons[weaponId].x + 50, weapons[weaponId].y, RIGHT);
+			}
+			else {
+			}
+			players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
+		}
 	}
 }
 
