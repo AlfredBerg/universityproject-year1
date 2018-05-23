@@ -48,12 +48,29 @@ void initGame(Game *game) {
 
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
+
 	// Init randomization
 	srand(game->seed);
 
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
+
+	int smallMapModulusX = 0;
+	int smallMapModulusY = 0;
+	int smallMapX = 0;
+	int smallMapY = 0;
+	
 	loadMap("assets/map/map1.map", lvl1);
+
+	/*if (loadMap("assets/map/smallmap4.map", lvl1)) {
+	
+		smallMapModulusX =2700 ;
+		smallMapModulusY = 700 ;
+		smallMapX = 1450;
+		smallMapY = 350;
+	}*/
+
+	
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -76,11 +93,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 	}
 
-
 	// Create players
 	char playerSprites[MAXPLAYERS][30] = { "assets/knightsprite.png", "assets/bearsprite.png", "assets/bird.png", "assets/princesssprite.png" };
-	int spawnXPos[MAXPLAYERS] = { randomX(), randomX(), randomX(), randomX() };
-	int spawnYPos[MAXPLAYERS] = { randomY(), randomY(), randomY(), randomY() };
+	int spawnXPos[MAXPLAYERS] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX) };
+	int spawnYPos[MAXPLAYERS] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
 
 	Player players[MAXPLAYERS];
 	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
@@ -91,11 +107,10 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	}
 	int nrOfPlayers = game->connectedPlayers;
 
-
 	// Create weapons
 	char weaponNames[4][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
-	int weaponXpos[4] = { randomX(), randomX(), randomX(), randomX() };
-	int weaponYpos[4] = { randomY(), randomY(), randomY(), randomY() };
+	int weaponXpos[4] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX) };
+	int weaponYpos[4] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
 	int weaponDamage[4] = { 10, 10, 4, 10 };
 	int weaponFireRate[4] = { 200, 200, 800, 200 };
 	int weaponProjectileType[4] = { 0, 0, 1, 2 };
@@ -111,13 +126,13 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
 	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
-	projectiles[2] = createProjectile(game, 2, 10, 12, 60, 60, "assets/beachball.png");
+	projectiles[2] = createProjectile(game, 2, 10, 12, 30, 30, "assets/beachball.png");
 	int nrOfProjectiles = 3;
 
 	// Create pickups
 	char pickupNames[MAX_NR_OF_PICKUPS][20] = { "assets/p_red.png", "assets/p_orange.png", "assets/p_yellow.png", "assets/p_green.png", "assets/p_blue.png", "assets/p_purple.png" };
-	int pickupXPos[MAX_NR_OF_PICKUPS] = { randomX(), randomX(), randomX(), randomX(), randomX(), randomX() };
-	int pickupYPos[MAX_NR_OF_PICKUPS] = { randomY(), randomY(), randomY(), randomY(), randomY(), randomY() };
+	int pickupXPos[MAX_NR_OF_PICKUPS] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX) };
+	int pickupYPos[MAX_NR_OF_PICKUPS] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
 	int pickupHealing[MAX_NR_OF_PICKUPS] = { 5, 10, 15, 20, 25, 30 };
 
 	Pickup pickups[MAX_NR_OF_PICKUPS];
@@ -548,14 +563,19 @@ int victoryCondition(Player players[], Game *game, int playerid, Network *client
 	return 0;
 }
 
-int randomX() {
-	int random = rand() % (MAP_WIDTH * TILE_WIDTH - 100);
+int randomX(int *smallMapModulusX, int *smallMapX) {
+	int random = rand() % ((MAP_WIDTH * TILE_WIDTH) - 100 - *smallMapModulusX) + *smallMapX; 
+
+	printf("Random x spawns: \n%d, %d \n", *smallMapModulusX, *smallMapX);
+	
 	random += 100;
 	return random;
 }
 
-int randomY() {
-	int random = rand() % (MAP_HEIGHT * TILE_HEIGHT - 100);
+int randomY(int *smallMapModulusY, int *smallMapY) {
+	int random = rand() % ((MAP_HEIGHT * TILE_HEIGHT) - 100 -*smallMapModulusY) + *smallMapY;
+
+	printf("Random Y spawns\n%d, %d \n", *smallMapModulusY, *smallMapY);
 	random += 100;
 	return random;
 }

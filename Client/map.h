@@ -22,7 +22,7 @@ struct tile {
 };
 typedef struct tile Tile;
 
-void loadMap(const char* fileName, int map[][MAP_WIDTH]);
+int loadMap(const char* fileName, int map[][MAP_WIDTH]);
 void initTiles(SDL_Renderer* renderer, Tile *tile, int x, int y);
 void drawTiles(SDL_Renderer* renderer, Tile *tile, int x, int y);
 void destroyTiles(Tile *tile);
