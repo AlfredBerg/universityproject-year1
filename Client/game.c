@@ -55,20 +55,20 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
 
-
-
+	int smallMapModulusX = 0;
+	int smallMapModulusY = 0;
+	int smallMapX = 0;
+	int smallMapY = 0;
 	
-	int smallMapModulusX, smallMapModulusY, smallMapX, smallMapY = 0;
-	
-	//loadMap("assets/map/map1.map", lvl1);
+	loadMap("assets/map/map1.map", lvl1);
 
-	if (loadMap("assets/map/smallmap4.map", lvl1)) {
+	/*if (loadMap("assets/map/smallmap4.map", lvl1)) {
 	
 		smallMapModulusX =2700 ;
 		smallMapModulusY = 700 ;
 		smallMapX = 1450;
 		smallMapY = 350;
-	}
+	}*/
 
 	
 
@@ -566,12 +566,16 @@ int victoryCondition(Player players[], Game *game, int playerid, Network *client
 int randomX(int *smallMapModulusX, int *smallMapX) {
 	int random = rand() % ((MAP_WIDTH * TILE_WIDTH) - 100 - *smallMapModulusX) + *smallMapX; 
 
+	printf("Random x spawns: \n%d, %d \n", *smallMapModulusX, *smallMapX);
+	
 	random += 100;
 	return random;
 }
 
 int randomY(int *smallMapModulusY, int *smallMapY) {
 	int random = rand() % ((MAP_HEIGHT * TILE_HEIGHT) - 100 -*smallMapModulusY) + *smallMapY;
+
+	printf("Random Y spawns\n%d, %d \n", *smallMapModulusY, *smallMapY);
 	random += 100;
 	return random;
 }
