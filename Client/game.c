@@ -125,7 +125,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Create projectiles
 	Projectile projectiles[MAXPROJECTILES];
 	projectiles[0] = createProjectile(game, 0, 10, 12, 30, 30, "assets/bullet.png");
-	projectiles[1] = createProjectile(game, 1, 4, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
+	projectiles[1] = createProjectile(game, 1, 15, 1000, 30, WINDOW_HEIGHT, "assets/handProjectile.png");
 	projectiles[2] = createProjectile(game, 2, 10, 12, 30, 30, "assets/beachball.png");
 	int nrOfProjectiles = 3;
 
