@@ -5,6 +5,8 @@
 #include <SDL.h>
 #include "game.h"
 
+#define NROFMAPS 5
+
 #define MAP_HEIGHT 42
 #define MAP_WIDTH 136
 #define TILE_HEIGHT 32

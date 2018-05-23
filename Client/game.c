@@ -55,21 +55,29 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	// Load map from file (.map)
 	static int lvl1[MAP_HEIGHT][MAP_WIDTH] = { 0 };
 
+	int smallMap = 0;
 	int smallMapModulusX = 0;
 	int smallMapModulusY = 0;
 	int smallMapX = 0;
 	int smallMapY = 0;
 	
-	loadMap("assets/map/map1.map", lvl1);
+	switch (rand() % NROFMAPS)
+	{
+	case 0:	loadMap("assets/map/map1.map", lvl1); break;
+	case 1: loadMap("assets/map/map2.map", lvl1); break;
+	case 2: loadMap("assets/map/map3.map", lvl1); break;
+	case 3: loadMap("assets/map/map4.map", lvl1); break;
+	case 4: loadMap("assets/map/smallmap4.map", lvl1); smallMap = 1;  break;
+	default:
+		break;
+	}
 
-	/*if (loadMap("assets/map/smallmap4.map", lvl1)) {
-	
-		smallMapModulusX =2700 ;
+	if (smallMap) {
+		smallMapModulusX = 2700 ;
 		smallMapModulusY = 700 ;
 		smallMapX = 1450;
 		smallMapY = 350;
-	}*/
-
+	}
 	
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
