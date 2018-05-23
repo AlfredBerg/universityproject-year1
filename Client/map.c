@@ -3,7 +3,7 @@
 
 
 
-int loadMap(const char* fileName, int map[][MAP_WIDTH]) {
+void loadMap(const char* fileName, int map[][MAP_WIDTH]) {
 	FILE *fp;
 	fp = fopen(fileName, "r");
 	if (fp != NULL) {
@@ -18,7 +18,7 @@ int loadMap(const char* fileName, int map[][MAP_WIDTH]) {
 		}
 		fclose(fp);
 	}
-	return;
+
 }
 
 
