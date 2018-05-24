@@ -48,7 +48,6 @@ void initGame(Game *game) {
 
 int runGame(Game *game, Network *client, char playerNames[][30]) {
 
-
 	// Init randomization
 	srand(game->seed);
 
@@ -78,18 +77,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		smallMapX = 1450;
 		smallMapY = 350;
 	}
-
-
-	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
-	//int decideMap = rand() % 2;
-	//switch (decideMap) {
-	//	case 0:
-	//		loadMap("assets/map/map1.map", lvl1);
-	//		break;
-	//	case 1:
-	//		loadMap("assets/map/map2.map", lvl1);
-	//		break;
-	//}
 
 	// Init map
 	Tile map[MAP_HEIGHT][MAP_WIDTH];
@@ -146,16 +133,6 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	Pickup pickups[MAX_NR_OF_PICKUPS];
 	for (int i = 0; i < MAX_NR_OF_PICKUPS; i++)
 		pickups[i] = createPickup(game, i, pickupXPos[i], pickupYPos[i], pickupHealing[i], pickupNames[i]);
-
-	// For future use! Placing weapons & pickups by randomization & if there's no tile /Sara
-	// Place pickups in random spots where there's no tile
-	//for (i = 0; i < MAP_HEIGHT; i++) {
-	//	for (j = 0; j < MAP_WIDTH; j++) {
-	//		if (map[i][j].ID == 0) {
-	//			
-	//		}
-	//	}
-	//}
 
 	SDL_Event event;
 	int running = 1;
@@ -587,4 +564,3 @@ int randomY(int *smallMapModulusY, int *smallMapY) {
 	random += 100;
 	return random;
 }
-
