@@ -307,7 +307,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 		}
 
 
-		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map, &leftWall, &rightWall);
+		gravity(&players[client->playerID], weapons, &groundDetected, &roofDetected, map);
 
 		if (groundDetected == 0) {
 			checkForCeiling(map, &players[client->playerID], &jumpTime, &roofDetected, &groundDetected, &leftWall, &rightWall);
@@ -588,25 +588,3 @@ int randomY(int *smallMapModulusY, int *smallMapY) {
 	return random;
 }
 
-//void drawPlayers(Game *game, Player players[], SDL_Rect srcrect[], SDL_Rect dstrect[], int *nrOfPlayers, int *leftWall, int *rightWall) {
-//
-//	for (int i = 0; i < MAXPLAYERS; i++) {
-//		if (players[i].life > 0) {
-//
-//			if ((players[i].lastDirection == RIGHT) && (*leftWall == 1)) {
-//				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
-//			}
-//			else if ((players[i].lastDirection == RIGHT) && (*leftWall == 0)) {
-//				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
-//			}
-//			else if ((players[i].lastDirection == LEFT) && (*rightWall == 0)) {
-//				SDL_RenderCopyEx(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i], 0.0, NULL, SDL_FLIP_HORIZONTAL);
-//			}
-//			else if ((players[i].lastDirection == LEFT) && (*leftWall == 0)) {
-//				SDL_RenderCopy(game->renderer, players[i].Texture, &srcrect[i], &dstrect[i]);
-//			}
-//		}
-//		else
-//			deletePlayer(players, players[i].id, nrOfPlayers);
-//	}
-//}
