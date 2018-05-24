@@ -10,7 +10,7 @@
 #include "game.h"
 #include "pickup.h"
 
-#define MAXNRWEAPONS 4
+#define MAXNRWEAPONS 6
 
 #define WEAPON_HEIGHT 60
 #define WEAPON_WIDTH 60

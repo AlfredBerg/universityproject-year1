@@ -60,7 +60,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int smallMapModulusY = 0;
 	int smallMapX = 0;
 	int smallMapY = 0;
-	
+
 	switch (rand() % NROFMAPS)
 	{
 	case 0:	loadMap("assets/map/map1.map", lvl1); break;
@@ -73,12 +73,12 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	}
 
 	if (smallMap) {
-		smallMapModulusX = 2700 ;
-		smallMapModulusY = 700 ;
+		smallMapModulusX = 2700;
+		smallMapModulusY = 700;
 		smallMapX = 1450;
 		smallMapY = 350;
 	}
-	
+
 
 	// For future use: if we want to randomize maps, BUT keep in mind that every client needs to have same map!
 	//int decideMap = rand() % 2;
@@ -116,12 +116,12 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfPlayers = game->connectedPlayers;
 
 	// Create weapons
-	char weaponNames[4][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png" };
-	int weaponXpos[4] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX) };
-	int weaponYpos[4] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
-	int weaponDamage[4] = { 10, 10, 4, 10 };
-	int weaponFireRate[4] = { 200, 200, 800, 200 };
-	int weaponProjectileType[4] = { 0, 0, 1, 2 };
+	char weaponNames[6][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png", "assets/uzi.png", "assets/ak47.png" };
+	int weaponXpos[6] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX) };
+	int weaponYpos[6] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
+	int weaponDamage[6] = { 10, 10, 4, 10, 12, 15 };
+	int weaponFireRate[6] = { 200, 200, 800, 200, 200, 200 };
+	int weaponProjectileType[6] = { 0, 0, 1, 2, 0, 0 };
 
 	Weapon weapons[MAXNRWEAPONS];
 	for (int i = 0; i < MAXNRWEAPONS; i++) {
@@ -572,16 +572,16 @@ int victoryCondition(Player players[], Game *game, int playerid, Network *client
 }
 
 int randomX(int *smallMapModulusX, int *smallMapX) {
-	int random = rand() % ((MAP_WIDTH * TILE_WIDTH) - 100 - *smallMapModulusX) + *smallMapX; 
+	int random = rand() % ((MAP_WIDTH * TILE_WIDTH) - 100 - *smallMapModulusX) + *smallMapX;
 
 	printf("Random x spawns: \n%d, %d \n", *smallMapModulusX, *smallMapX);
-	
+
 	random += 100;
 	return random;
 }
 
 int randomY(int *smallMapModulusY, int *smallMapY) {
-	int random = rand() % ((MAP_HEIGHT * TILE_HEIGHT) - 100 -*smallMapModulusY) + *smallMapY;
+	int random = rand() % ((MAP_HEIGHT * TILE_HEIGHT) - 100 - *smallMapModulusY) + *smallMapY;
 
 	printf("Random Y spawns\n%d, %d \n", *smallMapModulusY, *smallMapY);
 	random += 100;
