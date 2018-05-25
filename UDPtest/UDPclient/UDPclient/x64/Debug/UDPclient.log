@@ -1,3 +1,0 @@
-﻿  main.c
-c:\users\administrator\source\repos\udpclient\udpclient\main.c(55): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  UDPclient.vcxproj -> C:\Users\Administrator\source\repos\UDPclient\x64\Debug\UDPclient.exe

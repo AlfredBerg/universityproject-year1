@@ -1,6 +1,0 @@
-﻿  main.c
-c:\users\administrator\source\repos\sockets\hellosdl\main.c(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
-  udptftpclient.c
-c:\users\administrator\source\repos\sockets\hellosdl\udptftpclient.c(7): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
-  udptftpserver.c
-c:\users\administrator\source\repos\sockets\hellosdl\udptftpserver.c(9): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
