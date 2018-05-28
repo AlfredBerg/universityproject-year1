@@ -9,7 +9,7 @@
 #define MAX_CLIENTS 4
 #define MAXPROJECTILEOBJECTS 50
 
-#define MAXNRWEAPONS 2
+#define MAXNRWEAPONS 6
 #define MAX_NR_OF_PICKUPS 2
 
 #define BULLET 0

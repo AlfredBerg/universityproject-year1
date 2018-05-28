@@ -83,7 +83,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 		printf("Shots fired!\n");
 
 		//Sound effects for gun
-		if (weaponId == 0 || weaponId == 1) {
+		if (weaponId == 0 || weaponId == 1 || weaponId == 4  || weaponId == 5) {
 			int gunshotChoice = rand() % 3 + 1;
 			char gunshotPath[30];
 

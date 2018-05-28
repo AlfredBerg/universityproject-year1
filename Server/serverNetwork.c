@@ -308,6 +308,7 @@ void updateLobby(Network *server) {
 
 void lobbyToString(Network *server, char string[MAX_PACKET]) {
 	//nrOfPlayers;p0Name;p1Name;timer;
+	server->seed = rand();
 	int length = 0;
 	length += sprintf(string + length, "4;%d;%d;%d;", server->next_player, server->seed, server->timer);
 	for (int i = 0; i < MAX_CLIENTS; i++) {
