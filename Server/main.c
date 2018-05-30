@@ -311,15 +311,14 @@ int restart(Network *server) {
 		server->clients[i].weaponId = -1;
 	}
 
-	//Hardcoded stuff, remove me
-	server->clients[0].xPos = 50;
-	server->clients[0].yPos = 50;
-	server->clients[1].xPos = 300;
-	server->clients[1].yPos = 50;
-	server->clients[2].xPos = 300;
-	server->clients[2].yPos = 370;
-	server->clients[3].xPos = 300;
-	server->clients[3].yPos = 370;
+	server->clients[0].xPos = -7000;
+	server->clients[0].yPos = 800;
+	server->clients[1].xPos = -7000;
+	server->clients[1].yPos = 800;
+	server->clients[2].xPos = -7000;
+	server->clients[2].yPos = 800;
+	server->clients[3].xPos = -7000;
+	server->clients[3].yPos = 800;
 
 	server->items = createItems(MAXNRWEAPONS, MAX_NR_OF_PICKUPS);
 
