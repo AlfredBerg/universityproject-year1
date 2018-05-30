@@ -197,14 +197,13 @@ void init(Network *server) {
 	}
 
 
-	//Hardcoded stuff, remove me
-	server->clients[0].xPos = 1500;
+	server->clients[0].xPos = -7000;
 	server->clients[0].yPos = 800;
-	server->clients[1].xPos = 1500;
+	server->clients[1].xPos = -7000;
 	server->clients[1].yPos = 800;
-	server->clients[2].xPos = 1500;
+	server->clients[2].xPos = -7000;
 	server->clients[2].yPos = 800;
-	server->clients[3].xPos = 1500;
+	server->clients[3].xPos = -7000;
 	server->clients[3].yPos = 800;
 	strcpy(server->clients[0].name, "spelare1");
 	strcpy(server->clients[1].name, "spelare2");
@@ -259,7 +258,9 @@ void updateGamestate(Network *server, Uint32 *lastGamestateTick, int * lobby) {
 		}
 	}
 
-	if (server->alivePlayers == 1) {
+	//Vicotry condition
+	int noPlayers = MAX_CLIENTS - server->next_player;
+	if (server->alivePlayers == 1 + noPlayers) {
 		for (int i = 0; i < MAX_CLIENTS; i++) {
 			if (server->clients[i].health > 0) {
 				sendVictoryToClient(server, i);
