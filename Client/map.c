@@ -18,7 +18,7 @@ int loadMap(const char* fileName, int map[][MAP_WIDTH]) {
 		}
 		fclose(fp);
 	}
-	return;
+	return 1;
 }
 
 

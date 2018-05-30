@@ -52,12 +52,10 @@ struct game {
 typedef struct game Game;
 
 void initGame(Game *game);
-int restart(Game *game);
 int runGame(Game *game, Network *client, char playerNames[][30]);
 void quitGame(Game *game);
 void playBackgroundMusic();
 void createWindowIcon(Game *game);
-int victoryCondition(Player players[], Game *game, int playerid);
 
 // These functions could not be placed in player-module
 Player createPlayer(Game *game, int id, char name[], int x, int y, int lastDirection, const char imageName[], int srcRectW, int srcRectH);

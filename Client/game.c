@@ -13,6 +13,81 @@
 extern Network client;
 extern SDL_Rect camera;
 
+int randomX(int *smallMapModulusX, int *smallMapX) {
+	int random = rand() % ((MAP_WIDTH * TILE_WIDTH) - 100 - *smallMapModulusX) + *smallMapX;
+
+
+	random += 100;
+	return random;
+}
+
+int randomY(int *smallMapModulusY, int *smallMapY) {
+	int random = rand() % ((MAP_HEIGHT * TILE_HEIGHT) - 150 - *smallMapModulusY) + *smallMapY;
+
+	random += 150;
+	return random;
+}
+
+int victoryCondition(Player players[], Game *game, int playerid, Network *client, Projectile *projectiles) {
+	int choose = 0;
+
+	for (int i = 0; i < MAXPLAYERS; i++) {
+		if (players[i].iWon) {
+			char sound[30];
+			//Victory screen
+			if (players[playerid].iWon) {
+				game->gameOverImage = IMG_Load("assets/winscreen.png");
+				sprintf(sound, "assets/winSound.wav");
+			}
+			else {
+				game->gameOverImage = IMG_Load("assets/losescreen.png");
+				sprintf(sound, "assets/loseSound.wav");
+			}
+
+			//Sound effects
+			Mix_PauseMusic();
+			Mix_Chunk *gameOverSound = Mix_LoadWAV(sound);
+			gameOverSound->volume = 100;
+			Mix_PlayChannel(1, gameOverSound, 0);
+
+			Mix_Chunk *clickSound = Mix_LoadWAV("assets/clickSound.wav");
+			clickSound->volume = 100;
+
+			game->gameOverScreen = SDL_CreateTextureFromSurface(game->renderer, game->gameOverImage);
+			SDL_FreeSurface(game->gameOverImage);
+			SDL_RenderCopy(game->renderer, game->gameOverScreen, NULL, NULL);
+
+			//SDL_Rect victoryRect = { camera.x, camera.y, WINDOW_WIDTH, WINDOW_HEIGHT };
+
+			//renderCopyMoveWithCamera(game->renderer, game->gameOverScreen, NULL, &victoryRect, 0.0, NULL, 0);
+
+			SDL_RenderPresent(game->renderer);
+
+			SDL_Event event;
+			while (!choose)
+				if (SDL_PollEvent(&event))
+					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
+						if (event.button.x > 70 && event.button.x < 450 && event.button.y > 400 && event.button.y < 465) {
+							game->replay = 0;
+							Mix_PlayChannel(1, clickSound, 0);
+							return 1;
+						}
+						else if (event.button.x > 600 && event.button.x < 940 && event.button.y > 400 && event.button.y < 465) {
+							game->replay = 1;
+							Mix_PlayChannel(1, clickSound, 0);
+							return 1;
+						}
+					}
+					else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+						game->replay = 1;
+						Mix_PlayChannel(1, clickSound, 0);
+						return 1;
+					}
+					updateServer(players, client, projectiles);
+		}
+	}
+	return 0;
+}
 
 void initGame(Game *game) {
 
@@ -35,7 +110,7 @@ void initGame(Game *game) {
 		WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	game->renderer = SDL_CreateRenderer(game->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-	game->debug = 1;
+	game->debug = 0;
 	game->running = 1;
 	game->loopCount = 0;
 	game->spectateMode = 0;
@@ -94,7 +169,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int spawnYPos[MAXPLAYERS] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
 
 	Player players[MAXPLAYERS];
-	for (int i = 0; i < MAXPLAYERS; i++) {  // Ska vara game->connectedPlayers men det ger error med kameran
+	for (int i = 0; i < MAXPLAYERS; i++) {
 		if (i == 2) // Om det är fågeln
 			players[i] = createPlayer(game, i, playerNames[i], spawnXPos[i], spawnYPos[i], RIGHT, playerSprites[i], 40, 40); //Den är i en annan storlek..
 		else
@@ -485,82 +560,4 @@ void drawPlayers(Game *game, Player players[], int *nrOfPlayers, int *leftWall, 
 		else
 			deletePlayer(players, players[i].id, nrOfPlayers);
 	}
-}
-
-int victoryCondition(Player players[], Game *game, int playerid, Network *client, Projectile *projectiles) {
-	int choose = 0;
-
-	for (int i = 0; i < MAXPLAYERS; i++) {
-		if (players[i].iWon) {
-			char sound[30];
-			//Victory screen
-			if (players[playerid].iWon) {
-				game->gameOverImage = IMG_Load("assets/winscreen.png");
-				sprintf(sound, "assets/winSound.wav");
-			}
-			else {
-				game->gameOverImage = IMG_Load("assets/losescreen.png");
-				sprintf(sound, "assets/loseSound.wav");
-			}
-
-			//Sound effects
-			Mix_PauseMusic();
-			Mix_Chunk *gameOverSound = Mix_LoadWAV(sound);
-			gameOverSound->volume = 100;
-			Mix_PlayChannel(1, gameOverSound, 0);
-
-			Mix_Chunk *clickSound = Mix_LoadWAV("assets/clickSound.wav");
-			clickSound->volume = 100;
-
-			game->gameOverScreen = SDL_CreateTextureFromSurface(game->renderer, game->gameOverImage);
-			SDL_FreeSurface(game->gameOverImage);
-			SDL_RenderCopy(game->renderer, game->gameOverScreen, NULL, NULL);
-
-			//SDL_Rect victoryRect = { camera.x, camera.y, WINDOW_WIDTH, WINDOW_HEIGHT };
-
-			//renderCopyMoveWithCamera(game->renderer, game->gameOverScreen, NULL, &victoryRect, 0.0, NULL, 0);
-
-			SDL_RenderPresent(game->renderer);
-
-			SDL_Event event;
-			while (!choose)
-				if (SDL_PollEvent(&event))
-					if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
-						if (event.button.x > 70 && event.button.x < 450 && event.button.y > 400 && event.button.y < 465) {
-							game->replay = 0;
-							Mix_PlayChannel(1, clickSound, 0);
-							return 1;
-						}
-						else if (event.button.x > 600 && event.button.x < 940 && event.button.y > 400 && event.button.y < 465) {
-							game->replay = 1;
-							Mix_PlayChannel(1, clickSound, 0);
-							return 1;
-						}
-					}
-					else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
-						game->replay = 1;
-						Mix_PlayChannel(1, clickSound, 0);
-						return 1;
-					}
-					updateServer(players, client, projectiles);
-		}
-	}
-	return 0;
-}
-
-int randomX(int *smallMapModulusX, int *smallMapX) {
-	int random = rand() % ((MAP_WIDTH * TILE_WIDTH) - 100 - *smallMapModulusX) + *smallMapX;
-
-	printf("Random x spawns: \n%d, %d \n", *smallMapModulusX, *smallMapX);
-
-	random += 100;
-	return random;
-}
-
-int randomY(int *smallMapModulusY, int *smallMapY) {
-	int random = rand() % ((MAP_HEIGHT * TILE_HEIGHT) - 100 - *smallMapModulusY) + *smallMapY;
-
-	printf("Random Y spawns\n%d, %d \n", *smallMapModulusY, *smallMapY);
-	random += 100;
-	return random;
 }
