@@ -103,12 +103,12 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfPlayers = game->connectedPlayers;
 
 	// Create weapons
-	char weaponNames[6][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png", "assets/uzi.png", "assets/ak47.png" };
-	int weaponXpos[6] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX) };
-	int weaponYpos[6] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY) };
-	int weaponDamage[6] = { 10, 10, 4, 10, 12, 15 };
-	int weaponFireRate[6] = { 200, 200, 800, 200, 200, 200 };
-	int weaponProjectileType[6] = { 0, 0, 1, 2, 0, 0 };
+	char weaponNames[7][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png", "assets/uzi.png", "assets/ak47.png", "assets/bullet.png" };
+	int weaponXpos[7] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX)};
+	int weaponYpos[7] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY)};
+	int weaponDamage[7] = { 10, 10, 4, 10, 12, 15, 50};
+	int weaponFireRate[7] = { 200, 200, 800, 200, 200, 200, 200};
+	int weaponProjectileType[7] = { 0, 0, 1, 2, 0, 0, 1};
 
 	Weapon weapons[MAXNRWEAPONS];
 	for (int i = 0; i < MAXNRWEAPONS; i++) {

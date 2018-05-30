@@ -15,12 +15,11 @@ void weaponActions(Weapon weapons[], Player players[], Network *client, Projecti
 	pickUpWeapon(client, weapons, players);
 
 	for (int i = 0; i < MAXPROJECTILES; i++) {
-		if (i != 1) {
+
+	 if (i !=1) {
 			detectProjectileColision(&projectiles[i], players, i);
 		}
 	}
-
-
 
 	int id;
 	for (int i = 0; i < MAXPLAYERS; i++) {
@@ -65,7 +64,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 			detectHandColision(&projectiles[1], players, 1, client->playerID, &camera);
 			players[client->playerID].tickThatWeaponFired = SDL_GetTicks();
 		}
-}
+	}
 	else if (players[client->playerID].weaponFired == 1) {
 		int weaponId = players[client->playerID].weaponID;
 		players[client->playerID].weaponFired = 0;
@@ -82,6 +81,7 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 
 		printf("Shots fired!\n");
 
+
 		//Sound effects for gun
 		if (weaponId == 0 || weaponId == 1 || weaponId == 4  || weaponId == 5) {
 			int gunshotChoice = rand() % 3 + 1;
@@ -97,6 +97,9 @@ void fireWeapon(Weapon weapons[], Player players[], Network *client, Projectile 
 			Mix_Chunk *gunshot = Mix_LoadWAV(gunshotPath);
 			gunshot->volume = 80;
 			Mix_PlayChannel(1, gunshot, 0);
+		}
+		else if (weaponId==6) {
+			detectFistColision(&projectiles[0], players, client->playerID);
 		}
 
 		if (players[client->playerID].lastDirection == LEFT) {

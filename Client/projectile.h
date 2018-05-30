@@ -32,5 +32,6 @@ void moveProjectiles(Projectile projectiles[]);
 void fireProjectile(Projectile *projectile, int direction, int x, int y, int id);
 void detectProjectileColision(Projectile *projectile, Player players[], int projectileType);
 void detectHandColision(Projectile *projectile, Player players[], int projectileType, int playerID, SDL_Rect *camera);
+void detectFistColision(Projectile *projectile, Player players[], int playerID);
 
 

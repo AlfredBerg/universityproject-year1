@@ -22,6 +22,7 @@ void fireProjectile(Projectile *projectile, int direction, int x, int y, int id)
 }
 
 void moveProjectiles(Projectile projectiles[]) {
+	
 	for (int i = 0; i < MAXPROJECTILES; i++) {
 		for (int j = 0; j < MAXPROJECTILEOBJECTS; j++) {
 			if (projectiles[i].direction[j] == LEFT) {
@@ -33,6 +34,7 @@ void moveProjectiles(Projectile projectiles[]) {
 		}
 	}
 }
+
 
 void detectProjectileColision(Projectile *projectile, Player players[], int projectileType) {
 	for (int i = 0; i < MAXPLAYERS; i++) {
@@ -59,6 +61,17 @@ void detectHandColision(Projectile *projectile, Player players[], int projectile
 					loseHealth(&players[i], projectile->dmg);
 				}
 			}
+		}
+	}
+}
+
+
+void detectFistColision(Projectile *projectile, Player players[], int playerID) {
+
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		if (SDL_HasIntersection(&players[i].dstRect, &players[playerID].dstRect) && players[i].id!= players[playerID].id) {
+
+			loseHealth(&players[i], projectile->dmg);	
 		}
 	}
 }
