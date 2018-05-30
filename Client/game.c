@@ -103,7 +103,7 @@ int runGame(Game *game, Network *client, char playerNames[][30]) {
 	int nrOfPlayers = game->connectedPlayers;
 
 	// Create weapons
-	char weaponNames[7][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png", "assets/uzi.png", "assets/ak47.png", "assets/bullet.png" };
+	char weaponNames[7][21] = { "assets/pistol.png", "assets/pistol.png", "assets/hand.png", "assets/beachball.png", "assets/uzi.png", "assets/ak47.png", "assets/fist.png" };
 	int weaponXpos[7] = { randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX), randomX(&smallMapModulusX, &smallMapX)};
 	int weaponYpos[7] = { randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY), randomY(&smallMapModulusY, &smallMapY)};
 	int weaponDamage[7] = { 10, 10, 4, 10, 12, 15, 50};
